@@ -2,14 +2,33 @@
 
 import { useState } from "react";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { Button, Input } from "@/components/ui";
 import { cn } from "@/lib/utils";
 
-export function LoginForm() {
-  const router = useRouter();
+const statusMessages: Record<string, string> = {
+  invalid_token: "That verification link is invalid. Request a new one below.",
+  token_expired: "That verification link has expired. Request a new one below.",
+  user_not_found: "We couldn't find an account for that link.",
+  verification_failed: "Email verification failed. Please try again.",
+};
+
+export interface LoginFormProps {
+  callbackUrl?: string;
+  verified?: boolean;
+  errorCode?: string;
+}
+
+/** Only allow same-site relative redirects to avoid open-redirects. */
+function safeCallback(url?: string) {
+  return url && url.startsWith("/") && !url.startsWith("//") ? url : "/dashboard";
+}
+
+export function LoginForm({ callbackUrl, verified, errorCode }: LoginFormProps) {
+  const redirectTo = safeCallback(callbackUrl);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(
+    errorCode ? statusMessages[errorCode] ?? "Sign in failed. Please try again." : null
+  );
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -33,8 +52,7 @@ export function LoginForm() {
         return;
       }
 
-      // Redirect to dashboard on success
-      window.location.href = "/dashboard";
+      window.location.href = redirectTo;
     } catch (err) {
       setError("An error occurred. Please try again.");
       setIsLoading(false);
@@ -44,7 +62,7 @@ export function LoginForm() {
   const handleOAuthSignIn = async (provider: "google" | "github" | "discord") => {
     setIsLoading(true);
     try {
-      await signIn(provider, { callbackUrl: "/dashboard" });
+      await signIn(provider, { callbackUrl: redirectTo });
     } catch (err) {
       setError("An error occurred with OAuth sign in");
       setIsLoading(false);
@@ -53,6 +71,11 @@ export function LoginForm() {
 
   return (
     <div className="w-full max-w-md">
+      {verified && !error && (
+        <div className="mb-6 p-4 rounded-lg bg-cyber-primary/10 border border-cyber-primary text-cyber-primary">
+          Email verified! You can sign in now.
+        </div>
+      )}
       {error && (
         <div className="mb-6 p-4 rounded-lg bg-cyber-danger/10 border border-cyber-danger text-cyber-danger">
           {error}

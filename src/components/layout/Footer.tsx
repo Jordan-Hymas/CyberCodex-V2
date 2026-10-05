@@ -11,34 +11,34 @@ export function Footer() {
         { label: "Courses", href: "/courses" },
         { label: "Labs", href: "/labs" },
         { label: "Community", href: "/community" },
-        { label: "Certifications", href: "/certifications" },
+        { label: "Certifications", href: "/certifications", soon: true },
       ],
     },
     resources: {
       title: "Resources",
       links: [
-        { label: "Documentation", href: "/docs" },
-        { label: "Blog", href: "/blog" },
-        { label: "Tutorials", href: "/tutorials" },
-        { label: "Tools", href: "/tools" },
+        { label: "Documentation", href: "/docs", soon: true },
+        { label: "Blog", href: "/blog", soon: true },
+        { label: "Tutorials", href: "/tutorials", soon: true },
+        { label: "Tools", href: "/tools", soon: true },
       ],
     },
     company: {
       title: "Company",
       links: [
         { label: "About", href: "/about" },
-        { label: "Careers", href: "/careers" },
-        { label: "Contact", href: "/contact" },
-        { label: "Partners", href: "/partners" },
+        { label: "Pricing", href: "/pricing" },
+        { label: "Contact", href: "/contact", soon: true },
+        { label: "Careers", href: "/careers", soon: true },
       ],
     },
     legal: {
       title: "Legal",
       links: [
-        { label: "Privacy Policy", href: "/privacy" },
-        { label: "Terms of Service", href: "/terms" },
-        { label: "Cookie Policy", href: "/cookies" },
-        { label: "Responsible Disclosure", href: "/disclosure" },
+        { label: "Privacy Policy", href: "/privacy", soon: true },
+        { label: "Terms of Service", href: "/terms", soon: true },
+        { label: "Cookie Policy", href: "/cookies", soon: true },
+        { label: "Responsible Disclosure", href: "/disclosure", soon: true },
       ],
     },
   };
@@ -56,12 +56,18 @@ export function Footer() {
               <ul className="space-y-3">
                 {section.links.map((link) => (
                   <li key={link.href}>
-                    <Link
-                      href={link.href}
-                      className="text-cyber-text-secondary hover:text-cyber-primary transition-colors duration-200 text-sm"
-                    >
-                      {link.label}
-                    </Link>
+                    {"soon" in link && link.soon ? (
+                      <span className="text-cyber-text-muted text-sm cursor-default" title="Coming soon">
+                        {link.label} <span className="text-xs uppercase">(soon)</span>
+                      </span>
+                    ) : (
+                      <Link
+                        href={link.href}
+                        className="text-cyber-text-secondary hover:text-cyber-primary transition-colors duration-200 text-sm"
+                      >
+                        {link.label}
+                      </Link>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -78,15 +84,17 @@ export function Footer() {
             <p className="text-cyber-text-secondary text-sm mb-4">
               Get the latest cybersecurity tutorials and news delivered to your inbox.
             </p>
-            <form className="flex gap-2">
+            <form className="flex gap-2" aria-disabled="true">
               <input
                 type="email"
-                placeholder="Enter your email"
+                disabled
+                placeholder="Newsletter coming soon"
                 className="flex-1 px-4 py-2 rounded-lg bg-cyber-dark text-cyber-text-primary border border-cyber-border focus:outline-none focus:ring-2 focus:ring-cyber-primary"
               />
               <button
                 type="submit"
-                className="px-6 py-2 bg-cyber-primary text-cyber-dark rounded-lg font-medium hover:bg-cyber-secondary transition-colors duration-200"
+                disabled
+                className="disabled:opacity-50 disabled:cursor-not-allowed px-6 py-2 bg-cyber-primary text-cyber-dark rounded-lg font-medium hover:bg-cyber-secondary transition-colors duration-200"
               >
                 Subscribe
               </button>

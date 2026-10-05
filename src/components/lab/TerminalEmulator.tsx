@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { VirtualFileSystem } from "@/lib/terminal/filesystem";
 import { executeCommand } from "@/lib/terminal/commandInterpreter";
 import { FileSystem } from "@/lib/terminal/types";
+import "@xterm/xterm/css/xterm.css";
 
 export interface TerminalEmulatorProps {
   initialFilesystem?: FileSystem;
@@ -48,7 +49,6 @@ export function TerminalEmulator({ initialFilesystem, welcomeMessage, className 
         const { Terminal } = await import("@xterm/xterm");
         const { FitAddon } = await import("@xterm/addon-fit");
         const { WebLinksAddon } = await import("@xterm/addon-web-links");
-        await import("@xterm/xterm/css/xterm.css");
 
         // Initialize xterm.js
         const term = new Terminal({
@@ -229,7 +229,6 @@ export function TerminalEmulator({ initialFilesystem, welcomeMessage, className 
         };
       } catch (error) {
         console.error("Failed to initialize terminal:", error);
-        setIsLoading(false);
       }
     };
 

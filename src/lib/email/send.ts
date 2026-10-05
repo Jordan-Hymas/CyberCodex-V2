@@ -1,4 +1,4 @@
-import { resend, FROM_EMAIL } from "./resend";
+import { getResend, FROM_EMAIL } from "./resend";
 import { getVerificationEmailHtml, getPasswordResetEmailHtml, getWelcomeEmailHtml } from "./templates";
 
 export async function sendVerificationEmail(
@@ -10,7 +10,7 @@ export async function sendVerificationEmail(
   const verificationUrl = `${baseUrl}/api/auth/verify-email?token=${verificationToken}`;
 
   try {
-    await resend.emails.send({
+    await getResend().emails.send({
       from: FROM_EMAIL,
       to,
       subject: "Verify Your Email - CyberCodex.io",
@@ -33,7 +33,7 @@ export async function sendPasswordResetEmail(
   const resetUrl = `${baseUrl}/reset-password/${resetToken}`;
 
   try {
-    await resend.emails.send({
+    await getResend().emails.send({
       from: FROM_EMAIL,
       to,
       subject: "Reset Your Password - CyberCodex.io",
@@ -52,7 +52,7 @@ export async function sendWelcomeEmail(to: string, name: string) {
   const dashboardUrl = `${baseUrl}/dashboard`;
 
   try {
-    await resend.emails.send({
+    await getResend().emails.send({
       from: FROM_EMAIL,
       to,
       subject: "Welcome to CyberCodex.io! 🎉",

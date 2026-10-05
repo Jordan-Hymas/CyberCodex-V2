@@ -3,8 +3,7 @@
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { Button, Input } from "@/components/ui";
-import { calculatePasswordStrength } from "@/lib/utils/password-validation";
+import { Button, Input, PasswordStrengthMeter } from "@/components/ui";
 
 export function SignupForm() {
   const router = useRouter();
@@ -16,8 +15,6 @@ export function SignupForm() {
     username: "",
     password: "",
   });
-
-  const passwordStrength = calculatePasswordStrength(formData.password);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -113,28 +110,7 @@ export function SignupForm() {
             disabled={isLoading}
           />
 
-          {formData.password && (
-            <div className="mt-2">
-              <div className="flex items-center justify-between mb-1">
-                <span className="text-sm text-cyber-text-secondary">Password strength:</span>
-                <span className={`text-sm font-medium text-${passwordStrength.color}`}>
-                  {passwordStrength.label}
-                </span>
-              </div>
-              <div className="w-full h-2 bg-cyber-dark-secondary rounded-full overflow-hidden">
-                <div
-                  className={`h-full transition-all duration-300`}
-                  style={{
-                    width: `${(passwordStrength.score / 4) * 100}%`,
-                    backgroundColor: passwordStrength.score >= 3 ? '#00ff41' : passwordStrength.score >= 2 ? '#ffd700' : '#ff0033'
-                  }}
-                />
-              </div>
-              <p className="mt-2 text-xs text-cyber-text-muted">
-                Use at least 12 characters with uppercase, lowercase, numbers, and special characters
-              </p>
-            </div>
-          )}
+          <PasswordStrengthMeter password={formData.password} />
         </div>
 
         <Button type="submit" variant="primary" size="lg" fullWidth isLoading={isLoading}>

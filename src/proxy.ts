@@ -14,18 +14,16 @@ export default auth((req) => {
 
   // Define protected routes
   const protectedRoutes = ["/dashboard", "/profile", "/settings"];
-  const authRoutes = ["/auth/login", "/auth/signup"];
 
   const isProtectedRoute = protectedRoutes.some((route) =>
     pathname.startsWith(route)
   );
-  const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route));
 
   // Redirect non-authenticated users to login
   if (isProtectedRoute && !isLoggedIn) {
     const callbackUrl = encodeURIComponent(pathname);
     return NextResponse.redirect(
-      new URL(`/auth/login?callbackUrl=${callbackUrl}`, req.url)
+      new URL(`/login?callbackUrl=${callbackUrl}`, req.url)
     );
   }
 
@@ -40,7 +38,5 @@ export const config = {
     "/dashboard/:path*",
     "/profile/:path*",
     "/settings/:path*",
-    "/auth/login",
-    "/auth/signup",
   ],
 };

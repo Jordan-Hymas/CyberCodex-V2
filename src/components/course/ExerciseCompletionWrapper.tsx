@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { ExerciseCompletionButton } from "./ExerciseCompletionButton";
 
@@ -67,12 +68,12 @@ export function ExerciseCompletionWrapper({
         <p className="text-cyber-text-secondary text-sm mb-3">
           Sign in to track your progress and earn XP
         </p>
-        <a
-          href="/api/auth/signin"
+        <Link
+          href="/login"
           className="inline-block px-6 py-2 bg-cyber-primary text-cyber-dark font-semibold rounded-lg hover:bg-cyber-secondary transition-colors"
         >
           Sign In
-        </a>
+        </Link>
       </div>
     );
   }

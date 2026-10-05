@@ -49,3 +49,7 @@ next-env.d.ts
 Thumbs.db
 
 /src/generated/prisma
+
+# local sqlite database
+prisma/*.db
+prisma/*.db-journal

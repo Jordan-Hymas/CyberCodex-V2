@@ -1,6 +1,7 @@
 "use client";
 
 import { Suspense } from "react";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { Hero3D } from "./Hero3D";
 import { Button } from "@/components/ui";
@@ -47,8 +48,8 @@ export function Hero() {
         <div
           className="absolute inset-0 opacity-10"
           style={{
-            backgroundImage: `linear-gradient(var(--cyber-border) 1px, transparent 1px),
-                             linear-gradient(90deg, var(--cyber-border) 1px, transparent 1px)`,
+            backgroundImage: `linear-gradient(var(--color-cyber-border) 1px, transparent 1px),
+                             linear-gradient(90deg, var(--color-cyber-border) 1px, transparent 1px)`,
             backgroundSize: "50px 50px",
           }}
         />
@@ -101,11 +102,11 @@ export function Hero() {
             variants={itemVariants}
             className="flex flex-col sm:flex-row gap-4 justify-center mb-16"
           >
-            <Button variant="primary" size="lg">
-              Start Learning →
+            <Button variant="primary" size="lg" asChild>
+              <Link href="/courses">Start Learning →</Link>
             </Button>
-            <Button variant="secondary" size="lg">
-              Explore Labs
+            <Button variant="secondary" size="lg" asChild>
+              <Link href="/labs">Explore Labs</Link>
             </Button>
           </motion.div>
 

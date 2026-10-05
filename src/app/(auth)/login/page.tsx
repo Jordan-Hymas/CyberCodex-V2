@@ -7,7 +7,13 @@ export const metadata = {
   description: "Sign in to your CyberCodex account",
 };
 
-export default function LoginPage() {
+interface LoginPageProps {
+  searchParams: Promise<{ callbackUrl?: string; verified?: string; error?: string }>;
+}
+
+export default async function LoginPage({ searchParams }: LoginPageProps) {
+  const { callbackUrl, verified, error } = await searchParams;
+
   return (
     <main className="min-h-screen flex items-center justify-center py-20">
       <Container>
@@ -21,7 +27,7 @@ export default function LoginPage() {
             </p>
           </div>
 
-          <LoginForm />
+          <LoginForm callbackUrl={callbackUrl} verified={verified === "true"} errorCode={error} />
 
           <p className="mt-8 text-center text-sm text-cyber-text-secondary">
             Don't have an account?{" "}

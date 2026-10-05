@@ -14,11 +14,8 @@ export async function GET(req: NextRequest) {
     const user = await prisma.user.findUnique({
       where: { id: session.user.id },
       include: {
-        courseProgress: {
-          include: {
-            exercises: true,
-          },
-        },
+        courseProgress: true,
+        exercises: true,
         badges: {
           include: {
             badge: true,
@@ -63,26 +60,30 @@ export async function GET(req: NextRequest) {
       },
       courseProgress: userData.courseProgress.map((progress) => ({
         courseId: progress.courseId,
-        status: progress.status,
+        isCompleted: progress.isCompleted,
         completedAt: progress.completedAt,
-        lastAccessedAt: progress.lastAccessedAt,
+        startedAt: progress.startedAt,
+        lastActivityAt: progress.lastActivityAt,
+        exercisesCompleted: progress.exercisesCompleted,
+        totalExercises: progress.totalExercises,
         xpEarned: progress.xpEarned,
-        exercises: progress.exercises.map((ex) => ({
-          exerciseId: ex.exerciseId,
-          status: ex.status,
-          completedAt: ex.completedAt,
-          attempts: ex.attempts,
-          xpEarned: ex.xpEarned,
-        })),
+        exercises: userData.exercises
+          .filter((ex) => ex.courseId === progress.courseId)
+          .map((ex) => ({
+            exerciseId: ex.exerciseId,
+            isCompleted: ex.isCompleted,
+            completedAt: ex.completedAt,
+            attempts: ex.attempts,
+            timeSpent: ex.timeSpent,
+          })),
       })),
       badges: userData.badges.map((userBadge) => ({
         badgeId: userBadge.badgeId,
-        earnedAt: userBadge.earnedAt,
+        unlockedAt: userBadge.unlockedAt,
         badge: {
           name: userBadge.badge.name,
           description: userBadge.badge.description,
           category: userBadge.badge.category,
-          rarity: userBadge.badge.rarity,
         },
       })),
       connectedAccounts: userData.accounts.map((account) => ({

@@ -9,3 +9,4 @@ export { ProgressBar, type ProgressBarProps } from "./ProgressBar";
 export { Accordion, type AccordionProps, type AccordionItem } from "./Accordion";
 export { PricingCard, type PricingCardProps, type PricingFeature } from "./PricingCard";
 export { Avatar, type AvatarProps } from "./Avatar";
+export { PasswordStrengthMeter, type PasswordStrengthMeterProps } from "./PasswordStrengthMeter";

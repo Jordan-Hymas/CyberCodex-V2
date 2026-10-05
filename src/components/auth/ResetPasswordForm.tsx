@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Input, Button } from "@/components/ui";
-import { calculatePasswordStrength } from "@/lib/utils/password-validation";
+import { Input, Button, PasswordStrengthMeter } from "@/components/ui";
+import { cn } from "@/lib/utils";
+import { validatePasswordStrength } from "@/lib/utils/password-validation";
 
 interface ResetPasswordFormProps {
   token: string;
@@ -18,7 +19,6 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
-  const passwordStrength = calculatePasswordStrength(passwords.newPassword);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,8 +32,9 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
       return;
     }
 
-    if (passwordStrength.score < 3) {
-      setMessage({ type: "error", text: "Password is too weak. Please choose a stronger password." });
+    const { isValid, errors } = validatePasswordStrength(passwords.newPassword);
+    if (!isValid) {
+      setMessage({ type: "error", text: errors[0] });
       setIsLoading(false);
       return;
     }
@@ -87,37 +88,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
         fullWidth
       />
 
-      {/* Password Strength Indicator */}
-      {passwords.newPassword && (
-        <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <div className="flex-1 h-2 bg-cyber-dark-secondary rounded-full overflow-hidden">
-              <div
-                className={cn(
-                  "h-full transition-all duration-300",
-                  passwordStrength.color === "red" && "bg-red-500",
-                  passwordStrength.color === "yellow" && "bg-yellow-500",
-                  passwordStrength.color === "green" && "bg-green-500"
-                )}
-                style={{ width: `${(passwordStrength.score / 4) * 100}%` }}
-              />
-            </div>
-            <span
-              className={cn(
-                "text-sm font-medium",
-                passwordStrength.color === "red" && "text-red-500",
-                passwordStrength.color === "yellow" && "text-yellow-500",
-                passwordStrength.color === "green" && "text-green-500"
-              )}
-            >
-              {passwordStrength.label}
-            </span>
-          </div>
-          {passwordStrength.feedback && (
-            <p className="text-xs text-cyber-text-muted">{passwordStrength.feedback}</p>
-          )}
-        </div>
-      )}
+      <PasswordStrengthMeter password={passwords.newPassword} />
 
       <Input
         label="Confirm New Password"
@@ -160,8 +131,4 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
       </Button>
     </form>
   );
-}
-
-function cn(...classes: any[]) {
-  return classes.filter(Boolean).join(" ");
 }

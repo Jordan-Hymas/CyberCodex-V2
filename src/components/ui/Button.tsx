@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes, forwardRef } from "react";
+import { ButtonHTMLAttributes, ReactElement, cloneElement, forwardRef, isValidElement } from "react";
 import { cn } from "@/lib/utils";
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -48,14 +48,11 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     );
 
     // If asChild is true, clone the child element and apply button styles
-    if (asChild && children) {
-      const childElement = children as React.ReactElement;
-      return (
-        <childElement.type
-          {...childElement.props}
-          className={cn(buttonClasses, childElement.props.className)}
-        />
-      );
+    if (asChild && isValidElement(children)) {
+      const child = children as ReactElement<{ className?: string }>;
+      return cloneElement(child, {
+        className: cn(buttonClasses, child.props.className),
+      });
     }
 
     return (

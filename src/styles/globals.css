@@ -276,10 +276,9 @@ pre {
   transition: all 300ms ease-in-out;
 }
 
-.btn:focus {
-  outline: none;
-  ring: 2px;
-  ring-offset: 2px;
+.btn:focus-visible {
+  outline: 2px solid var(--color-cyber-primary);
+  outline-offset: 2px;
 }
 
 .btn-primary {
@@ -518,11 +517,6 @@ pre {
 .prose-cyber p {
   margin-bottom: 1.25rem;
   color: var(--color-cyber-text-secondary);
-}
-
-.prose-cyber strong {
-  color: var(--color-cyber-primary);
-  font-weight: 700;
 }
 
 .prose-cyber ul,
