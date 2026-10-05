@@ -1,2 +1,1 @@
-export { Hero } from "./Hero";
-export { Hero3D } from "./Hero3D";
+export { Hero, type HeroProps } from "./Hero";

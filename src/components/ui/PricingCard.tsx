@@ -15,7 +15,7 @@ export interface PricingCardProps {
   description: string;
   features: readonly PricingFeature[];
   ctaText: string;
-  ctaVariant?: "primary" | "secondary" | "ghost";
+  ctaVariant?: "primary" | "secondary" | "accent" | "ghost";
   onCtaClick?: () => void;
   badge?: string;
   highlighted?: boolean;
@@ -40,17 +40,15 @@ export function PricingCard({
   return (
     <div
       className={cn(
-        "relative rounded-lg p-8 transition-all duration-300 h-full flex flex-col",
-        highlighted
-          ? "bg-cyber-dark-secondary border-2 border-cyber-primary shadow-lg"
-          : "bg-cyber-dark-secondary border border-cyber-border hover:border-cyber-primary/50",
+        "relative p-8 h-full flex flex-col pixel-panel",
+        highlighted && "!border-cyber-primary !shadow-[8px_8px_0_0_var(--color-cyber-primary-dark)]",
         className
       )}
     >
       {/* Badge */}
       {badge && (
         <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-          <Badge variant="primary" className="text-xs font-bold px-3 py-1">
+          <Badge variant="warning" size="lg">
             {badge}
           </Badge>
         </div>
@@ -60,12 +58,12 @@ export function PricingCard({
       <div className="text-center mb-6">
         {icon && <div className="mb-4 flex justify-center">{icon}</div>}
 
-        <h3 className="text-xl font-bold text-cyber-text-secondary mb-2">
+        <h3 className="text-2xl text-cyber-text-primary mb-3">
           {title}
         </h3>
 
         <div className="mb-3">
-          <span className="text-5xl font-bold text-cyber-text-primary">
+          <span className="font-pixel text-4xl text-cyber-warning [text-shadow:3px_3px_0_var(--color-cyber-ink)]">
             {price}
           </span>
           {period && (
@@ -82,31 +80,15 @@ export function PricingCard({
       <div className="space-y-3 flex-grow mb-6">
         {features.map((feature, index) => (
           <div key={index} className="flex items-start space-x-3">
-            {feature.included ? (
-              <svg
-                className="w-5 h-5 text-cyber-primary flex-shrink-0 mt-0.5"
-                fill="none"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path d="M5 13l4 4L19 7" />
-              </svg>
-            ) : (
-              <svg
-                className="w-5 h-5 text-cyber-text-muted flex-shrink-0 mt-0.5"
-                fill="none"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            )}
+            <span
+              className={cn(
+                "grid h-5 w-5 flex-shrink-0 place-items-center border-2 border-cyber-ink font-ui text-xs font-bold leading-none text-cyber-ink mt-0.5",
+                feature.included ? "bg-cyber-primary" : "bg-cyber-dark-tertiary text-cyber-text-muted"
+              )}
+              aria-label={feature.included ? "Included" : "Not included"}
+            >
+              {feature.included ? "✓" : "–"}
+            </span>
             <span
               className={cn(
                 "text-sm",

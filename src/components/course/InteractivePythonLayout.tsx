@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
-import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
 import { PythonCodeEditor } from "./PythonCodeEditor";
@@ -303,39 +302,33 @@ export function InteractivePythonLayout({
       <div className="exercise-navigation">
         <div className="nav-buttons">
           {previousExerciseId && courseSlug ? (
-            <Link href={`/courses/${courseSlug}/${previousExerciseId}`}>
-              <Button
+            <Button href={`/courses/${courseSlug}/${previousExerciseId}`}
                 variant="ghost"
                 className="nav-button nav-button-prev"
               >
                 <ChevronLeft size={18} />
                 Previous
               </Button>
-            </Link>
           ) : (
             <div></div>
           )}
 
           {nextExerciseId && courseSlug ? (
-            <Link href={`/courses/${courseSlug}/${nextExerciseId}`}>
-              <Button
+            <Button href={`/courses/${courseSlug}/${nextExerciseId}`}
                 variant="primary"
                 className="nav-button nav-button-next"
               >
                 Next Exercise
                 <ChevronRight size={18} />
               </Button>
-            </Link>
           ) : (
-            <Link href={`/courses/${courseSlug}`}>
-              <Button
+            <Button href={`/courses/${courseSlug}`}
                 variant="primary"
                 className="nav-button nav-button-next"
               >
                 Back to Course
                 <ChevronRight size={18} />
               </Button>
-            </Link>
           )}
         </div>
       </div>

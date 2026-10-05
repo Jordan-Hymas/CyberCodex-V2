@@ -1,14 +1,30 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Atkinson_Hyperlegible, JetBrains_Mono, Pixelify_Sans } from "next/font/google";
 import localFont from "next/font/local";
 import { NavigationWrapper } from "@/components/layout/NavigationWrapper";
 import { Footer } from "@/components/layout";
 import { SmoothScrollProvider, SessionProvider } from "@/components/providers";
 import "@/styles/globals.css";
 
-const inter = Inter({
+// Body copy: highly legible, with more character than the usual Inter default
+const bodyFont = Atkinson_Hyperlegible({
   subsets: ["latin"],
-  variable: "--font-inter",
+  weight: ["400", "700"],
+  variable: "--font-body",
+  display: "swap",
+});
+
+// UI labels, buttons, small headings: pixel-flavoured but readable
+const pixelify = Pixelify_Sans({
+  subsets: ["latin"],
+  weight: ["600", "700"],
+  variable: "--font-pixelify",
+  display: "swap",
+});
+
+const codeFont = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-code",
   display: "swap",
 });
 
@@ -48,7 +64,7 @@ export const viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
-  themeColor: "#0a0e27",
+  themeColor: "#1f2246",
 };
 
 export default function RootLayout({
@@ -57,7 +73,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${pressStart2P.variable}`}>
+    <html lang="en" className={`${bodyFont.variable} ${pixelify.variable} ${codeFont.variable} ${pressStart2P.variable}`}>
       <body className="antialiased">
         <SessionProvider>
           <SmoothScrollProvider>

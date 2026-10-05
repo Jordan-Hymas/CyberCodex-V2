@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { Button } from "@/components/ui";
 import type { Exercise } from "@/types/curriculum";
 import { cn } from "@/lib/utils";
@@ -56,25 +55,21 @@ export function ExerciseItem({
             <span className="text-cyber-text-muted">???</span>
           </Button>
         ) : isCompleted ? (
-          <Link href={`/courses/${courseSlug}/${exercise.id}`}>
-            <Button
+          <Button href={`/courses/${courseSlug}/${exercise.id}`}
               variant="ghost"
               size="sm"
               className="border border-cyber-primary text-cyber-primary hover:bg-cyber-primary/10"
             >
               ✓ Review
             </Button>
-          </Link>
         ) : (
-          <Link href={`/courses/${courseSlug}/${exercise.id}`}>
-            <Button
+          <Button href={`/courses/${courseSlug}/${exercise.id}`}
               variant="primary"
               size="sm"
               className="bg-cyber-secondary hover:bg-cyber-secondary/90"
             >
               Start
             </Button>
-          </Link>
         )}
       </div>
     </div>

@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Link from "next/link";
 import { Button, Card, ProgressBar } from "@/components/ui";
 
 interface CourseProgress {
@@ -54,11 +53,9 @@ export function JumpBackIn({ courseProgress }: JumpBackInProps) {
             <p className="text-cyber-text-secondary mb-6">
               Browse our course catalog and begin your cybersecurity journey today.
             </p>
-            <Link href="/courses">
-              <Button variant="primary" size="lg">
+            <Button href="/courses" variant="primary" size="lg">
                 Browse Courses
               </Button>
-            </Link>
           </div>
         </Card>
       </motion.div>
@@ -102,11 +99,9 @@ export function JumpBackIn({ courseProgress }: JumpBackInProps) {
             </div>
           </div>
           <div className="lg:ml-6">
-            <Link href={`/courses/${courseProgress.courseSlug}`}>
-              <Button variant="primary" size="lg">
+            <Button href={`/courses/${courseProgress.courseSlug}`} variant="primary" size="lg">
                 Continue Learning
               </Button>
-            </Link>
           </div>
         </div>
       </Card>

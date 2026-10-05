@@ -252,11 +252,9 @@ export default async function ExercisePage({ params }: ExercisePageProps) {
         <div className="pt-[132px]">
           <Container className="max-w-4xl py-8">
             {/* Back Button */}
-            <Link href={`/courses/${slug}`}>
-              <Button variant="ghost" className="mb-6 border border-cyber-border hover:border-cyber-primary">
+            <Button href={`/courses/${slug}`} variant="ghost" className="mb-6 border border-cyber-border hover:border-cyber-primary">
                 ← Back to Course
               </Button>
-            </Link>
 
             {/* Exercise Content */}
             <article className="prose prose-invert prose-cyber max-w-none">
@@ -283,18 +281,14 @@ export default async function ExercisePage({ params }: ExercisePageProps) {
 
             {/* Navigation */}
             <div className="mt-12 pt-8 border-t border-cyber-border flex justify-between">
-              <Link href={`/courses/${slug}`}>
-                <Button variant="ghost" className="border border-cyber-border hover:border-cyber-primary">
+              <Button href={`/courses/${slug}`} variant="ghost" className="border border-cyber-border hover:border-cyber-primary">
                   ← Back to Course
                 </Button>
-              </Link>
 
               {exercise.frontmatter.nextExercise && (
-                <Link href={`/courses/${slug}/${exercise.frontmatter.nextExercise}`}>
-                  <Button variant="primary">
+                <Button href={`/courses/${slug}/${exercise.frontmatter.nextExercise}`} variant="primary">
                     Next Exercise →
                   </Button>
-                </Link>
               )}
             </div>
           </Container>

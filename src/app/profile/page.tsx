@@ -3,7 +3,6 @@ import { redirect } from "next/navigation";
 import prisma from "@/lib/db/prisma";
 import { Container, Button } from "@/components/ui";
 import Image from "next/image";
-import Link from "next/link";
 import { ProfilePageClient } from "@/components/profile/ProfilePageClient";
 
 export const metadata = {

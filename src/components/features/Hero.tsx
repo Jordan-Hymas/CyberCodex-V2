@@ -1,158 +1,122 @@
-"use client";
-
-import { Suspense } from "react";
-import Link from "next/link";
-import { motion } from "framer-motion";
-import { Hero3D } from "./Hero3D";
+import Image from "next/image";
 import { Button } from "@/components/ui";
+import { Mascot } from "@/components/brand";
 
-function Hero3DFallback() {
-  return (
-    <div className="w-full h-full flex items-center justify-center">
-      <div className="animate-pulse text-cyber-primary">Loading 3D Scene...</div>
-    </div>
-  );
+export interface HeroProps {
+  stats: { label: string; value: number }[];
 }
 
-export function Hero() {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.3,
-      },
-    },
-  };
+// Each line types in after the previous one (pure CSS, see animation-delay)
+const terminalLines: { text: string; kind: "cmd" | "out" | "ok" }[] = [
+  { text: "whoami", kind: "cmd" },
+  { text: "guest", kind: "out" },
+  { text: "cat mission.txt", kind: "cmd" },
+  { text: "Learn how attacks work so you can stop them.", kind: "out" },
+  { text: "./start --course linux-fundamentals", kind: "cmd" },
+  { text: "[■■■■■■■■■■] lesson 1 loaded · +25 XP", kind: "ok" },
+];
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.6,
-      },
-    },
-  };
-
+export function Hero({ stats }: HeroProps) {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-cyber-dark">
-      {/* Background Elements */}
-      <div className="absolute inset-0">
-        {/* Gradient Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-cyber-dark via-cyber-dark-secondary to-cyber-dark" />
-
-        {/* Grid Pattern */}
-        <div
-          className="absolute inset-0 opacity-10"
-          style={{
-            backgroundImage: `linear-gradient(var(--color-cyber-border) 1px, transparent 1px),
-                             linear-gradient(90deg, var(--color-cyber-border) 1px, transparent 1px)`,
-            backgroundSize: "50px 50px",
-          }}
+    <section className="relative overflow-hidden border-b-[3px] border-cyber-ink">
+      {/* Pixel-art city backdrop */}
+      <div className="absolute inset-0" aria-hidden="true">
+        <Image
+          src="/images/banners/future.gif"
+          alt=""
+          fill
+          priority
+          unoptimized
+          sizes="100vw"
+          className="object-cover object-center"
         />
-
-        {/* Radial Glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-cyber-primary/5 rounded-full blur-3xl" />
+        <div className="absolute inset-0 bg-gradient-to-r from-cyber-dark via-cyber-dark/85 to-cyber-dark/30" />
+        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-cyber-dark to-transparent" />
       </div>
 
-      {/* 3D Scene Container */}
-      <div className="absolute inset-0 md:left-1/2 md:-translate-x-1/2 w-full md:w-[800px] h-[600px] top-1/2 -translate-y-1/2">
-        <Suspense fallback={<Hero3DFallback />}>
-          <Hero3D />
-        </Suspense>
-      </div>
-
-      {/* Content */}
-      <motion.div
-        className="container-custom relative z-10 py-20"
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        <div className="max-w-4xl mx-auto text-center">
-          <motion.div variants={itemVariants} className="mb-6">
-            <span className="inline-block px-4 py-2 bg-cyber-primary/10 border border-cyber-primary/30 rounded-full text-cyber-primary text-sm font-medium mb-6">
-              🎓 Learn. Practice. Master.
-            </span>
-          </motion.div>
-
-          <motion.h1
-            variants={itemVariants}
-            className="text-display-1 mb-6 flex flex-col items-center justify-center gap-2"
-          >
-            <span className="block text-center">
-              Master{" "}
-              <span className="gradient-text inline-block">Cybersecurity</span>
-            </span>
-            <span className="block text-center">Through Action</span>
-          </motion.h1>
-
-          <motion.p
-            variants={itemVariants}
-            className="text-xl md:text-2xl text-cyber-text-secondary mb-10 max-w-2xl mx-auto leading-relaxed"
-          >
-            Learn ethical hacking, penetration testing, and security best practices through
-            interactive tutorials and hands-on labs
-          </motion.p>
-
-          <motion.div
-            variants={itemVariants}
-            className="flex flex-col sm:flex-row gap-4 justify-center mb-16"
-          >
-            <Button variant="primary" size="lg" asChild>
-              <Link href="/courses">Start Learning →</Link>
+      <div className="container-custom relative grid items-center gap-12 pt-32 pb-20 md:pt-40 md:pb-28 lg:grid-cols-[1.1fr_1fr]">
+        {/* Copy */}
+        <div className="animate-slide-up">
+          <p className="pixel-label mb-5 inline-block border-2 border-cyber-ink bg-cyber-warning px-2 py-1 text-cyber-ink shadow-[3px_3px_0_0_var(--color-cyber-ink)]">
+            Ethical hacking academy
+          </p>
+          <h1 className="text-display-1 mb-6">
+            Learn to hack.
+            <br />
+            <span className="gradient-text">Legally.</span>
+          </h1>
+          <p className="mb-8 max-w-xl text-lg leading-relaxed text-cyber-text-secondary md:text-xl">
+            Bite-size lessons, a real terminal in your browser, and XP for every exercise you crack.
+            Start with Linux, Python and networking, then work up to web exploitation.
+          </p>
+          <div className="mb-10 flex flex-col gap-4 sm:flex-row">
+            <Button href="/courses" size="lg">
+              Start learning ▶
             </Button>
-            <Button variant="secondary" size="lg" asChild>
-              <Link href="/labs">Explore Labs</Link>
+            <Button href="#how-it-works" variant="secondary" size="lg">
+              How it works
             </Button>
-          </motion.div>
+          </div>
 
-          {/* Stats */}
-          <motion.div
-            variants={itemVariants}
-            className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-3xl mx-auto"
-          >
-            {[
-              { value: "100+", label: "Tutorials" },
-              { value: "50+", label: "Labs" },
-              { value: "10K+", label: "Learners" },
-              { value: "24/7", label: "Access" },
-            ].map((stat, index) => (
-              <motion.div
-                key={index}
-                whileHover={{ scale: 1.05 }}
-                className="text-center"
+          {/* Real numbers from the course catalog */}
+          <dl className="flex flex-wrap gap-3">
+            {stats.map((stat) => (
+              <div
+                key={stat.label}
+                className="flex items-baseline gap-2 border-2 border-cyber-ink bg-cyber-dark-secondary/90 px-3 py-1.5 shadow-[3px_3px_0_0_var(--color-cyber-ink)]"
               >
-                <div className="text-3xl md:text-4xl font-bold text-cyber-primary mb-2">
-                  {stat.value}
-                </div>
-                <div className="text-cyber-text-secondary text-sm">
+                <dt className="sr-only">{stat.label}</dt>
+                <dd className="font-pixel text-sm text-cyber-primary">{stat.value}</dd>
+                <span className="font-ui text-sm text-cyber-text-secondary" aria-hidden="true">
                   {stat.label}
-                </div>
-              </motion.div>
+                </span>
+              </div>
             ))}
-          </motion.div>
+          </dl>
         </div>
-      </motion.div>
 
-      {/* Scroll Indicator */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1, duration: 0.6, repeat: Infinity, repeatType: "reverse" }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden md:block"
-      >
-        <div className="w-6 h-10 border-2 border-cyber-primary rounded-full flex justify-center pt-2">
-          <motion.div
-            animate={{ y: [0, 12, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
-            className="w-1 h-3 bg-cyber-primary rounded-full"
+        {/* Terminal window + mascot */}
+        <div className="relative mx-auto w-full max-w-lg lg:mr-0">
+          <div className="pixel-panel !shadow-[10px_10px_0_0_var(--color-cyber-ink)]">
+            <div className="flex items-center gap-2 border-b-[3px] border-cyber-ink bg-cyber-accent px-3 py-2">
+              <span className="h-3 w-3 border-2 border-cyber-ink bg-cyber-danger" />
+              <span className="h-3 w-3 border-2 border-cyber-ink bg-cyber-warning" />
+              <span className="h-3 w-3 border-2 border-cyber-ink bg-cyber-primary" />
+              <span className="ml-2 font-ui text-sm font-semibold text-cyber-ink">guest@cybercodex: ~</span>
+            </div>
+            <div className="min-h-[15rem] bg-cyber-ink p-5 font-mono text-sm leading-7 sm:text-[0.95rem]">
+              {terminalLines.map((line, i) => (
+                <div
+                  key={i}
+                  className="animate-fade-in"
+                  style={{ animationDelay: `${0.4 + i * 0.55}s` }}
+                >
+                  {line.kind === "cmd" ? (
+                    <>
+                      <span className="text-cyber-pink">$ </span>
+                      <span className="text-cyber-text-primary">{line.text}</span>
+                    </>
+                  ) : (
+                    <span className={line.kind === "ok" ? "text-cyber-primary" : "text-cyber-text-muted"}>
+                      {line.text}
+                    </span>
+                  )}
+                </div>
+              ))}
+              <div className="animate-fade-in" style={{ animationDelay: `${0.4 + terminalLines.length * 0.55}s` }}>
+                <span className="text-cyber-pink">$ </span>
+                <span className="inline-block h-4 w-2.5 translate-y-0.5 bg-cyber-primary animate-blink" />
+              </div>
+            </div>
+          </div>
+          <Mascot
+            mood="hacker"
+            width={190}
+            priority
+            className="absolute -bottom-14 -right-4 hidden drop-shadow-[4px_4px_0_var(--color-cyber-ink)] sm:block lg:-right-10"
           />
         </div>
-      </motion.div>
+      </div>
     </section>
   );
 }

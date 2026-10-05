@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useId, useState } from "react";
 import { cn } from "@/lib/utils";
 
 export interface AccordionItem {
@@ -18,64 +17,52 @@ export interface AccordionProps {
 
 export function Accordion({ items, className, allowMultiple = false }: AccordionProps) {
   const [openItems, setOpenItems] = useState<string[]>([]);
+  const baseId = useId();
 
   const toggleItem = (id: string) => {
     if (allowMultiple) {
-      setOpenItems((prev) =>
-        prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
-      );
+      setOpenItems((prev) => (prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]));
     } else {
       setOpenItems((prev) => (prev.includes(id) ? [] : [id]));
     }
   };
 
-  const isOpen = (id: string) => openItems.includes(id);
-
   return (
     <div className={cn("space-y-4", className)}>
-      {items.map((item) => (
-        <div
-          key={item.id}
-          className="border border-cyber-border rounded-lg overflow-hidden bg-cyber-dark-secondary"
-        >
-          <button
-            onClick={() => toggleItem(item.id)}
-            className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-cyber-dark transition-colors duration-200"
-          >
-            <span className="text-lg font-semibold text-cyber-text-primary">
-              {item.question}
-            </span>
-            <motion.svg
-              animate={{ rotate: isOpen(item.id) ? 180 : 0 }}
-              transition={{ duration: 0.3 }}
-              className="w-5 h-5 text-cyber-primary flex-shrink-0 ml-4"
-              fill="none"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
+      {items.map((item) => {
+        const open = openItems.includes(item.id);
+        const panelId = `${baseId}-${item.id}`;
+        return (
+          <div key={item.id} className="pixel-panel !shadow-[4px_4px_0_0_var(--color-cyber-ink)]">
+            <button
+              onClick={() => toggleItem(item.id)}
+              aria-expanded={open}
+              aria-controls={panelId}
+              className={cn(
+                "w-full px-5 py-4 flex items-center justify-between gap-4 text-left transition-colors duration-100",
+                open ? "bg-cyber-dark-tertiary" : "hover:bg-cyber-dark-tertiary"
+              )}
             >
-              <path d="M19 9l-7 7-7-7" />
-            </motion.svg>
-          </button>
-
-          <AnimatePresence initial={false}>
-            {isOpen(item.id) && (
-              <motion.div
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: "auto", opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                transition={{ duration: 0.3 }}
+              <span className="font-ui text-lg font-semibold text-cyber-text-primary">{item.question}</span>
+              <span
+                className={cn(
+                  "grid h-7 w-7 flex-shrink-0 place-items-center border-2 border-cyber-ink font-ui text-lg font-bold leading-none text-cyber-ink",
+                  open ? "bg-cyber-pink" : "bg-cyber-primary"
+                )}
+                aria-hidden="true"
               >
-                <div className="px-6 pb-4 text-cyber-text-secondary leading-relaxed">
-                  {item.answer}
-                </div>
-              </motion.div>
+                {open ? "−" : "+"}
+              </span>
+            </button>
+
+            {open && (
+              <div id={panelId} className="px-5 py-4 border-t-2 border-dashed border-cyber-border text-cyber-text-secondary leading-relaxed animate-fade-in">
+                {item.answer}
+              </div>
             )}
-          </AnimatePresence>
-        </div>
-      ))}
+          </div>
+        );
+      })}
     </div>
   );
 }

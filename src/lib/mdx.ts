@@ -42,6 +42,27 @@ export async function getCourseBySlug(slug: string): Promise<Course | null> {
 }
 
 /**
+ * Read chapter/exercise/XP totals from a course's curriculum.json, if it has one.
+ */
+function getCurriculumStats(slug: string): Pick<CourseSummary, "chapterCount" | "exerciseCount" | "totalXp"> {
+  try {
+    const raw = fs.readFileSync(path.join(coursesDirectory, slug, "curriculum.json"), "utf8");
+    const curriculum = JSON.parse(raw) as {
+      chapters?: { exercises?: unknown[] }[];
+      progress?: { totalXp?: number };
+    };
+    const chapters = curriculum.chapters ?? [];
+    return {
+      chapterCount: chapters.length,
+      exerciseCount: chapters.reduce((sum, c) => sum + (c.exercises?.length ?? 0), 0),
+      totalXp: curriculum.progress?.totalXp,
+    };
+  } catch {
+    return {};
+  }
+}
+
+/**
  * Get all courses (summary without full content)
  */
 export function getAllCourses(): CourseSummary[] {
@@ -60,6 +81,7 @@ export function getAllCourses(): CourseSummary[] {
         return {
           slug,
           readingTime,
+          ...getCurriculumStats(slug),
           ...(data as CourseFrontmatter),
         } as CourseSummary;
       } catch (error) {

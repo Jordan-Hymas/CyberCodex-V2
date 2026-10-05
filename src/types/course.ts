@@ -34,4 +34,7 @@ export interface Course extends CourseFrontmatter {
 export interface CourseSummary extends CourseFrontmatter {
   slug: string;
   readingTime?: number; // Estimated reading time in minutes
+  chapterCount?: number; // From curriculum.json
+  exerciseCount?: number;
+  totalXp?: number;
 }

@@ -115,11 +115,9 @@ export function DashboardSidebar({ user, stats }: DashboardSidebarProps) {
           </div>
         </div>
 
-        <Link href="/profile" className="mt-4 block">
-          <Button variant="secondary" size="md" fullWidth>
+        <Button href="/profile" variant="secondary" size="md" fullWidth className="mt-4">
             View Profile
           </Button>
-        </Link>
       </Card>
 
       {/* Upcoming Events */}
@@ -204,11 +202,9 @@ export function DashboardSidebar({ user, stats }: DashboardSidebarProps) {
           <p className="text-sm text-cyber-text-secondary mb-4">
             Unlock exclusive courses, labs, and certificates
           </p>
-          <Link href="/pricing">
-            <Button variant="primary" size="md" fullWidth>
+          <Button href="/pricing" variant="primary" size="md" fullWidth>
               Upgrade Now
             </Button>
-          </Link>
         </div>
       </Card>
 

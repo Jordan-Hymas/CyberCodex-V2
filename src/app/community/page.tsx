@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import Link from "next/link";
 import { Container, Card, Button, Badge } from "@/components/ui";
 import { LeaderboardTabs } from "@/components/community/LeaderboardTabs";
 import { LeaderboardTable } from "@/components/community/LeaderboardTable";
@@ -214,11 +213,9 @@ export default function CommunityPage() {
                         <li>Participate in weekly challenges (coming soon)</li>
                         <li>Maintain your learning streak</li>
                       </ul>
-                      <Link href="/courses">
-                        <Button variant="primary" size="sm" className="mt-4">
+                      <Button href="/courses" variant="primary" size="sm" className="mt-4">
                           Explore Courses
                         </Button>
-                      </Link>
                     </div>
                   </div>
                 </Card>

@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import Link from "next/link";
 import { Container, Button, Card, CardContent } from "@/components/ui";
 
 export default function AboutPage() {
@@ -599,20 +598,16 @@ export default function AboutPage() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="flex flex-col sm:flex-row gap-6 justify-center"
             >
-              <Link href="/courses">
-                <Button variant="primary" size="lg" className="text-lg px-8 py-6 shadow-2xl">
+              <Button href="/courses" variant="primary" size="lg" className="text-lg px-8 py-6 shadow-2xl">
                   <span className="flex items-center gap-2">
                     Browse Courses
                   </span>
                 </Button>
-              </Link>
-              <Link href="/pricing">
-                <Button variant="ghost" size="lg" className="text-lg px-8 py-6 border-2 border-white/30 bg-white/10 backdrop-blur-sm hover:border-cyber-primary hover:bg-cyber-primary/20 text-white shadow-2xl">
+              <Button href="/pricing" variant="ghost" size="lg" className="text-lg px-8 py-6 border-2 border-white/30 bg-white/10 backdrop-blur-sm hover:border-cyber-primary hover:bg-cyber-primary/20 text-white shadow-2xl">
                   <span className="flex items-center gap-2">
                     View Pricing
                   </span>
                 </Button>
-              </Link>
             </motion.div>
           </motion.div>
         </Container>

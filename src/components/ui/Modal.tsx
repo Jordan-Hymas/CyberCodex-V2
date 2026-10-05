@@ -51,47 +51,35 @@ export function Modal({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+        className="absolute inset-0 bg-cyber-ink/80"
         onClick={onClose}
         aria-hidden="true"
       />
 
-      {/* Modal */}
+      {/* Window */}
       <div
-        className={cn(
-          "relative w-full bg-cyber-dark-secondary border border-cyber-border rounded-lg shadow-2xl",
-          "animate-slide-up",
-          sizes[size]
-        )}
+        className={cn("relative w-full pixel-panel !shadow-[10px_10px_0_0_var(--color-cyber-ink)] animate-slide-up", sizes[size])}
         role="dialog"
         aria-modal="true"
         aria-labelledby={title ? "modal-title" : undefined}
       >
-        {/* Header */}
+        {/* Title bar */}
         {(title || showCloseButton) && (
-          <div className="flex items-center justify-between p-6 border-b border-cyber-border">
-            {title && (
-              <h2 id="modal-title" className="text-2xl font-bold text-cyber-text-primary">
+          <div className="flex items-center justify-between gap-4 bg-cyber-accent px-4 py-2 border-b-[3px] border-cyber-ink">
+            {title ? (
+              <h2 id="modal-title" className="font-ui text-lg font-bold text-cyber-ink" style={{ fontFamily: "var(--font-ui)" }}>
                 {title}
               </h2>
+            ) : (
+              <span />
             )}
             {showCloseButton && (
               <button
                 onClick={onClose}
-                className="text-cyber-text-secondary hover:text-cyber-primary transition-colors"
+                className="grid h-7 w-7 place-items-center border-2 border-cyber-ink bg-cyber-danger font-ui font-bold leading-none text-cyber-ink active:translate-x-px active:translate-y-px"
                 aria-label="Close modal"
               >
-                <svg
-                  className="w-6 h-6"
-                  fill="none"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path d="M6 18L18 6M6 6l12 12" />
-                </svg>
+                ×
               </button>
             )}
           </div>
@@ -113,7 +101,7 @@ export function ModalFooter({ children, className }: ModalFooterProps) {
   return (
     <div
       className={cn(
-        "flex items-center justify-end gap-3 pt-4 border-t border-cyber-border",
+        "flex items-center justify-end gap-3 pt-4 border-t-2 border-dashed border-cyber-border",
         className
       )}
     >

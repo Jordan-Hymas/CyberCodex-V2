@@ -45,10 +45,12 @@ export const config = {
     maxRecentCourses: 6,
   },
 
+  // Leave a value empty to hide that icon in the footer. The old placeholder
+  // handles (github.com/cybercodex etc.) belong to someone else.
   social: {
-    github: "https://github.com/cybercodex",
-    twitter: "https://twitter.com/cybercodex",
-    discord: "https://discord.gg/cybercodex",
+    github: process.env.NEXT_PUBLIC_SOCIAL_GITHUB || "",
+    twitter: process.env.NEXT_PUBLIC_SOCIAL_TWITTER || "",
+    discord: process.env.NEXT_PUBLIC_SOCIAL_DISCORD || "",
   },
 } as const;
 
