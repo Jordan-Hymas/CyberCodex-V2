@@ -7,6 +7,22 @@ import prisma from "@/lib/db/prisma";
  */
 const DEV_ADMIN_EMAIL = "admin@cybercodex.io";
 
+/** True only for the dev admin account, and never in production. */
+export function isDevAdmin(email: string | null | undefined) {
+  return process.env.NODE_ENV !== "production" && email === DEV_ADMIN_EMAIL;
+}
+
+/** Flip the dev admin between paid ("pro"/active) and free, for testing gated content. */
+export async function setDevAdminPro(enabled: boolean) {
+  if (process.env.NODE_ENV === "production") return null;
+  return prisma.user.update({
+    where: { email: DEV_ADMIN_EMAIL },
+    data: enabled
+      ? { subscriptionTier: "pro", subscriptionStatus: "active", subscriptionEndsAt: null }
+      : { subscriptionTier: "free", subscriptionStatus: null, subscriptionEndsAt: null },
+  });
+}
+
 export async function devAdminLogin(identifier: unknown, password: unknown) {
   if (process.env.NODE_ENV === "production") return null;
   if (identifier !== "admin" && identifier !== DEV_ADMIN_EMAIL) return null;

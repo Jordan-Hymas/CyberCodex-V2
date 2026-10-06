@@ -6,12 +6,14 @@ import { Avatar, Button } from "@/components/ui";
 import { MascotSays } from "@/components/brand";
 import { Edit2 } from "lucide-react";
 import { EditProfileModal } from "./EditProfileModal";
+import { DevProToggle } from "./DevProToggle";
 import { cn } from "@/lib/utils";
 
 interface ProfilePageClientProps {
   userData: any;
   followerCount: number;
   followingCount: number;
+  isDevAdmin?: boolean;
   stats: Array<{
     label: string;
     value: string | number;
@@ -25,7 +27,7 @@ const tabs = [
   { id: "posts", label: "Posts" },
 ] as const;
 
-export function ProfilePageClient({ userData, followerCount, followingCount }: ProfilePageClientProps) {
+export function ProfilePageClient({ userData, followerCount, followingCount, isDevAdmin }: ProfilePageClientProps) {
   const [activeTab, setActiveTab] = useState<(typeof tabs)[number]["id"]>("overview");
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
@@ -76,6 +78,7 @@ export function ProfilePageClient({ userData, followerCount, followingCount }: P
           </div>
         </div>
         <div className="flex items-center gap-3">
+          {isDevAdmin && <DevProToggle initialPro={userData.subscriptionTier === "pro" && userData.subscriptionStatus === "active"} />}
           <span className="border-2 border-cyber-ink bg-cyber-warning px-2 py-1 font-label text-sm text-cyber-ink shadow-[3px_3px_0_0_var(--color-cyber-ink)]">
             LV {userData.level}
           </span>

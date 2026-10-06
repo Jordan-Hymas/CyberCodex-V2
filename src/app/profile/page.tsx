@@ -4,6 +4,7 @@ import prisma from "@/lib/db/prisma";
 import { Container, Button } from "@/components/ui";
 import Image from "next/image";
 import { ProfilePageClient } from "@/components/profile/ProfilePageClient";
+import { isDevAdmin } from "@/lib/auth/dev-admin";
 
 export const metadata = {
   title: "Profile - CyberCodex.io",
@@ -86,6 +87,7 @@ export default async function ProfilePage() {
         userData={userData}
         followerCount={followerCount}
         followingCount={followingCount}
+        isDevAdmin={isDevAdmin(userData.email)}
         stats={stats}
       />
     </main>

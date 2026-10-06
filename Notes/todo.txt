@@ -1,0 +1,69 @@
+# Great ideas 
+
+	[] Dailey or weekly challeges simple challegs that get updated that are fun simple games or task to get you more xp.
+	[] Use OverTheWire, HackTheBox, PWN.College to get content for courses 
+
+# UI Changes
+
+Clean up the course page search section show more of the courses on smaller screens optimize for smaller displays!
+
+
+QUICK CHANGES
+
+	- When in a course dont  show the site footer user should be fully emursed in that cours (Python Course as and example)
+	- Clean up the pricing plan (Certicates, Ai learning assistant) Make free tier good but not nearly as good as the payed plan 
+
+	Say something along the lines of this has all been built around information across the internet compiled into one place 
+	that and our pricing is what separtes us from other compeditors. 
+	
+	- Change main log {?} improve this design	
+
+
+# Courses 
+	@ Main focus
+	@ Linux
+	@ Python
+	@ Networking
+	@ Basic Cyber Skills + advanced at some point in time
+	
+
+# Database 
+	- This is a very important part we need to store this 
+	* Loging creds (Secure safe)
+	* User XP
+	* Username so no one has the same name, user progress, ex..
+	* 
+
+# Billing
+	* Very important that this is safe and easy! 
+	* Subscription based spend alot of time on making sure this works and is secure
+	*
+
+# Login
+	- We need to add the ability to use Google and GitHub to login into there accounts.
+	- user login is saved with browser so user doesnt have to keep logining in everytime.
+
+# Mobile ????
+
+# Security 
+	- This is massive we are teaching it so we need to make sure we are secure. 
+	- Login is the biggest protection point that needs to be secure same with database information. 
+	- Hosting is also masive this needs to be completly secure no way in!
+
+# Version control
+	- We should easily be able to push progress updates to the site with out taking everything down. 
+	
+
+# User Account 
+	- Clean up home acount page 
+	- Add custom user profile picturs avatars they can setup
+	
+
+# Marketing
+	- Find a great way to market this on Tiktok, Forms spread it across the internet for free if later pay for adds, BGCA, Schools,
+
+# Tracking user metrics
+	- We should monitor number of users who view the page what they do on the page ex..
+
+# Domain Name / Hosting
+	- Simple buy domain find best usecase for traffic and get VPS to host needs to be secure AF
