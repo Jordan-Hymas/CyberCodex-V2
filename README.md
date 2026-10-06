@@ -58,8 +58,9 @@ Required values:
 ```bash
 DATABASE_URL="file:./dev.db"
 AUTH_SECRET="<generate-with-openssl-rand-base64-32>"
-AUTH_URL="http://localhost:3000"
 ```
+
+Leave `AUTH_URL` unset in development. When it's set, Auth.js sends every sign-in to that URL, so opening the site from another device on your network (e.g. `http://192.168.1.20:3000`) breaks login. Set it only in production.
 
 Optional values enable OAuth, email, rate limiting, and billing integrations.
 
