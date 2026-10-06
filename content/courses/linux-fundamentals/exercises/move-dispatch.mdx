@@ -1,34 +1,43 @@
 ---
 title: "Rename the incoming report"
-description: "Rename incoming.txt to approved.txt without changing its content."
+description: "The incoming report has been approved. Rename incoming.txt to approved.txt, keeping its contents, and collect your reward."
 type: exercise
 xpReward: 25
 ---
 
 ## Learn
 
-mv moves or renames an entry. Unlike cp, it removes the old path. Check both the new name and the absence of the old one.
+mv moves or renames a file. Unlike cp, the old name disappears, because it's the same file under a new path.
 
-A rename changes the path used to reach an entry. Moving between directories is the same basic operation with a different destination. When the destination is a directory, this simulator keeps the source basename inside it. Verify that the old path is gone.
+Renaming and moving are the same operation in Linux: you're changing the path used to reach the file. mv old.txt new.txt renames it, and mv file.txt folder/ moves it into a folder. Afterwards, check that the old name is gone. Once the rename is correct, reward.txt appears with your flag.
 
-## Syntax example
+## Why it matters
+
+Renaming files is everyday admin work, and knowing the difference between moving and copying avoids lost or duplicated data.
+
+## Example
 
 ```sh
-mv draft.txt final.txt
+mv draft.txt final.txt       # rename a file
+mv final.txt reports/        # move it into a folder
 ```
 
 Example filenames illustrate syntax; inspect your mission files before running them.
 
 ## Your mission
 
-Rename incoming.txt to approved.txt without changing its content.
+The incoming report has been approved. Rename incoming.txt to approved.txt, keeping its contents, and collect your reward.
+
+1. Run mv incoming.txt approved.txt.
+2. Run ls to check that incoming.txt is gone.
+3. Read the reward with cat reward.txt.
 
 ## Common mistake
 
-A successfully renamed file should not remain under its old name unless you copied it instead.
+If incoming.txt still exists afterwards, you copied the file instead of moving it.
 
 ## Check your understanding
 
-How can you prove you moved a file rather than copied it?
+How could you prove you moved a file rather than copied it?
 
 Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

@@ -1,34 +1,42 @@
 ---
 title: "First contact: read your dispatch"
-description: "Read dispatch.txt in your home directory, copy the CYBER{...} flag, and submit it below."
+description: "Your home directory holds a file called dispatch.txt. Read it to find your first flag."
 type: exercise
 xpReward: 25
 ---
 
 ## Learn
 
-A terminal accepts commands and prints their results. cat reads a text file; it does not change that file. A flag is the proof you retrieve from a challenge, not a command to execute.
+This is a terminal: you type a command, press Enter, and Linux prints the result. Your first command is cat, which prints the contents of a text file to the screen. Reading a file with cat never changes it.
 
-A command usually has a name followed by arguments, separated by spaces. Press Enter to run it and wait for the next prompt before typing another command. The prompt is not part of the command. cat writes file contents to standard output, which is what you see in the terminal.
+Every command starts with its name, followed by any arguments, separated by spaces. Here, cat is the command and the filename is its argument. The text before the $ (user@cybercodex:~) is the prompt. It shows who you are and where you are, and you don't type it. The ~ means your home directory, which is where every mission starts unless it says otherwise.
 
-## Syntax example
+## Why it matters
+
+Security work starts with reading: config files, logs, notes left on a system. cat is the quickest way to look inside a file.
+
+## Example
 
 ```sh
-cat greeting.txt
+cat notes.txt      # prints everything inside notes.txt
 ```
 
 Example filenames illustrate syntax; inspect your mission files before running them.
 
 ## Your mission
 
-Read dispatch.txt in your home directory, copy the CYBER&#123;...&#125; flag, and submit it below.
+Your home directory holds a file called dispatch.txt. Read it to find your first flag.
+
+1. Type cat dispatch.txt and press Enter.
+2. Find the flag in the output. It looks like CYBER&#123;...&#125;.
+3. Highlight the whole flag with your mouse (it copies automatically) and paste it into the flag box.
 
 ## Common mistake
 
-Do not type the dollar sign from a sample prompt. Do not run the flag as a command; submit it in the form.
+Don't type the $ or anything before it. That's the prompt, not part of the command. And don't run the flag as a command: paste it into the flag box.
 
 ## Check your understanding
 
-What would change if you read the same file twice?
+What would happen if you ran cat dispatch.txt twice? Would the file change?
 
 Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

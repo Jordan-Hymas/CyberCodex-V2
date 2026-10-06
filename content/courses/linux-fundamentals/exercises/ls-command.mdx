@@ -1,36 +1,44 @@
 ---
 title: "The dispatch shelf"
-description: "Locate the hidden dispatch in your home folder and read it."
+description: "Something is hidden in your home directory. List everything, find the hidden dispatch and read it."
 type: exercise
 xpReward: 25
 ---
 
 ## Learn
 
-ls lists directory entries. Names beginning with a dot are hidden from its default view. ls -a includes them, and ls -l shows permissions and other details.
+ls lists the files in a directory. Files whose names start with a dot (like .config) are hidden from a normal listing. ls -a shows everything, and ls -l shows details like permissions and size.
 
-An option changes how a command works, while a path operand tells it what to inspect. Linux filenames are case sensitive. Hidden entries are a naming convention, not an access-control feature: if you know the name and have permission, you can read them.
+Options such as -a and -l change how a command behaves. Hidden files are just a naming convention to reduce clutter, not a security feature: anyone who knows the name, and has permission, can read them. Remember that filenames are case sensitive, so Notes.txt and notes.txt are different files.
 
-## Syntax example
+## Why it matters
+
+Attackers and admins both stash things in dotfiles. Always use ls -a when you're exploring a system.
+
+## Example
 
 ```sh
-ls
-ls -a
-ls -l
+ls          # normal listing
+ls -a       # include hidden files (names starting with .)
+ls -l       # long listing with permissions and sizes
 ```
 
 Example filenames illustrate syntax; inspect your mission files before running them.
 
 ## Your mission
 
-Locate the hidden dispatch in your home folder and read it.
+Something is hidden in your home directory. List everything, find the hidden dispatch and read it.
+
+1. Run ls and notice that only readme.txt appears.
+2. Run ls -a to reveal hidden files.
+3. Read the hidden file with cat (keep the dot in its name).
 
 ## Common mistake
 
-The dot at the beginning of a filename is part of its name. Listing a file does not automatically read its contents.
+The dot is part of the filename, so cat dispatch won't work. Listing a file also doesn't show its contents; you still need cat.
 
 ## Check your understanding
 
-Does hiding a file with a dot protect its contents from another user?
+Does hiding a file with a dot stop another user from reading it?
 
 Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

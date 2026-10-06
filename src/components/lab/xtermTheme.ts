@@ -1,4 +1,5 @@
-import type { ITerminalOptions } from "@xterm/xterm";
+import type { ITerminalOptions, Terminal } from "@xterm/xterm";
+import { copyText } from "@/lib/utils/clipboard";
 
 /** Shared xterm.js look, matching the CyberCodex palette (globals.css). */
 export const xtermOptions: ITerminalOptions = {
@@ -8,6 +9,8 @@ export const xtermOptions: ITerminalOptions = {
   lineHeight: 1.25,
   scrollback: 1200,
   allowProposedApi: true,
+  // Default separators include { and }; without them, double-click selects a whole CYBER{...} flag
+  wordSeparator: " ()[]'\",`;",
   theme: {
     background: "#12132b",
     foreground: "#f5f3ff",
@@ -39,4 +42,20 @@ export function keepCtrlKeys(event: KeyboardEvent) {
     if ("sofgkuxyveacl".includes(event.key.toLowerCase())) event.preventDefault();
   }
   return true;
+}
+
+/**
+ * Copy the terminal selection to the clipboard when the user finishes selecting
+ * (mouse up, including double/triple click). Returns a cleanup function.
+ */
+export function enableCopyOnSelect(term: Terminal, element: HTMLElement, onCopied: (text: string) => void) {
+  const handle = () => {
+    // Let xterm finalize the selection first
+    setTimeout(async () => {
+      const text = term.getSelection().trim();
+      if (text && (await copyText(text))) onCopied(text);
+    }, 0);
+  };
+  element.addEventListener("mouseup", handle);
+  return () => element.removeEventListener("mouseup", handle);
 }

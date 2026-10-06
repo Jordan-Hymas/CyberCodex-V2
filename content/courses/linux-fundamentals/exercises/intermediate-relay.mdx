@@ -11,7 +11,7 @@ A pipeline can combine selection, field extraction, and decoding. Inspect each s
 
 Complex pipelines are easier to debug incrementally. Run the first stage and inspect its output. Add a second stage and check the shape again. Decode only the payload, not the record label. If a stage outputs nothing, inspect that stage before adding more commands.
 
-## Syntax example
+## Example
 
 ```sh
 grep READY example.txt | cut -d : -f 2

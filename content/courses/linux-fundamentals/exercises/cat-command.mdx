@@ -1,34 +1,42 @@
 ---
 title: "Read without moving"
-description: "Read /opt/academy/dispatch.txt without changing directory."
+description: "A dispatch is waiting in /opt/academy. Read it without leaving your home directory."
 type: exercise
 xpReward: 25
 ---
 
 ## Learn
 
-An absolute path works from any current directory. cat can read several files in order; a relative path instead starts from your current directory.
+An absolute path starts with / and points to the same place no matter where you are. You can read a file anywhere by giving cat its absolute path, without moving.
 
-An absolute path begins at /. A relative path begins at your current working directory. Reading by an absolute path is useful in instructions and scripts when you want to be independent of where a terminal happens to start.
+So far you've used relative paths, which start from your current directory. Absolute paths start from the root /. They're handy in instructions and scripts because they always work, whatever directory the terminal happens to be in.
 
-## Syntax example
+## Why it matters
+
+Logs and config files live in fixed places like /var/log and /etc. Reading them by absolute path is something you'll do constantly.
+
+## Example
 
 ```sh
-cat /etc/example.conf
+cat /etc/hostname      # read a file by its absolute path
 ```
 
 Example filenames illustrate syntax; inspect your mission files before running them.
 
 ## Your mission
 
-Read /opt/academy/dispatch.txt without changing directory.
+A dispatch is waiting in /opt/academy. Read it without leaving your home directory.
+
+1. Stay in your home directory (no cd needed).
+2. Run cat /opt/academy/dispatch.txt.
+3. Optional: run pwd to confirm you never moved.
 
 ## Common mistake
 
-A leading slash is meaningful; etc/example.conf and /etc/example.conf refer to different locations.
+The leading slash matters. opt/academy/dispatch.txt (no slash) would look inside your current directory instead.
 
 ## Check your understanding
 
-How could you read a file in another directory without entering that directory?
+How could you read a file in another directory without going into it?
 
 Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

@@ -1,35 +1,43 @@
 ---
 title: "Know your operator"
-description: "Run whoami and id. Then read /home/user/operator.txt to collect your dispatch."
+description: "Find out who you are, then collect the dispatch addressed to you."
 type: exercise
 xpReward: 25
 ---
 
 ## Learn
 
-whoami identifies the current user. id also shows user and group IDs. Here those identities are simulated and belong only to your learning environment.
+Linux always knows which user is running each command. whoami prints your username, and id adds your numeric user ID (UID) and the groups you belong to.
 
-The username is a human-readable identity; the numeric UID is what a real Linux kernel uses for ownership checks. Groups provide additional access categories. This environment has a single simulated owner so you can practice commands without changing your computer or another learner’s files.
+Your username is the human-friendly name. The UID is the number Linux actually uses to decide what you may read or change. Groups give extra access to shared files. This lab has one practice user, user, so nothing you do here touches your real computer or anyone else's environment.
 
-## Syntax example
+## Why it matters
+
+On any system you break into or defend, the first question is "who am I running as?". Your user decides what you can access.
+
+## Example
 
 ```sh
-whoami
-id
+whoami      # prints your username
+id          # prints your UID, GID and groups
 ```
 
 Example filenames illustrate syntax; inspect your mission files before running them.
 
 ## Your mission
 
-Run whoami and id. Then read /home/user/operator.txt to collect your dispatch.
+Find out who you are, then collect the dispatch addressed to you.
+
+1. Run whoami and note the username.
+2. Run id to see your UID and groups.
+3. Read your dispatch with cat /home/user/operator.txt.
 
 ## Common mistake
 
-The user shown inside this lab is not your email address, and it is not a login to the website’s server.
+The user shown in the lab isn't your CyberCodex account or email. It's the practice user inside your environment.
 
 ## Check your understanding
 
-How are a username, UID, and group different?
+How is a username different from a UID, and why would Linux use the number?
 
 Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

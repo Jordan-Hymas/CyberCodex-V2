@@ -1,31 +1,39 @@
 ---
 title: "Names with spaces"
-description: "Read the file named shift notes.txt."
+description: "Someone saved the shift notes with a space in the filename. Read shift notes.txt."
 type: exercise
 xpReward: 25
 ---
 
 ## Learn
 
-Quotes make a filename containing spaces one argument. Single and double quotes both group text, but single quotes also prevent variable expansion.
+The shell splits what you type into separate words at spaces. To use a filename that contains a space, wrap it in quotes so it stays one argument.
 
-The shell splits unquoted text into arguments. Matching quotes preserve spaces inside one argument and are removed before the command receives it. Single quotes preserve the text literally. Double quotes preserve spaces while allowing variable references used in later lessons.
+Without quotes, cat shift notes.txt asks for two files: shift and notes.txt. Quotes keep the whole name together, and the shell removes them before cat sees the name. Double quotes and single quotes both work for this. Single quotes are completely literal, which matters once you meet variables.
 
-## Syntax example
+## Why it matters
+
+Real systems are full of awkward filenames, especially anything copied from Windows or macOS. Quoting correctly prevents some nasty mistakes.
+
+## Example
 
 ```sh
-echo "a phrase with spaces"
+cat "my report.txt"      # one file whose name has a space
+cat my report.txt        # two files: my and report.txt
 ```
 
 Example filenames illustrate syntax; inspect your mission files before running them.
 
 ## Your mission
 
-Read the file named shift notes.txt.
+Someone saved the shift notes with a space in the filename. Read shift notes.txt.
+
+1. Run ls to see the filename.
+2. Read it with cat "shift notes.txt" (including the quotes).
 
 ## Common mistake
 
-Apostrophes inside single-quoted text end that quote. Choose double quotes when appropriate.
+Tab completion can add a backslash before the space for you. That works too.
 
 ## Check your understanding
 

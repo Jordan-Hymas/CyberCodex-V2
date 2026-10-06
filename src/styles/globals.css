@@ -696,3 +696,14 @@
   color: var(--color-cyber-secondary) !important;
   text-decoration: underline;
 }
+
+/* Flag-capture celebration (components/fx/PixelConfetti) */
+@keyframes confetti-fall {
+  0% { transform: translate(0, -20px) rotate(0deg); opacity: 1; }
+  80% { opacity: 1; }
+  100% { transform: translate(var(--drift), 520px) rotate(var(--spin)); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pixel-confetti { display: none; }
+}

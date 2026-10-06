@@ -15,6 +15,8 @@ export function createChallenge(mission: Mission) {
   const shell = blankShell();
   for (const file of mission.files) addFile(shell, file.path, file.text.replaceAll('{{FLAG}}', flag).replaceAll('{{BASE64}}', Buffer.from(flag + '\n').toString('base64')).replaceAll('{{REVERSED}}', [...flag].reverse().join('')), file.mode);
   if (mission.goal?.kind === 'fixture-mode') shell.files[mission.goal.path].mode = mission.goal.mode!;
+  // Start where the task begins (e.g. inside work/ for a relative-path mission)
+  if (shell.files[mission.start]?.kind === 'dir') shell.cwd = mission.start;
   return { shell, flag, hash: flagHash(flag) };
 }
 export function objectiveMet(m: Mission, s: Shell, flag: string): boolean {

@@ -11,7 +11,7 @@ A pipe sends one command’s standard output to the next command’s standard in
 
 Standard input is a data stream consumed by a command. Standard output is the stream it produces. A pipe joins these streams. The right side receives the left side’s output as data, not as command-line arguments, which is why cat sample.log | grep READY needs no filename for grep.
 
-## Syntax example
+## Example
 
 ```sh
 cat sample.log | grep READY

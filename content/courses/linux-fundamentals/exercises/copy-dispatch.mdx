@@ -1,32 +1,40 @@
 ---
 title: "Copy a field report"
-description: "Create backup and copy report.txt to backup/report.txt. The reward file appears when the backup contains the original text."
+description: "Make a backup of the field report: create a backup directory and copy report.txt into it. Your flag appears in reward.txt once the backup is in place."
 type: exercise
 xpReward: 25
 ---
 
 ## Learn
 
-cp copies a file while leaving the source in place. mkdir creates a directory. A destination file needs an existing parent directory.
+cp copies a file and leaves the original where it is. mkdir creates a new directory. A copy needs its destination directory to exist first.
 
-A copy creates another independent file containing the same data. Editing one copy later should not change the other. Creating a directory establishes a destination; cp does not invent all missing parent folders for you. Inspect both files after copying.
+A copy is a completely separate file with the same contents, so changing one later won't affect the other. cp won't create missing directories for you, so make the folder first with mkdir. This mission checks your filesystem: once the backup exists with the right contents, a reward.txt file containing your flag appears in your home directory.
 
-## Syntax example
+## Why it matters
+
+Backing up a file before you touch it is a habit that saves careers, especially when you're editing configs on a live system.
+
+## Example
 
 ```sh
-mkdir copies
-cp example.txt copies/example.txt
+mkdir copies                      # create a folder
+cp notes.txt copies/notes.txt     # copy a file into it
 ```
 
 Example filenames illustrate syntax; inspect your mission files before running them.
 
 ## Your mission
 
-Create backup and copy report.txt to backup/report.txt. The reward file appears when the backup contains the original text.
+Make a backup of the field report: create a backup directory and copy report.txt into it. Your flag appears in reward.txt once the backup is in place.
+
+1. Run mkdir backup.
+2. Run cp report.txt backup/report.txt.
+3. Read the reward with cat reward.txt.
 
 ## Common mistake
 
-Copying to an existing filename may replace its contents. Check the destination carefully.
+Copying onto an existing file replaces its contents with no warning. Check the destination carefully.
 
 ## Check your understanding
 

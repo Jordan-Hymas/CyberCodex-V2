@@ -1,36 +1,44 @@
 ---
 title: "Walk to the relay"
-description: "Navigate into stations/relay and read message.txt, then return home."
+description: "Walk into the stations/relay directory, read the message waiting there, then head back home."
 type: exercise
 xpReward: 25
 ---
 
 ## Learn
 
-cd changes your working directory. .. names its parent, and . names the current directory. cd by itself returns home.
+cd (change directory) moves you to another directory. cd .. goes up one level, cd - jumps back to where you just were, and plain cd takes you home.
 
-The shell remembers one working directory. cd changes that shell state, so the next command resolves relative paths from the new location. cd - returns to the previous location in this simulator, while cd with no operand returns home.
+Your terminal remembers one current directory. After a cd, every filename you type is looked up from the new location. Directories inside directories are written with / between them, so stations/relay means "the relay folder inside stations". Use pwd or ls after moving if you want to check where you landed.
 
-## Syntax example
+## Why it matters
+
+Moving around the filesystem quickly is the core skill for every later mission and every real system you'll work on.
+
+## Example
 
 ```sh
-cd /tmp
-pwd
-cd -
+cd /tmp     # go to /tmp
+pwd         # confirm where you are
+cd -        # jump back to the previous directory
 ```
 
 Example filenames illustrate syntax; inspect your mission files before running them.
 
 ## Your mission
 
-Navigate into stations/relay and read message.txt, then return home.
+Walk into the stations/relay directory, read the message waiting there, then head back home.
+
+1. Run cd stations/relay (Tab can complete the names for you).
+2. Run cat message.txt to read the flag.
+3. Run cd on its own to return home.
 
 ## Common mistake
 
-Changing directory does not display all files automatically. Follow it with pwd or ls if you need confirmation.
+cd doesn't print anything when it works. No output means success, so run pwd if you want to check.
 
 ## Check your understanding
 
-What is the difference between cd .. and cd /?
+What's the difference between cd .. and cd /?
 
 Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

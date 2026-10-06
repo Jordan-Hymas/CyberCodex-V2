@@ -1,35 +1,43 @@
 ---
 title: "Ask the manual"
-description: "Read man ls, then locate the hidden file inside /opt/academy/helpdesk."
+description: "Use the manual for ls to learn how to show hidden files, then use that to find the hidden receipt in /opt/academy/helpdesk."
 type: exercise
 xpReward: 25
 ---
 
 ## Learn
 
-man command and help command describe the supported syntax. The teaching shell documents its own subset; a full Linux machine may offer additional options.
+You don't have to memorize every command. man COMMAND opens a command's manual, and help lists every command this lab supports.
 
-Knowing how to discover syntax is more valuable than memorizing every option. Read the synopsis first, then try one option at a time on small fixtures. These built-in manuals describe supported simulator behavior. On an actual Linux system, man pages are more extensive and depend on installed software.
+Real professionals look things up constantly. Read a manual's first line to see the basic syntax, then try one option at a time. This lab's manuals describe its supported subset; on a full Linux system, man pages are longer and cover more options.
 
-## Syntax example
+## Why it matters
+
+Knowing how to find the answer is more valuable than memorizing it. Every tool you meet later will come with a manual.
+
+## Example
 
 ```sh
-help
-man cat
+help        # list every supported command
+man cat     # read the manual for cat
 ```
 
 Example filenames illustrate syntax; inspect your mission files before running them.
 
 ## Your mission
 
-Read man ls, then locate the hidden file inside /opt/academy/helpdesk.
+Use the manual for ls to learn how to show hidden files, then use that to find the hidden receipt in /opt/academy/helpdesk.
+
+1. Run man ls and look for the option that shows hidden entries.
+2. List /opt/academy/helpdesk with that option.
+3. Read the hidden file by its full path.
 
 ## Common mistake
 
-Do not assume a command exists merely because you have seen it online. The lab explains unsupported commands.
+Not every command or option you see online exists here. If one isn't supported, the lab will tell you, so check man first.
 
 ## Check your understanding
 
-How would you determine whether an option is supported before using it?
+How would you check whether an option is supported before using it?
 
 Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

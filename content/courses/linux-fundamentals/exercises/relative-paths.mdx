@@ -1,35 +1,43 @@
 ---
 title: "One floor up"
-description: "From /home/user/work, read ../store/receipt.txt."
+description: "You're standing in the work directory. The receipt is in the store directory next door. Read it without using an absolute path."
 type: exercise
 xpReward: 25
 ---
 
 ## Learn
 
-Relative paths can contain .. anywhere. A path such as ../store/file.txt begins at the parent directory and then enters store.
+A relative path can climb up with .. before going back down. ../store/receipt.txt means "go up one level, enter store, then find receipt.txt".
 
-The . component means stay at the current location; .. means move to the parent. They can occur inside longer paths. Resolve a path one component at a time if you become confused. Paths never climb above the root directory.
+This mission starts you inside /home/user/work. The . in a path means "here" and .. means "the parent directory", and they can appear anywhere in a path. If a path confuses you, resolve it one piece at a time: start at pwd, then apply each part in order.
 
-## Syntax example
+## Why it matters
+
+Relative paths keep commands short and portable. You'll see ../ in scripts, configs and exploits all the time.
+
+## Example
 
 ```sh
-cd /home/user
-cat ./example.txt
+cat ../notes.txt          # a file one level above you
+cat ./notes.txt           # a file right here (same as notes.txt)
 ```
 
 Example filenames illustrate syntax; inspect your mission files before running them.
 
 ## Your mission
 
-From /home/user/work, read ../store/receipt.txt.
+You're standing in the work directory. The receipt is in the store directory next door. Read it without using an absolute path.
+
+1. Run pwd to confirm you're in /home/user/work.
+2. Run ls .. to see the directories next to work.
+3. Read the receipt with cat ../store/receipt.txt.
 
 ## Common mistake
 
-../store is not the same as /store. The former depends on the current directory.
+../store is not /store. The first depends on where you are; the second always starts at the root.
 
 ## Check your understanding
 
-Starting in /home/user/work, where does ../../ resolve?
+Starting in /home/user/work, where does ../../ point to?
 
 Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

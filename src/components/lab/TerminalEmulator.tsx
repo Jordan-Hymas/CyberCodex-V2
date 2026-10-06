@@ -5,7 +5,8 @@ import { VirtualFileSystem } from "@/lib/terminal/filesystem";
 import { LocalBackend, ShellSession, type LocalBackendEvents } from "@/lib/terminal/shell";
 import { FileSystem } from "@/lib/terminal/types";
 import "@xterm/xterm/css/xterm.css";
-import { keepCtrlKeys, xtermOptions } from "./xtermTheme";
+import { enableCopyOnSelect, keepCtrlKeys, xtermOptions } from "./xtermTheme";
+import { CopyToast, useCopyToast } from "./CopyToast";
 
 export interface TerminalEmulatorProps extends LocalBackendEvents {
   initialFilesystem?: FileSystem;
@@ -28,6 +29,9 @@ export function TerminalEmulator({
   // Keep the latest callbacks without re-creating the terminal
   const eventsRef = useRef<LocalBackendEvents>({ onFileSaved, onCommand });
   eventsRef.current = { onFileSaved, onCommand };
+  const toast = useCopyToast();
+  const showCopied = useRef(toast.show);
+  showCopied.current = toast.show;
 
   useEffect(() => {
     const container = containerRef.current;
@@ -52,6 +56,7 @@ export function TerminalEmulator({
       term.open(container);
 
       term.attachCustomKeyEventHandler(keepCtrlKeys);
+      const stopCopy = enableCopyOnSelect(term, container, (text) => showCopied.current(text));
 
       const fit = () => {
         try {
@@ -85,6 +90,7 @@ export function TerminalEmulator({
       observer.observe(container);
 
       cleanup = () => {
+        stopCopy();
         observer.disconnect();
         dataListener.dispose();
         resizeListener.dispose();
@@ -101,10 +107,13 @@ export function TerminalEmulator({
   }, []);
 
   return (
-    <div
-      ref={containerRef}
-      className={`terminal-container ${className}`}
-      style={{ width: "100%", height: "100%", padding: "0.75rem" }}
-    />
+    <div className="relative h-full w-full">
+      <CopyToast text={toast.copied} />
+      <div
+        ref={containerRef}
+        className={`terminal-container ${className}`}
+        style={{ width: "100%", height: "100%", padding: "0.75rem" }}
+      />
+    </div>
   );
 }

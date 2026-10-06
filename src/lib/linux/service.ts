@@ -9,6 +9,8 @@ export type LabReply = {
   version: number; cwd: string; completed: boolean; attempts: number;
   output: string; error: string; clear: boolean; status: number; awarded: number; message: string;
   commands?: string[]; entries?: { name: string; dir: boolean }[]; file?: { path: string; text: string; isNew: boolean };
+  /** Learner XP after a successful capture (level = floor(totalXp / 100) + 1) */
+  progress?: { totalXp: number; level: number; levelXp: number };
 };
 export async function labAction(userId: string, exerciseId: string, action: LabAction): Promise<LabReply> {
   const mission = missionById(exerciseId);
@@ -39,6 +41,7 @@ export async function labAction(userId: string, exerciseId: string, action: LabA
     const state: Stored = JSON.parse(row.state);
     let output = '', error = '', clear = false, status = 0, awarded = 0, message = '';
     let solvedAt = row.solvedAt, attempts = row.attempts, hash = row.flagHash;
+    let progress: LabReply['progress'];
     if (action.action === 'reset') {
       const fresh = createChallenge(mission); state.shell = fresh.shell; state.flag = fresh.flag; hash = fresh.hash;
       message = 'Environment reset. A new flag was generated; your earned completion is preserved.'; clear = true;
@@ -68,6 +71,8 @@ export async function labAction(userId: string, exerciseId: string, action: LabA
           const updated = await tx.user.update({ where: { id: userId }, data: { totalXp: { increment: awarded }, lastActive: new Date() } });
           await tx.user.update({ where: { id: userId }, data: { level: Math.floor(updated.totalXp / 100) + 1, xp: updated.totalXp % 100 } });
         }
+        const totalXp = (await tx.user.findUniqueOrThrow({ where: { id: userId }, select: { totalXp: true } })).totalXp;
+        progress = { totalXp, level: Math.floor(totalXp / 100) + 1, levelXp: totalXp % 100 };
         const finished = await tx.linuxLabSession.findMany({ where: { userId, solvedAt: { not: null } }, select: { exerciseId: true } });
         const ids = new Set([...finished.map(f => f.exerciseId), exerciseId]);
         const count = missions.filter(m => ids.has(m.id)).length;
@@ -79,6 +84,6 @@ export async function labAction(userId: string, exerciseId: string, action: LabA
     const changed = await tx.linuxLabSession.updateMany({ where: { id: row.id, version: row.version }, data: { state: JSON.stringify(state), flagHash: hash, version: { increment: 1 }, solvedAt, attempts, nextAttemptAt: action.action === 'submit' ? new Date(Date.now() + 1000) : row.nextAttemptAt } });
     if (!changed.count) throw new LabError('Mission changed in another tab. Reopen it before retrying.', 409);
     row = (await tx.linuxLabSession.findUnique({ where: key }))!;
-    return { ...snapshot(), output, error, clear, status, awarded, message };
+    return { ...snapshot(), output, error, clear, status, awarded, message, progress };
   }, { maxWait: 5000, timeout: 10000 });
 }

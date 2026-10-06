@@ -7,11 +7,11 @@ xpReward: 60
 
 ## Learn
 
-&amp;&amp; runs the next command only after success. || runs it only after failure. test checks a condition and communicates through its exit status rather than printed text.
+&& runs the next command only after success. || runs it only after failure. test checks a condition and communicates through its exit status rather than printed text.
 
-Commands communicate success with zero and other outcomes with nonzero status. &amp;&amp; and || make later commands conditional on that status. test often prints nothing; silence is normal. The lab supports a small documented test subset rather than the whole shell expression language.
+Commands communicate success with zero and other outcomes with nonzero status. && and || make later commands conditional on that status. test often prints nothing; silence is normal. The lab supports a small documented test subset rather than the whole shell expression language.
 
-## Syntax example
+## Example
 
 ```sh
 test -f sample.txt && echo present

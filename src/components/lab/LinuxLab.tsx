@@ -1,21 +1,54 @@
 'use client';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { useSession } from 'next-auth/react';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
-const LinuxTerminal = dynamic(() => import('./LinuxTerminal').then(m => m.LinuxTerminal), { ssr: false, loading: () => <p>Loading terminal…</p> });
-type Snapshot = { version: number; cwd: string; completed: boolean; attempts: number; output?: string; error?: string; clear?: boolean; message?: string; commands?: string[]; entries?: { name: string; dir: boolean }[]; file?: { path: string; text: string; isNew: boolean } };
-export function LinuxLab({ exerciseId, userId, nextId, hints }: { exerciseId: string; userId: string; nextId?: string; hints: string[] }) {
-  const { data: session, status } = useSession();
-  // Switching accounts unmounts the old console and drops pending requests/state.
-  if (status === 'loading') return <p>Checking your account…</p>;
-  if (session?.user?.id !== userId) return <p>Your account changed. <a href={`/courses/linux-fundamentals/${exerciseId}`} className="underline">Reopen this mission</a> to load the correct environment.</p>;
-  return <PersonalLab key={`${userId}:${exerciseId}`} exerciseId={exerciseId} nextId={nextId} hints={hints} />;
+import { Button, ProgressBar, WindowBar } from '@/components/ui';
+import { Mascot } from '@/components/brand';
+import { PixelConfetti } from '@/components/fx/PixelConfetti';
+import { MissionWorkspace } from './MissionWorkspace';
+const LinuxTerminal = dynamic(() => import('./LinuxTerminal').then(m => m.LinuxTerminal), { ssr: false, loading: () => <p className="p-4 font-ui text-cyber-text-muted">Booting terminal…</p> });
+
+type Snapshot = {
+  version: number; cwd: string; completed: boolean; attempts: number; output?: string; error?: string; clear?: boolean; message?: string;
+  awarded?: number; commands?: string[]; entries?: { name: string; dir: boolean }[]; file?: { path: string; text: string; isNew: boolean };
+  progress?: { totalXp: number; level: number; levelXp: number };
+};
+
+interface LinuxLabProps {
+  exerciseId: string;
+  userId: string;
+  nextId?: string;
+  hints: string[];
+  header: ReactNode;
+  /** Server-rendered mission briefing for the left column */
+  briefing: ReactNode;
 }
-function PersonalLab({ exerciseId, nextId, hints }: { exerciseId: string; nextId?: string; hints: string[] }) {
-  const [snapshot,setSnapshot] = useState<Snapshot | null>(null), [error,setError] = useState(''), [busy,setBusy] = useState(false), [flag,setFlag] = useState(''), [message,setMessage] = useState(''), [generation,setGeneration] = useState(0), [stale,setStale] = useState(false);
+
+export function LinuxLab({ exerciseId, userId, ...rest }: LinuxLabProps) {
+  const { data: session, status } = useSession();
+  // Remember the last settled account so a session refresh (e.g. after earning XP,
+  // which briefly reports 'loading') doesn't unmount the lab mid-celebration.
+  const settled = useRef<string | null | undefined>(undefined);
+  if (status !== 'loading') settled.current = session?.user?.id ?? null;
+  // Switching accounts unmounts the old console and drops pending requests/state.
+  const notice = settled.current === undefined ? <p className="p-6 font-ui text-cyber-text-muted">Checking your account…</p>
+    : settled.current !== userId ? <p className="p-6">Your account changed. <a href={`/courses/linux-fundamentals/${exerciseId}`} className="underline">Reopen this mission</a> to load the correct environment.</p>
+    : null;
+  if (notice) return <MissionWorkspace header={rest.header} left={rest.briefing} right={notice} />;
+  return <PersonalLab key={`${userId}:${exerciseId}`} exerciseId={exerciseId} {...rest} />;
+}
+
+function PersonalLab({ exerciseId, nextId, hints, header, briefing }: Omit<LinuxLabProps, 'userId'>) {
+  const { update: refreshSession } = useSession();
+  const router = useRouter();
+  const [snapshot, setSnapshot] = useState<Snapshot | null>(null), [error, setError] = useState(''), [busy, setBusy] = useState(false);
+  const [flag, setFlag] = useState(''), [message, setMessage] = useState(''), [generation, setGeneration] = useState(0), [stale, setStale] = useState(false);
+  const [hintsShown, setHintsShown] = useState(0), [confirmReset, setConfirmReset] = useState(false);
+  const [celebration, setCelebration] = useState<{ awarded: number; progress?: Snapshot['progress']; key: number } | null>(null);
   const current = useRef<Snapshot | null>(null), inFlight = useRef(false), live = useRef(true), controller = useRef<AbortController | null>(null);
   const commandNames = useRef<string[]>([]);
+
   // quiet: read-only terminal helpers (tab completion, opening files) skip the busy/status UI
   const request = useCallback(async (action: string, extra: Record<string, unknown> = {}, quiet = false) => {
     if (inFlight.current) throw Error('Wait for the current action to finish.');
@@ -33,11 +66,13 @@ function PersonalLab({ exerciseId, nextId, hints }: { exerciseId: string; nextId
     } catch (err) { if (live.current && !abort.signal.aborted && !quiet) setError((err as Error).message); throw err; }
     finally { inFlight.current = false; if (live.current && !quiet) setBusy(false); }
   }, [exerciseId]);
+
   useEffect(() => {
     live.current = true;
     const timer = setTimeout(() => { void request('open').catch(() => {}); }, 0);
     return () => { clearTimeout(timer); live.current = false; controller.current?.abort(); };
   }, [request]);
+
   const run = async (command: string) => {
     if (stale) throw Error('Reopen the environment using the button below.');
     return request('command', { command });
@@ -51,18 +86,100 @@ function PersonalLab({ exerciseId, nextId, hints }: { exerciseId: string; nextId
     if (stale) return 'reopen the environment using the button below';
     try { await request('save', { path, content }); return null; } catch (err) { return (err as Error).message; }
   };
-  return <div className="space-y-4">
-    <p className="text-sm text-cyber-text-muted">Private, saved teaching environment • bounded Linux simulation • no installation needed</p>
-    {snapshot && <div className="h-[420px] border-2 border-cyber-border bg-[#12132b]"><LinuxTerminal key={generation} cwd={snapshot.cwd} commands={commandNames.current} run={run} listDir={listDir} readFile={readFile} writeFile={writeFile} /></div>}
-    {error && <p role="alert" className="text-cyber-danger">{error}</p>}
-    {(!snapshot || stale) && <button className="underline" disabled={busy} onClick={() => void request('open').then(() => setGeneration(g => g + 1)).catch(() => {})}>Reopen environment</button>}
-    <form className="flex flex-wrap gap-3" onSubmit={event => { event.preventDefault(); void request('submit', { flag: flag.trim() }).catch(() => {}); }}>
-      <label className="flex-1 min-w-48">Captured flag<input aria-label="Captured flag" className="mt-1 block w-full border-2 border-cyber-border bg-cyber-dark p-3 font-mono" placeholder="CYBER{...}" value={flag} maxLength={160} onChange={e => setFlag(e.target.value)} autoComplete="off" spellCheck={false} /></label>
-      <button className="self-end border-2 border-cyber-ink bg-cyber-primary px-4 py-3 text-cyber-ink disabled:opacity-50" disabled={busy || !snapshot || stale || !flag.trim()}>Check flag</button>
-    </form>
-    <p aria-live="polite">{busy ? 'Saving…' : message || (snapshot?.completed ? 'Mission previously completed. You can continue or practice again.' : 'Find your flag in the terminal, then paste it above.')}</p>
-    {snapshot?.completed && (nextId ? <Link className="inline-block underline text-cyber-primary" href={`/courses/linux-fundamentals/${nextId}`}>Continue to the next mission →</Link> : <Link className="underline" href="/courses/linux-fundamentals">Track complete — review your progress →</Link>)}
-    <details><summary className="cursor-pointer">Need a hint?</summary><ol className="list-decimal space-y-2 pl-6">{hints.map(hint => <li key={hint}>{hint}</li>)}</ol></details>
-    <details><summary className="cursor-pointer">Reset this mission</summary><p className="my-2 text-sm">This clears this mission’s files and command history and generates a new flag. Earned completion stays saved.</p><button className="underline" disabled={busy || !snapshot || stale} onClick={() => void request('reset').then(() => { setGeneration(g => g + 1); setFlag(''); }).catch(() => {})}>Reset environment and flag</button></details>
+
+  const submitFlag = async () => {
+    try {
+      const data = await request('submit', { flag: flag.trim() });
+      if (data.completed && data.message?.startsWith('Flag')) {
+        setCelebration({ awarded: data.awarded ?? 0, progress: data.progress, key: Date.now() });
+        setFlag('');
+        // Update the level badge: refresh the client session and the server-rendered nav
+        if (data.awarded) void refreshSession().then(() => router.refresh());
+      }
+    } catch { /* error shown via state */ }
+  };
+
+  const reset = () => void request('reset').then(() => { setGeneration(g => g + 1); setFlag(''); setConfirmReset(false); setCelebration(null); }).catch(() => {});
+  const nextHref = nextId ? `/courses/linux-fundamentals/${nextId}` : '/courses/linux-fundamentals';
+
+  const left = <>
+    {briefing}
+
+    {hints.length > 0 && <section className="mt-6 space-y-3">
+      {hints.slice(0, hintsShown).map((hint, i) => (
+        <p key={hint} className="border-2 border-cyber-ink border-l-[6px] border-l-cyber-warning bg-cyber-dark-secondary p-3">
+          <span className="pixel-label mb-1 block text-cyber-warning">Hint {i + 1}</span>{hint}
+        </p>
+      ))}
+      {hintsShown < hints.length && <Button variant="secondary" size="sm" onClick={() => setHintsShown(n => n + 1)}>💡 {hintsShown ? 'Another hint' : 'Need a hint?'} ({hintsShown}/{hints.length})</Button>}
+    </section>}
+
+    <section className="mt-8 border-t-2 border-dashed border-cyber-border pt-6">
+      <h2 className="mb-2 text-cyber-text-primary" style={{ fontFamily: 'var(--font-ui)', fontSize: '1.1rem', fontWeight: 600 }}>Reset this mission</h2>
+      <p className="mb-4 text-sm text-cyber-text-secondary">Wipes this mission&apos;s files and command history and generates a new flag. Completion you&apos;ve already earned stays saved.</p>
+      {confirmReset ? (
+        <div className="flex flex-wrap items-center gap-3">
+          <span className="font-ui text-cyber-danger">Reset everything?</span>
+          <Button variant="danger" size="sm" disabled={busy || !snapshot} onClick={reset}>Yes, reset</Button>
+          <Button variant="ghost" size="sm" onClick={() => setConfirmReset(false)}>Cancel</Button>
+        </div>
+      ) : (
+        <Button variant="danger" size="sm" disabled={busy || !snapshot || stale} onClick={() => setConfirmReset(true)}>↺ Reset mission</Button>
+      )}
+    </section>
+  </>;
+
+  const right = <>
+    <div className="relative flex min-h-0 flex-1 flex-col bg-cyber-ink">
+      <WindowBar title="user@cybercodex: personal mission" right={snapshot?.completed ? '✓ captured' : undefined} />
+      <div className="min-h-0 flex-1">
+        {snapshot ? <LinuxTerminal key={generation} cwd={snapshot.cwd} commands={commandNames.current} run={run} listDir={listDir} readFile={readFile} writeFile={writeFile} />
+          : <p className="p-4 font-ui text-cyber-text-muted">{error ? '' : 'Opening your environment…'}</p>}
+      </div>
+
+      {celebration && <div className="absolute inset-0 z-20 flex items-center justify-center bg-cyber-ink/85 p-6 animate-fade-in">
+        <PixelConfetti key={celebration.key} />
+        <div className="relative w-full max-w-md border-[3px] border-cyber-ink bg-cyber-primary p-6 text-center text-cyber-ink shadow-[10px_10px_0_0_#000]">
+          <Mascot mood="cheers" width={110} className="mx-auto -mt-16 mb-2" />
+          <p className="pixel-label mb-1">Flag captured</p>
+          <p className="mb-4 font-pixel text-2xl [text-shadow:3px_3px_0_rgba(0,0,0,0.25)]">{celebration.awarded ? `+${celebration.awarded} XP` : 'Already solved'}</p>
+          {celebration.progress && <XpGain progress={celebration.progress} awarded={celebration.awarded} />}
+          <div className="flex flex-col justify-center gap-3 sm:flex-row">
+            <Button href={nextHref} variant="secondary">{nextId ? 'Next mission ▶' : 'Back to the course ▶'}</Button>
+            <Button variant="ghost" className="!text-cyber-ink hover:!bg-black/10" onClick={() => setCelebration(null)}>Keep exploring</Button>
+          </div>
+        </div>
+      </div>}
+    </div>
+
+    <div className="shrink-0 space-y-3 border-t-[3px] border-cyber-ink bg-cyber-dark-secondary p-4">
+      <form className="flex flex-wrap items-end gap-3" onSubmit={event => { event.preventDefault(); void submitFlag(); }}>
+        <label className="min-w-48 flex-1">
+          <span className="pixel-label mb-1 block text-cyber-text-secondary">Captured flag</span>
+          <input aria-label="Captured flag" className="pixel-input w-full px-3 py-2.5 font-mono" placeholder="CYBER{...}  (highlight it in the terminal to copy)" value={flag} maxLength={160} onChange={e => setFlag(e.target.value)} autoComplete="off" spellCheck={false} />
+        </label>
+        <Button type="submit" disabled={busy || !snapshot || stale || !flag.trim()}>Check flag</Button>
+      </form>
+      {error && <p role="alert" className="font-ui text-cyber-danger">{error}</p>}
+      {(!snapshot || stale) && <Button variant="secondary" size="sm" disabled={busy} onClick={() => void request('open').then(() => setGeneration(g => g + 1)).catch(() => {})}>Reopen environment</Button>}
+      <p aria-live="polite" className="text-sm text-cyber-text-secondary">
+        {busy ? 'Saving…' : message || (snapshot?.completed ? 'Mission completed. You can keep practicing or move on.' : 'Find the flag in your terminal, then paste it here.')}
+      </p>
+      {snapshot?.completed && !celebration && <Button href={nextHref} size="sm">{nextId ? 'Next mission ▶' : 'Back to the course ▶'}</Button>}
+    </div>
+  </>;
+
+  return <MissionWorkspace header={header} left={left} right={right} />;
+}
+
+/** XP bar that fills from the previous total to the new one, with a level-up flourish. */
+function XpGain({ progress, awarded }: { progress: NonNullable<Snapshot['progress']>; awarded: number }) {
+  const levelledUp = awarded > 0 && progress.levelXp - awarded < 0;
+  const [value, setValue] = useState(levelledUp ? 0 : Math.max(0, progress.levelXp - awarded));
+  useEffect(() => { const t = setTimeout(() => setValue(progress.levelXp), 350); return () => clearTimeout(t); }, [progress.levelXp]);
+  return <div className="mb-5 border-2 border-cyber-ink bg-cyber-ink p-3 text-left text-cyber-text-primary">
+    {levelledUp && <p className="mb-2 inline-block border-2 border-cyber-ink bg-cyber-warning px-2 py-0.5 font-label text-xs text-cyber-ink animate-blink">Level up!</p>}
+    <ProgressBar label={`Level ${progress.level}`} value={value} variant="warning" />
+    <p className="mt-2 text-xs text-cyber-text-muted">{100 - progress.levelXp} XP to level {progress.level + 1} · {progress.totalXp} XP total</p>
   </div>;
 }

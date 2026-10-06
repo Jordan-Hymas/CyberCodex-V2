@@ -23,7 +23,7 @@
       "id": "1",
       "number": 1,
       "title": "Beginner: first steps",
-      "description": "Original flag missions in your personal saved Linux environment.",
+      "description": "Get comfortable typing commands. You will read files, ask the system who you are, and work out where you are standing in the filesystem.",
       "isLocked": false,
       "isPremium": false,
       "exercises": [
@@ -69,7 +69,7 @@
       "id": "2",
       "number": 2,
       "title": "Beginner: paths and discovery",
-      "description": "Original flag missions in your personal saved Linux environment.",
+      "description": "Move around the filesystem with confidence. Paths are how every Linux tool finds things, so this chapter makes absolute and relative paths second nature.",
       "isLocked": false,
       "isPremium": false,
       "exercises": [
@@ -115,7 +115,7 @@
       "id": "3",
       "number": 3,
       "title": "Beginner: files and checkpoint",
-      "description": "Original flag missions in your personal saved Linux environment.",
+      "description": "Change things, not just read them. You will handle awkward filenames, copy and rename files, then prove it all in the beginner checkpoint.",
       "isLocked": false,
       "isPremium": false,
       "exercises": [
@@ -161,7 +161,7 @@
       "id": "4",
       "number": 4,
       "title": "Intermediate: search and selection",
-      "description": "Original flag missions in your personal saved Linux environment.",
+      "description": "Real systems have thousands of files and huge logs. Learn to find the one line or file that matters.",
       "isLocked": false,
       "isPremium": true,
       "exercises": [
@@ -207,7 +207,7 @@
       "id": "5",
       "number": 5,
       "title": "Intermediate: streams and reports",
-      "description": "Original flag missions in your personal saved Linux environment.",
+      "description": "Connect commands together. Pipes and redirection are what make the shell powerful: small tools chained into exactly the output you want.",
       "isLocked": false,
       "isPremium": true,
       "exercises": [
@@ -253,7 +253,7 @@
       "id": "6",
       "number": 6,
       "title": "Intermediate: data and permissions",
-      "description": "Original flag missions in your personal saved Linux environment.",
+      "description": "Pull data apart and deal with locked files. Security work constantly involves extracting fields, decoding data and fixing permissions.",
       "isLocked": false,
       "isPremium": true,
       "exercises": [
@@ -299,7 +299,7 @@
       "id": "7",
       "number": 7,
       "title": "Advanced: composition and evidence",
-      "description": "Original flag missions in your personal saved Linux environment.",
+      "description": "Compose tools like a professional: feed files in as input, keep copies of evidence while you work, and spot what changed between versions.",
       "isLocked": false,
       "isPremium": true,
       "exercises": [
@@ -345,7 +345,7 @@
       "id": "8",
       "number": 8,
       "title": "Advanced: variables and recovery",
-      "description": "Original flag missions in your personal saved Linux environment.",
+      "description": "Make the shell remember things and recover from problems. Variables, directory permissions and conditional commands appear in every real script.",
       "isLocked": false,
       "isPremium": true,
       "exercises": [
@@ -391,7 +391,7 @@
       "id": "9",
       "number": 9,
       "title": "Advanced: automation checkpoints",
-      "description": "Original flag missions in your personal saved Linux environment.",
+      "description": "Put it all together. These checkpoints chain several skills into one task, the way real investigations and automation work.",
       "isLocked": false,
       "isPremium": true,
       "exercises": [

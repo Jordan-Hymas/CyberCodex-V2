@@ -1,35 +1,43 @@
 ---
 title: "Your place in the tree"
-description: "Inspect your location with pwd. Read coordinates.txt from that location."
+description: "Confirm where you are, then read the coordinates file stored there."
 type: exercise
 xpReward: 25
 ---
 
 ## Learn
 
-pwd prints an absolute path. The slash at the start means the filesystem root. Your working directory determines how relative paths are interpreted.
+pwd (print working directory) shows exactly where you are in the filesystem, as a full path that starts with /.
 
-Think of the filesystem as a tree with one root, /. Your home directory is one branch of that tree. pwd reports your current location without modifying anything. It is a useful first diagnostic when a filename you expected to exist cannot be found.
+The Linux filesystem is one big tree. The very top is the root, written as /. Your home directory, /home/user, is a branch of that tree. Whenever you type a filename without a leading /, Linux looks for it in the directory pwd shows. That's why the same command can work in one place and fail in another.
 
-## Syntax example
+## Why it matters
+
+When a command says "No such file", checking pwd is the first thing to do. Most of the time you're simply in the wrong place.
+
+## Example
 
 ```sh
-pwd
-ls
+pwd         # prints something like /home/user
+ls          # lists what's in that directory
 ```
 
 Example filenames illustrate syntax; inspect your mission files before running them.
 
 ## Your mission
 
-Inspect your location with pwd. Read coordinates.txt from that location.
+Confirm where you are, then read the coordinates file stored there.
+
+1. Run pwd to see your current directory.
+2. Run ls to see what's in it.
+3. Read coordinates.txt with cat.
 
 ## Common mistake
 
-A directory and a file can have similar names; a path tells you where an entry belongs.
+A path tells you where something lives. coordinates.txt here and /coordinates.txt at the root would be two different files.
 
 ## Check your understanding
 
-Why might cat notes.txt work in one directory and fail in another?
+Why might cat notes.txt work in one directory but fail in another?
 
 Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

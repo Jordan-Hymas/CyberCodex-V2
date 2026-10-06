@@ -1,4 +1,5 @@
 import { LinuxLesson } from "@/components/lab/LinuxLesson";
+import { LinuxOrientation } from "@/components/lab/LinuxOrientation";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { serialize } from "next-mdx-remote/serialize";
@@ -39,6 +40,9 @@ export async function generateStaticParams() {
 // Generate metadata for SEO
 export async function generateMetadata({ params }: ExercisePageProps): Promise<Metadata> {
   const { slug, exerciseId } = await params;
+  if (slug === "linux-fundamentals" && exerciseId === "orientation") {
+    return { title: "Orientation - Linux Fundamentals - CyberCodex" };
+  }
   const exercise = await getExerciseContent(slug, exerciseId);
   const curriculum = await getCurriculumBySlug(slug);
 
@@ -56,6 +60,8 @@ export async function generateMetadata({ params }: ExercisePageProps): Promise<M
 
 export default async function ExercisePage({ params }: ExercisePageProps) {
   const { slug, exerciseId } = await params;
+  // Course orientation is a page of its own, not a curriculum exercise
+  if (slug === "linux-fundamentals" && exerciseId === "orientation") return <LinuxOrientation />;
   const exercise = await getExerciseContent(slug, exerciseId);
   const curriculum = await getCurriculumBySlug(slug);
 

@@ -7,6 +7,7 @@ import { getCourseBySlug } from "@/lib/mdx";
 import Link from "next/link";
 import { courseCategories, difficultyLevels } from "@/lib/config";
 import { Badge } from "@/components/ui";
+import { Mascot } from "@/components/brand";
 import { CourseLayout, CourseSidebar, ChapterList } from "@/components/course";
 import { auth } from "@/lib/auth/auth";
 import { prisma } from "@/lib/db/prisma";
@@ -259,6 +260,26 @@ export default async function CoursePage({ params }: CoursePageProps) {
           />
         }
       >
+        {slug === "linux-fundamentals" && (
+          <Link
+            href="/courses/linux-fundamentals/orientation"
+            className="card card-interactive mb-10 flex-row items-center gap-5 !border-cyber-secondary !p-5"
+          >
+            <div className="shrink-0 border-2 border-cyber-ink bg-cyber-secondary p-1">
+              <Mascot mood="hi" width={64} />
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="pixel-label mb-1 text-cyber-secondary">Start here</p>
+              <p className="text-lg text-cyber-text-primary" style={{ fontFamily: "var(--font-ui)", fontWeight: 600 }}>
+                Course orientation
+              </p>
+              <p className="text-sm text-cyber-text-secondary">
+                What you&apos;ll learn, how flag missions work, and how you earn XP.
+              </p>
+            </div>
+            <span className="font-ui text-cyber-text-primary" aria-hidden="true">▶</span>
+          </Link>
+        )}
         <ChapterList
           chapters={chapters}
           courseSlug={slug}
