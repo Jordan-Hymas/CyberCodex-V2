@@ -15,11 +15,18 @@ const schema = z.discriminatedUnion('action', [
 ]);
 // A saved file can be 64 KiB; JSON escaping can roughly double that.
 const MAX_BODY = 140_000;
+// Compare against the Host the browser actually used. request.nextUrl is built from the
+// server's own hostname (localhost), so it never matches when opened via a LAN IP.
+function sameOrigin(request: NextRequest) {
+  const origin = request.headers.get('origin');
+  if (!origin) return true;
+  const host = request.headers.get('x-forwarded-host')?.split(',')[0].trim() || request.headers.get('host');
+  try { return !!host && new URL(origin).host === host; } catch { return false; }
+}
 export async function POST(request: NextRequest, { params }: { params: Promise<{ exerciseId: string }> }) {
   const response = (body: unknown, status = 200) => NextResponse.json(body, { status, headers: { 'Cache-Control': 'no-store' } });
   try {
-    const origin = request.headers.get('origin');
-    if (origin && origin !== request.nextUrl.origin) return response({ error: 'Invalid request origin.' }, 403);
+    if (!sameOrigin(request)) return response({ error: 'Invalid request origin.' }, 403);
     const session = await auth();
     if (!session?.user?.id) return response({ error: 'Sign in to use your personal Linux environment.' }, 401);
     if (Number(request.headers.get('content-length')) > MAX_BODY) return response({ error: 'Request too large.' }, 413);
