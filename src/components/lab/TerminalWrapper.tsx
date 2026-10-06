@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import type { TerminalEmulatorProps } from "@/components/lab/TerminalEmulator";
 
 // Dynamic import of TerminalEmulator with client-side only rendering
 const TerminalEmulator = dynamic(
@@ -9,12 +10,12 @@ const TerminalEmulator = dynamic(
     ssr: false,
     loading: () => (
       <div className="flex items-center justify-center h-full w-full">
-        <div className="text-cyber-text-muted animate-pulse">Initializing terminal...</div>
+        <div className="font-ui text-cyber-text-muted">Booting terminal…</div>
       </div>
     ),
   }
 );
 
-export function TerminalWrapper({ className }: { className?: string }) {
-  return <TerminalEmulator className={className} />;
+export function TerminalWrapper(props: TerminalEmulatorProps) {
+  return <TerminalEmulator {...props} />;
 }

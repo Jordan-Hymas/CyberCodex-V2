@@ -1,5 +1,7 @@
 import { FileSystem, FileSystemNode } from "./types";
 
+export const HOME_DIR = "/home/user";
+
 /**
  * Virtual filesystem manager for terminal emulator
  * Provides in-memory filesystem operations
@@ -51,52 +53,26 @@ export class VirtualFileSystem {
   }
 
   /**
-   * Resolve relative path to absolute path
+   * Resolve a path (absolute, relative, or ~) against the current directory
    */
   resolvePath(currentDir: string, path: string): string {
-    if (path.startsWith("/")) {
-      return this.normalizePath(path);
+    if (path === "~" || path.startsWith("~/")) {
+      path = HOME_DIR + path.slice(1);
     }
-
-    if (path === ".") {
-      return currentDir;
-    }
-
-    if (path === "..") {
-      const parts = currentDir.split("/").filter(Boolean);
-      parts.pop();
-      return "/" + parts.join("/");
-    }
-
-    if (path.startsWith("../")) {
-      const parts = currentDir.split("/").filter(Boolean);
-      const pathParts = path.split("/").filter(Boolean);
-
-      for (const part of pathParts) {
-        if (part === "..") {
-          parts.pop();
-        } else {
-          parts.push(part);
-        }
-      }
-
-      return "/" + parts.join("/");
-    }
-
-    if (path.startsWith("./")) {
-      path = path.slice(2);
-    }
-
-    return this.normalizePath(currentDir + "/" + path);
+    return this.normalizePath(path.startsWith("/") ? path : `${currentDir}/${path}`);
   }
 
   /**
-   * Normalize path (remove trailing slashes, collapse multiple slashes)
+   * Normalize a path: collapse slashes and resolve "." and ".." segments
    */
   normalizePath(path: string): string {
-    const parts = path.split("/").filter(Boolean);
-    let normalized = "/" + parts.join("/");
-    return normalized === "" ? "/" : normalized;
+    const parts: string[] = [];
+    for (const part of path.split("/")) {
+      if (!part || part === ".") continue;
+      if (part === "..") parts.pop();
+      else parts.push(part);
+    }
+    return "/" + parts.join("/");
   }
 
   /**

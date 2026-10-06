@@ -25,9 +25,11 @@ FILE OPERATIONS:
   rmdir DIR         Remove empty directory
   cp SRC DEST       Copy file
   mv SRC DEST       Move or rename file
+  nano FILE         Edit a file (^O save, ^X exit, ^G help)
 
 TEXT PROCESSING:
   echo TEXT         Display text
+  CMD > FILE        Write a command's output to a file (>> appends)
   grep PATTERN FILE Search for pattern in file
   find [PATH]       Search for files
 
@@ -40,9 +42,15 @@ SYSTEM:
   date              Display date and time
   uname             Print system information
   clear             Clear terminal screen
+  history           Show commands you've run
 
 HELP:
   help              Show this help message
+
+TIPS:
+  Tab               Complete commands and file names (Tab twice lists options)
+  Up / Down         Scroll through previous commands
+  Ctrl+C            Cancel the current line
 
 Use --help flag with any command for more information.
 `;
@@ -65,6 +73,31 @@ export const manCommand: Command = {
 
     const command = context.args[0];
     const manPages: { [key: string]: string } = {
+      nano: `
+NANO(1)                         User Commands                        NANO(1)
+
+NAME
+       nano - a small, friendly text editor
+
+SYNOPSIS
+       nano [FILE]
+
+DESCRIPTION
+       Opens FILE for editing (a new file is created when you save if it
+       doesn't exist). The bottom two lines list the main shortcuts;
+       ^ means the Ctrl key.
+
+       ^O   Write Out (save, confirm the file name with Enter)
+       ^S   Save to the current file
+       ^X   Exit (asks whether to save changes)
+       ^K   Cut the current line      ^U   Paste
+       ^F   Search                    ^C   Show cursor position
+       ^G   Help
+
+EXAMPLES
+       nano notes.txt
+              Edit (or create) notes.txt in the current directory
+`,
       ls: `
 LS(1)                           User Commands                          LS(1)
 
