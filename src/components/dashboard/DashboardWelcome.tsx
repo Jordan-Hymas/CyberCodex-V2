@@ -1,31 +1,22 @@
-"use client";
-
-import { motion } from "framer-motion";
+import { Mascot } from "@/components/brand";
 
 interface DashboardWelcomeProps {
   userName: string;
 }
 
 export function DashboardWelcome({ userName }: DashboardWelcomeProps) {
-  const getGreeting = () => {
-    const hour = new Date().getHours();
-    if (hour < 12) return "Good morning";
-    if (hour < 18) return "Good afternoon";
-    return "Good evening";
-  };
-
+  // A time-of-day greeting rendered on the server and again in the browser
+  // caused hydration mismatches, so keep it time-independent.
   return (
-    <motion.div
-      initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6 }}
-    >
-      <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-cyber-text-primary mb-2 md:mb-3">
-        {getGreeting()}, <span className="gradient-text">{userName}</span>
-      </h1>
-      <p className="text-base md:text-lg text-cyber-text-secondary">
-        Ready to level up your cybersecurity skills?
-      </p>
-    </motion.div>
+    <div className="flex items-end gap-5">
+      <Mascot mood="hi" width={96} priority className="hidden shrink-0 sm:block" />
+      <div>
+        <p className="pixel-label mb-2 text-cyber-pink">Player select</p>
+        <h1 className="text-display-2 mb-2">
+          Welcome back, <span className="gradient-text">{userName}</span>
+        </h1>
+        <p className="text-lg text-cyber-text-secondary">Ready to level up?</p>
+      </div>
+    </div>
   );
 }

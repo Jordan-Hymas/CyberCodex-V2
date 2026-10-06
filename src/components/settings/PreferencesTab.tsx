@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, Button } from "@/components/ui";
+import { cn } from "@/lib/utils";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, Button, Alert } from "@/components/ui";
 
 interface PreferencesTabProps {
   user: any;
@@ -94,16 +95,7 @@ export function PreferencesTab({ user }: PreferencesTabProps) {
 
           {/* Message */}
           {message && (
-            <div
-              className={cn(
-                "p-4 rounded-lg mt-6",
-                message.type === "success"
-                  ? "bg-green-500/10 text-green-500 border border-green-500/20"
-                  : "bg-cyber-danger/10 text-cyber-danger border border-cyber-danger/20"
-              )}
-            >
-              {message.text}
-            </div>
+            <Alert className="mt-6" variant={message.type === "success" ? "success" : "error"}>{message.text}</Alert>
           )}
 
           <div className="flex justify-end mt-6">
@@ -124,7 +116,7 @@ export function PreferencesTab({ user }: PreferencesTabProps) {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <div className="flex items-center justify-between p-4 bg-cyber-dark-secondary/50 rounded-lg border border-cyber-border">
+            <div className="flex items-center justify-between p-4 border-2 border-cyber-ink bg-cyber-ink">
               <div>
                 <p className="font-medium text-cyber-text-primary">Theme</p>
                 <p className="text-sm text-cyber-text-muted">Currently: Dark Mode</p>
@@ -134,7 +126,7 @@ export function PreferencesTab({ user }: PreferencesTabProps) {
               </Button>
             </div>
 
-            <div className="flex items-center justify-between p-4 bg-cyber-dark-secondary/50 rounded-lg border border-cyber-border">
+            <div className="flex items-center justify-between p-4 border-2 border-cyber-ink bg-cyber-ink">
               <div>
                 <p className="font-medium text-cyber-text-primary">Language</p>
                 <p className="text-sm text-cyber-text-muted">Currently: English (US)</p>
@@ -160,7 +152,7 @@ interface ToggleItemProps {
 
 function ToggleItem({ label, description, checked, onChange }: ToggleItemProps) {
   return (
-    <div className="flex items-center justify-between p-4 bg-cyber-dark-secondary/50 rounded-lg border border-cyber-border">
+    <div className="flex items-center justify-between p-4 border-2 border-cyber-ink bg-cyber-ink">
       <div className="flex-1">
         <p className="font-medium text-cyber-text-primary">{label}</p>
         <p className="text-sm text-cyber-text-muted">{description}</p>
@@ -171,13 +163,13 @@ function ToggleItem({ label, description, checked, onChange }: ToggleItemProps) 
         aria-checked={checked}
         onClick={() => onChange(!checked)}
         className={cn(
-          "relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-cyber-primary focus:ring-offset-2 focus:ring-offset-cyber-dark",
-          checked ? "bg-cyber-primary" : "bg-cyber-border"
+          "relative inline-flex h-7 w-12 shrink-0 items-center border-2 border-cyber-ink transition-colors duration-100",
+          checked ? "bg-cyber-primary" : "bg-cyber-dark-tertiary"
         )}
       >
         <span
           className={cn(
-            "inline-block h-4 w-4 transform rounded-full bg-white transition-transform",
+            "inline-block h-4 w-4 border-2 border-cyber-ink bg-cyber-text-primary transition-transform duration-100",
             checked ? "translate-x-6" : "translate-x-1"
           )}
         />
@@ -186,6 +178,3 @@ function ToggleItem({ label, description, checked, onChange }: ToggleItemProps) 
   );
 }
 
-function cn(...classes: any[]) {
-  return classes.filter(Boolean).join(" ");
-}

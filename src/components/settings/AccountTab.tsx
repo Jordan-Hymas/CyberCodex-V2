@@ -91,7 +91,7 @@ export function AccountTab({ user }: AccountTabProps) {
             <InfoRow label="Email" value={user.email} />
           </div>
 
-          <div className="mt-6 p-4 bg-cyber-dark-secondary/50 rounded-lg border border-cyber-border">
+          <div className="mt-6 p-4 border-2 border-cyber-ink bg-cyber-ink">
             <h4 className="font-medium text-cyber-text-primary mb-2">Upgrade to Pro</h4>
             <p className="text-sm text-cyber-text-secondary mb-4">
               Get access to premium courses, advanced labs, and exclusive content
@@ -138,7 +138,7 @@ export function AccountTab({ user }: AccountTabProps) {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="bg-cyber-danger/10 border border-cyber-danger/20 rounded-lg p-4">
+          <div className="border-2 border-l-[6px] border-cyber-ink border-l-cyber-danger bg-cyber-ink p-4">
             <h4 className="text-cyber-danger font-medium mb-2">Delete Account</h4>
             <p className="text-sm text-cyber-text-secondary mb-4">
               Once you delete your account, there is no going back. All your progress,
@@ -170,7 +170,7 @@ export function AccountTab({ user }: AccountTabProps) {
             and remove all your data from our servers.
           </p>
 
-          <div className="bg-cyber-danger/10 border border-cyber-danger/20 rounded-lg p-4">
+          <div className="border-2 border-l-[6px] border-cyber-ink border-l-cyber-danger bg-cyber-ink p-4">
             <p className="text-sm text-cyber-danger font-medium mb-2">
               ⚠️ Warning: This is irreversible
             </p>
@@ -229,7 +229,7 @@ interface InfoRowProps {
 
 function InfoRow({ label, value }: InfoRowProps) {
   return (
-    <div className="flex items-center justify-between p-3 bg-cyber-dark-secondary/50 rounded-lg border border-cyber-border">
+    <div className="flex items-center justify-between p-3 border-2 border-cyber-ink bg-cyber-ink">
       <span className="text-sm text-cyber-text-muted">{label}</span>
       <span className="text-sm font-medium text-cyber-text-primary">{value}</span>
     </div>

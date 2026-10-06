@@ -81,7 +81,7 @@ export default async function ProfilePage() {
   ];
 
   return (
-    <main className="min-h-screen pt-24 pb-20 bg-cyber-dark">
+    <main className="min-h-screen pt-28 pb-24">
       <ProfilePageClient
         userData={userData}
         followerCount={followerCount}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, Input, Button } from "@/components/ui";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, Input, Button, Alert } from "@/components/ui";
 
 interface SecurityTabProps {
   user: any;
@@ -108,7 +108,7 @@ export function SecurityTab({ user }: SecurityTabProps) {
             />
 
             {/* Password Requirements */}
-            <div className="bg-cyber-dark-secondary/50 p-4 rounded-lg border border-cyber-border">
+            <div className="p-4 border-2 border-cyber-ink bg-cyber-ink">
               <p className="text-sm text-cyber-text-secondary mb-2">Password requirements:</p>
               <ul className="text-xs text-cyber-text-muted space-y-1">
                 <li>• At least 12 characters long</li>
@@ -120,16 +120,7 @@ export function SecurityTab({ user }: SecurityTabProps) {
 
             {/* Message */}
             {message && (
-              <div
-                className={cn(
-                  "p-4 rounded-lg",
-                  message.type === "success"
-                    ? "bg-green-500/10 text-green-500 border border-green-500/20"
-                    : "bg-cyber-danger/10 text-cyber-danger border border-cyber-danger/20"
-                )}
-              >
-                {message.text}
-              </div>
+              <Alert variant={message.type === "success" ? "success" : "error"}>{message.text}</Alert>
             )}
 
             <div className="flex justify-end">
@@ -151,12 +142,12 @@ export function SecurityTab({ user }: SecurityTabProps) {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <div className="flex items-center justify-between p-4 bg-cyber-dark-secondary/50 rounded-lg border border-cyber-border">
+            <div className="flex items-center justify-between p-4 border-2 border-cyber-ink bg-cyber-ink">
               <div>
                 <p className="text-cyber-text-primary font-medium">{user.email}</p>
                 <p className="text-sm text-cyber-text-muted">
                   {user.emailVerified ? (
-                    <span className="text-green-500">✓ Verified</span>
+                    <span className="text-cyber-primary">✓ Verified</span>
                   ) : (
                     <span className="text-cyber-warning">⚠ Not verified</span>
                   )}
@@ -190,6 +181,3 @@ export function SecurityTab({ user }: SecurityTabProps) {
   );
 }
 
-function cn(...classes: any[]) {
-  return classes.filter(Boolean).join(" ");
-}

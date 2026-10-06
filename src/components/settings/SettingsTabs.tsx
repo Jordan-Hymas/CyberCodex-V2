@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { ProfileTab } from "./ProfileTab";
 import { SecurityTab } from "./SecurityTab";
@@ -14,61 +13,52 @@ interface SettingsTabsProps {
   user: any;
 }
 
-const tabs: { id: Tab; label: string; icon: string }[] = [
-  { id: "profile", label: "Profile", icon: "👤" },
-  { id: "security", label: "Security", icon: "🔒" },
-  { id: "preferences", label: "Preferences", icon: "⚙️" },
-  { id: "account", label: "Account", icon: "🗑️" },
+const tabs: { id: Tab; label: string }[] = [
+  { id: "profile", label: "Profile" },
+  { id: "security", label: "Security" },
+  { id: "preferences", label: "Preferences" },
+  { id: "account", label: "Account" },
 ];
 
 export function SettingsTabs({ user }: SettingsTabsProps) {
   const [activeTab, setActiveTab] = useState<Tab>("profile");
 
   return (
-    <div className="space-y-6">
-      {/* Tab Navigation */}
-      <div className="border-b border-cyber-border">
-        <nav className="flex space-x-8" aria-label="Settings tabs">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={cn(
-                "relative py-4 px-1 text-sm font-medium transition-colors",
-                "focus:outline-none focus:ring-2 focus:ring-cyber-primary focus:ring-offset-2 focus:ring-offset-cyber-dark",
-                activeTab === tab.id
-                  ? "text-cyber-primary"
-                  : "text-cyber-text-secondary hover:text-cyber-text-primary"
-              )}
-            >
-              <span className="flex items-center gap-2">
-                <span>{tab.icon}</span>
-                <span>{tab.label}</span>
-              </span>
-              {activeTab === tab.id && (
-                <motion.div
-                  layoutId="activeTab"
-                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-cyber-primary"
-                  transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                />
-              )}
-            </button>
-          ))}
-        </nav>
-      </div>
+    <div className="grid gap-8 md:grid-cols-[13rem_1fr] md:items-start">
+      {/* Menu */}
+      <nav aria-label="Settings sections" className="pixel-panel md:sticky md:top-24">
+        <ul role="tablist" aria-orientation="vertical" className="flex overflow-x-auto py-2 md:block">
+          {tabs.map((tab) => {
+            const active = activeTab === tab.id;
+            return (
+              <li key={tab.id}>
+                <button
+                  role="tab"
+                  aria-selected={active}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={cn(
+                    "flex w-full items-center gap-2 whitespace-nowrap px-4 py-2.5 text-left font-ui transition-colors duration-100",
+                    active ? "bg-cyber-dark-tertiary text-cyber-primary" : "text-cyber-text-secondary hover:text-cyber-text-primary",
+                    tab.id === "account" && !active && "hover:text-cyber-danger"
+                  )}
+                >
+                  <span className={cn("text-[0.6rem]", !active && "invisible")} aria-hidden="true">
+                    ▶
+                  </span>
+                  {tab.label}
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
 
-      {/* Tab Content */}
-      <motion.div
-        key={activeTab}
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.2 }}
-      >
+      <div role="tabpanel" key={activeTab} className="min-w-0 animate-fade-in">
         {activeTab === "profile" && <ProfileTab user={user} />}
         {activeTab === "security" && <SecurityTab user={user} />}
         {activeTab === "preferences" && <PreferencesTab user={user} />}
         {activeTab === "account" && <AccountTab user={user} />}
-      </motion.div>
+      </div>
     </div>
   );
 }

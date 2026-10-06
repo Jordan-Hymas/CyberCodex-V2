@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Modal, Button, Input } from "@/components/ui";
-import { Upload, X } from "lucide-react";
+import { Upload } from "lucide-react";
 
 interface EditProfileModalProps {
   isOpen: boolean;
@@ -54,17 +54,8 @@ export function EditProfileModal({ isOpen, onClose, userData }: EditProfileModal
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
-      <div className="p-6">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-cyber-text-primary">Edit Profile</h2>
-          <button
-            onClick={onClose}
-            className="text-cyber-text-secondary hover:text-cyber-text-primary transition-colors"
-          >
-            <X size={24} />
-          </button>
-        </div>
+    <Modal isOpen={isOpen} onClose={onClose} title="Edit profile">
+      <div>
 
         <div className="space-y-6">
           {/* Banner URL */}
@@ -115,7 +106,7 @@ export function EditProfileModal({ isOpen, onClose, userData }: EditProfileModal
               }}
               maxLength={MAX_BIO_LENGTH}
               placeholder="Tell us about yourself..."
-              className="w-full min-h-[100px] p-3 bg-cyber-dark border border-cyber-border rounded-lg text-cyber-text-primary focus:outline-none focus:border-cyber-primary resize-none"
+              className="pixel-input w-full min-h-[100px] p-3"
             />
             <div className="flex justify-between items-center mt-1">
               <p className="text-xs text-cyber-text-muted">

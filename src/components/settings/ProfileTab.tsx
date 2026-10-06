@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, Input, Textarea, Button } from "@/components/ui";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, Input, Textarea, Button, Alert } from "@/components/ui";
 
 interface ProfileTabProps {
   user: any;
@@ -92,16 +92,7 @@ export function ProfileTab({ user }: ProfileTabProps) {
 
             {/* Message */}
             {message && (
-              <div
-                className={cn(
-                  "p-4 rounded-lg",
-                  message.type === "success"
-                    ? "bg-green-500/10 text-green-500 border border-green-500/20"
-                    : "bg-cyber-danger/10 text-cyber-danger border border-cyber-danger/20"
-                )}
-              >
-                {message.text}
-              </div>
+              <Alert variant={message.type === "success" ? "success" : "error"}>{message.text}</Alert>
             )}
 
             {/* Submit Button */}
@@ -124,12 +115,12 @@ export function ProfileTab({ user }: ProfileTabProps) {
         </CardHeader>
         <CardContent>
           <div className="flex items-center gap-6">
-            <div className="w-24 h-24 rounded-full bg-cyber-dark-secondary border-2 border-cyber-border flex items-center justify-center text-4xl">
+            <div className="grid h-24 w-24 place-items-center overflow-hidden border-[3px] border-cyber-ink bg-cyber-dark-tertiary font-ui text-4xl shadow-[3px_3px_0_0_var(--color-cyber-ink)]">
               {user.image ? (
                 <img
                   src={user.image}
                   alt={user.name}
-                  className="w-full h-full rounded-full object-cover"
+                  className="h-full w-full object-cover"
                 />
               ) : (
                 <span>{user.name?.charAt(0).toUpperCase() || "?"}</span>
@@ -150,6 +141,3 @@ export function ProfileTab({ user }: ProfileTabProps) {
   );
 }
 
-function cn(...classes: any[]) {
-  return classes.filter(Boolean).join(" ");
-}
