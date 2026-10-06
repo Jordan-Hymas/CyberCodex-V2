@@ -3,6 +3,7 @@ import { Atkinson_Hyperlegible, JetBrains_Mono, Pixelify_Sans, Silkscreen } from
 import localFont from "next/font/local";
 import { NavigationWrapper } from "@/components/layout/NavigationWrapper";
 import { Footer } from "@/components/layout";
+import { FooterGate } from "@/components/layout/FooterGate";
 import { SmoothScrollProvider, SessionProvider } from "@/components/providers";
 import "@/styles/globals.css";
 
@@ -87,7 +88,9 @@ export default function RootLayout({
           <SmoothScrollProvider>
             <NavigationWrapper />
             {children}
-            <Footer />
+            <FooterGate>
+              <Footer />
+            </FooterGate>
           </SmoothScrollProvider>
         </SessionProvider>
       </body>
