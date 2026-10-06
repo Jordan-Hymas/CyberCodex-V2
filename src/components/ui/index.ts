@@ -1,4 +1,4 @@
-export { Button, type ButtonProps } from "./Button";
+export { Button, buttonClasses, type ButtonProps } from "./Button";
 export { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter, type CardProps } from "./Card";
 export { Badge, type BadgeProps } from "./Badge";
 export { Input, type InputProps } from "./Input";
@@ -11,3 +11,4 @@ export { PricingCard, type PricingCardProps, type PricingFeature } from "./Prici
 export { Avatar, type AvatarProps } from "./Avatar";
 export { PasswordStrengthMeter, type PasswordStrengthMeterProps } from "./PasswordStrengthMeter";
 export { WindowBar, type WindowBarProps } from "./WindowBar";
+export { Alert, type AlertProps } from "./Alert";

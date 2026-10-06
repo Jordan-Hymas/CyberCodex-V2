@@ -1,6 +1,3 @@
-"use client";
-
-import { motion } from "framer-motion";
 import { Avatar } from "@/components/ui";
 import { cn } from "@/lib/utils";
 
@@ -16,97 +13,51 @@ export interface LeaderboardUser {
 export interface LeaderboardEntryProps {
   user: LeaderboardUser;
   rank: number;
-  index: number;
+  /** @deprecated no longer used (entries don't stagger in) */
+  index?: number;
 }
 
-export function LeaderboardEntry({ user, rank, index }: LeaderboardEntryProps) {
-  // Determine medal/trophy for top 3
-  const getMedalEmoji = (rank: number) => {
-    switch (rank) {
-      case 1:
-        return "🥇";
-      case 2:
-        return "🥈";
-      case 3:
-        return "🥉";
-      default:
-        return null;
-    }
-  };
+// Gold, silver, bronze tiles for the podium
+const podium: Record<number, string> = {
+  1: "bg-cyber-warning text-cyber-ink",
+  2: "bg-cyber-text-secondary text-cyber-ink",
+  3: "bg-cyber-orange text-cyber-ink",
+};
 
-  const medal = getMedalEmoji(rank);
+export function LeaderboardEntry({ user, rank }: LeaderboardEntryProps) {
   const isTopThree = rank <= 3;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, delay: index * 0.05 }}
-      className={cn(
-        "flex items-center gap-4 p-4 rounded-lg transition-all duration-300",
-        "hover:bg-cyber-dark-secondary/50",
-        isTopThree && "bg-cyber-dark-secondary/30"
-      )}
-    >
-      {/* Rank Number */}
-      <div className={cn(
-        "flex items-center justify-center w-12 h-12 rounded-lg font-bold flex-shrink-0",
-        isTopThree
-          ? "text-xl bg-gradient-to-br from-cyber-primary/20 to-cyber-secondary/20 border border-cyber-primary/30"
-          : "text-lg text-cyber-text-muted"
-      )}>
-        {medal || rank}
-      </div>
+    <li className={cn("flex items-center gap-4 px-4 py-3", isTopThree && "bg-cyber-dark-tertiary/60")}>
+      <span
+        className={cn(
+          "grid h-10 w-10 shrink-0 place-items-center border-2 border-cyber-ink font-pixel text-xs",
+          podium[rank] ?? "bg-cyber-ink text-cyber-text-muted",
+          isTopThree && "shadow-[3px_3px_0_0_var(--color-cyber-ink)]"
+        )}
+        aria-label={`Rank ${rank}`}
+      >
+        {rank}
+      </span>
 
-      {/* User Avatar & Info */}
-      <div className="flex items-center gap-3 flex-1 min-w-0">
-        <Avatar
-          src={user.image}
-          alt={user.name}
-          fallback={user.name}
-          size="lg"
-          showBorder={isTopThree}
-          showGlow={isTopThree}
-        />
-
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2">
-            <h3 className={cn(
-              "font-semibold truncate",
-              isTopThree ? "text-cyber-primary" : "text-cyber-text-primary"
-            )}>
-              {user.name}
-            </h3>
+      <div className="flex min-w-0 flex-1 items-center gap-3">
+        <Avatar src={user.image} alt={user.name} fallback={user.name} size="lg" showBorder={isTopThree} />
+        <div className="min-w-0">
+          <p className={cn("flex items-center gap-2 truncate font-ui", isTopThree ? "text-cyber-text-primary" : "text-cyber-text-secondary")}>
+            {user.name}
             {user.isVerified && (
-              <svg
-                className="w-5 h-5 text-cyber-secondary flex-shrink-0"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                aria-label="Verified"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                  clipRule="evenodd"
-                />
-              </svg>
+              <span className="border border-cyber-ink bg-cyber-secondary px-1 text-[0.6rem] text-cyber-ink" title="Verified">
+                ✓
+              </span>
             )}
-          </div>
-          {user.username && (
-            <p className="text-sm text-cyber-text-muted truncate">
-              @{user.username}
-            </p>
-          )}
+          </p>
+          {user.username && <p className="truncate text-sm text-cyber-text-muted">@{user.username}</p>}
         </div>
       </div>
 
-      {/* XP Display */}
-      <div className={cn(
-        "font-bold text-lg whitespace-nowrap flex-shrink-0",
-        isTopThree ? "text-cyber-primary" : "text-cyber-text-secondary"
-      )}>
+      <span className={cn("shrink-0 whitespace-nowrap font-ui", isTopThree ? "text-cyber-warning" : "text-cyber-text-secondary")}>
         {user.xp.toLocaleString()} XP
-      </div>
-    </motion.div>
+      </span>
+    </li>
   );
 }

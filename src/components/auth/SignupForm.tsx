@@ -61,9 +61,9 @@ export function SignupForm() {
   };
 
   return (
-    <div className="w-full max-w-md">
+    <div className="w-full">
       {error && (
-        <div className="mb-6 p-4 rounded-lg bg-cyber-danger/10 border border-cyber-danger text-cyber-danger">
+        <div role="alert" className="mb-6 border-2 border-l-[6px] border-cyber-ink border-l-cyber-danger bg-cyber-ink px-4 py-3 font-ui text-cyber-danger">
           {error}
         </div>
       )}

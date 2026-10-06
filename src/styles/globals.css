@@ -37,6 +37,7 @@
   --font-pixel: var(--font-press-start), monospace;  /* display headings */
   --font-ui: var(--font-pixelify), var(--font-body), sans-serif;  /* labels, buttons (use weight 600+) */
   --font-mono: var(--font-code), ui-monospace, monospace;
+  --font-label: var(--font-silkscreen), var(--font-ui);  /* tiny uppercase labels */
 
   /* Square corners everywhere — the pixel grid has no curves */
   --radius-xs: 0px;
@@ -263,11 +264,12 @@
 
   /* Small all-caps label, e.g. "LEVEL 3" or section eyebrows */
   .pixel-label {
-    font-family: var(--font-ui);
-    font-size: 0.8rem;
-    font-weight: 600;
+    font-family: var(--font-label);
+    font-size: 0.75rem;
+    font-weight: 400;
     text-transform: uppercase;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.06em;
+    line-height: 1.4;
   }
 
   /* --- Panels & cards --- */

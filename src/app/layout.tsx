@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Atkinson_Hyperlegible, JetBrains_Mono, Pixelify_Sans } from "next/font/google";
+import { Atkinson_Hyperlegible, JetBrains_Mono, Pixelify_Sans, Silkscreen } from "next/font/google";
 import localFont from "next/font/local";
 import { NavigationWrapper } from "@/components/layout/NavigationWrapper";
 import { Footer } from "@/components/layout";
@@ -19,6 +19,14 @@ const pixelify = Pixelify_Sans({
   subsets: ["latin"],
   weight: ["600", "700"],
   variable: "--font-pixelify",
+  display: "swap",
+});
+
+// Tiny all-caps labels and badges: built for small sizes
+const silkscreen = Silkscreen({
+  subsets: ["latin"],
+  weight: ["400"],
+  variable: "--font-silkscreen",
   display: "swap",
 });
 
@@ -73,7 +81,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${bodyFont.variable} ${pixelify.variable} ${codeFont.variable} ${pressStart2P.variable}`}>
+    <html lang="en" className={`${bodyFont.variable} ${pixelify.variable} ${codeFont.variable} ${silkscreen.variable} ${pressStart2P.variable}`}>
       <body className="antialiased">
         <SessionProvider>
           <SmoothScrollProvider>

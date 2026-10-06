@@ -32,7 +32,7 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
     <span
       ref={ref}
       className={cn(
-        "inline-flex items-center gap-1 font-ui font-semibold uppercase tracking-wider",
+        "inline-flex items-center gap-1 font-label uppercase tracking-wide",
         "border-2 border-cyber-ink shadow-[2px_2px_0_0_var(--color-cyber-ink)]",
         variants[variant] ?? variants.default,
         sizes[size],

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Input, Button, PasswordStrengthMeter } from "@/components/ui";
+import { Input, Button, PasswordStrengthMeter, Alert } from "@/components/ui";
 import { cn } from "@/lib/utils";
 import { validatePasswordStrength } from "@/lib/utils/password-validation";
 
@@ -103,7 +103,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
       />
 
       {/* Password Requirements */}
-      <div className="bg-cyber-dark-secondary/50 p-4 rounded-lg border border-cyber-border">
+      <div className="border-2 border-dashed border-cyber-border p-4">
         <p className="text-sm text-cyber-text-secondary mb-2">Password requirements:</p>
         <ul className="text-xs text-cyber-text-muted space-y-1">
           <li>• At least 12 characters long</li>
@@ -114,16 +114,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
       </div>
 
       {message && (
-        <div
-          className={cn(
-            "p-4 rounded-lg",
-            message.type === "success"
-              ? "bg-green-500/10 text-green-500 border border-green-500/20"
-              : "bg-cyber-danger/10 text-cyber-danger border border-cyber-danger/20"
-          )}
-        >
-          {message.text}
-        </div>
+        <Alert variant={message.type === "success" ? "success" : "error"}>{message.text}</Alert>
       )}
 
       <Button type="submit" isLoading={isLoading} fullWidth>

@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import Image from "next/image";
-import { Container, Card, Button, Badge } from "@/components/ui";
+import { Button } from "@/components/ui";
+import { PageBanner } from "@/components/layout/PageBanner";
+import { Mascot } from "@/components/brand";
 import { LeaderboardTabs } from "@/components/community/LeaderboardTabs";
 import { LeaderboardTable } from "@/components/community/LeaderboardTable";
 import { CommunityStats } from "@/components/community/CommunityStats";
@@ -78,200 +78,65 @@ export default function CommunityPage() {
   }, [activePeriod]);
 
   return (
-    <main className="min-h-screen">
-      {/* Hero Banner Section */}
-      <div className="relative mb-16 pt-32 pb-20 overflow-hidden min-h-[300px] sm:min-h-[350px] md:min-h-[400px]">
-        {/* Background Image/GIF */}
-        <div className="absolute inset-0 z-0">
-          <Image
-            src="/images/banners/space_banner.png"
-            alt="CyberCodex Community"
-            fill
-            className="object-cover"
-            priority
-            unoptimized
-            onError={(e) => {
-              e.currentTarget.style.display = 'none';
-            }}
-          />
-          {/* Darker gradient overlay for better text readability */}
-          <div className="absolute inset-0 bg-gradient-to-b from-cyber-dark/70 via-cyber-dark/60 to-cyber-dark" />
-          {/* Additional dark overlay at top for title */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-transparent" />
-        </div>
+    <main className="min-h-screen pb-24">
+      <PageBanner
+        image="/images/banners/futureOutpost.gif"
+        imagePosition="center 60%"
+        eyebrow="Community"
+        title="High scores"
+        description="Earn XP from exercises and courses, then see how you stack up against everyone else."
+      />
 
-        {/* Header Content */}
-        <Container>
-          <div className="relative z-10 text-center max-w-4xl mx-auto px-4 sm:px-6">
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ duration: 0.5, type: "spring" }}
-              className="mb-6 flex justify-center"
-            >
-              <div className="w-16 h-16 sm:w-20 sm:h-20 relative">
-                <Image
-                  src="/images/logo/possibleCharacter.gif"
-                  alt="CyberCodex Trophy"
-                  width={80}
-                  height={80}
-                  className="object-contain"
-                  unoptimized
-                />
-              </div>
-            </motion.div>
-
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="text-3xl sm:text-4xl md:text-5xl lg:text-display-2 font-bold mb-4 sm:mb-6 text-white drop-shadow-[0_4px_20px_rgba(0,0,0,1)] [text-shadow:_0_0_30px_rgb(0_0_0_/_100%),_0_2px_10px_rgb(0_0_0_/_100%)] px-4"
-            >
-              Community
-            </motion.h1>
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-base sm:text-lg md:text-xl text-white/90 max-w-3xl mx-auto drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]"
-            >
-              Compete with other users and rise to the top 🏆
-            </motion.p>
+      <div className="container-custom grid gap-10 pt-12 lg:grid-cols-[2fr_1fr] lg:items-start">
+        {/* Leaderboard */}
+        <section id="leaderboard" className="scroll-mt-24 space-y-6">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <h2 className="text-display-2 !text-[clamp(1.25rem,2vw,1.75rem)]">Leaderboard</h2>
+            <LeaderboardTabs onPeriodChange={setActivePeriod} defaultPeriod={activePeriod} />
           </div>
-        </Container>
+
+          {isLoading ? (
+            <div className="pixel-panel flex items-center justify-center gap-4 p-12">
+              <span className="loading-spinner h-8 w-8" aria-hidden="true" />
+              <p className="font-ui text-cyber-text-muted">Loading scores…</p>
+            </div>
+          ) : (
+            <LeaderboardTable users={leaderboardUsers} />
+          )}
+
+          <div className="flex flex-col items-start gap-5 border-[3px] border-cyber-ink bg-cyber-secondary p-6 text-cyber-ink shadow-[6px_6px_0_0_var(--color-cyber-ink)] sm:flex-row sm:items-center">
+            <Mascot mood="smart" width={80} />
+            <div className="flex-1">
+              <h3 className="mb-2 text-xl text-cyber-ink">How to earn XP</h3>
+              <ul className="grid gap-1 text-sm sm:grid-cols-2">
+                <li>▸ Complete course exercises and projects</li>
+                <li>▸ Finish entire courses to unlock badges</li>
+                <li>▸ Maintain your learning streak</li>
+                <li>▸ Weekly challenges (coming soon)</li>
+              </ul>
+            </div>
+            <Button href="/courses" variant="secondary">
+              Explore courses
+            </Button>
+          </div>
+        </section>
+
+        {/* Sidebar */}
+        <aside className="space-y-10">
+          <section className="space-y-4">
+            <h2 className="pixel-label text-cyber-text-muted">
+              Community stats
+            </h2>
+            <CommunityStats totalUsers={totalUsers} totalXP={totalXP} activeToday={activeToday} />
+          </section>
+          <section className="space-y-4">
+            <h2 className="pixel-label text-cyber-text-muted">
+              Patch notes
+            </h2>
+            <UpdatesCard updates={updates} />
+          </section>
+        </aside>
       </div>
-
-      {/* Main Content Section */}
-      <section className="pb-20 -mt-8">
-        <Container>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:items-start">
-            {/* Main Leaderboard Section (2/3 width on desktop) */}
-            <div className="lg:col-span-2 space-y-6">
-              {/* Tabs and Title */}
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <motion.h2
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.6 }}
-                  className="text-2xl md:text-3xl font-bold text-cyber-text-primary"
-                >
-                  Leaderboard
-                </motion.h2>
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.6, delay: 0.1 }}
-                >
-                  <LeaderboardTabs
-                    onPeriodChange={setActivePeriod}
-                    defaultPeriod={activePeriod}
-                  />
-                </motion.div>
-              </div>
-
-              {/* Leaderboard Table */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-              >
-                {isLoading ? (
-                  <Card className="p-12 text-center">
-                    <div className="flex flex-col items-center gap-4">
-                      <div className="w-12 h-12 border-4 border-cyber-primary border-t-transparent rounded-full animate-spin" />
-                      <p className="text-cyber-text-muted">Loading leaderboard...</p>
-                    </div>
-                  </Card>
-                ) : (
-                  <LeaderboardTable users={leaderboardUsers} />
-                )}
-              </motion.div>
-
-              {/* Info Card */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.3 }}
-              >
-                <Card padding="md" className="bg-gradient-to-br from-cyber-primary/5 to-cyber-secondary/5 border-cyber-primary/30">
-                  <div className="flex items-start gap-4">
-                    <div className="flex-shrink-0 text-cyber-primary">
-                      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M13 10V3L4 14h7v7l9-11h-7z"
-                        />
-                      </svg>
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="text-lg font-bold text-cyber-primary mb-2">How to Earn XP</h3>
-                      <ul className="text-sm text-cyber-text-secondary space-y-2 list-disc list-inside">
-                        <li>Complete course exercises and projects</li>
-                        <li>Finish entire courses to unlock badges</li>
-                        <li>Participate in weekly challenges (coming soon)</li>
-                        <li>Maintain your learning streak</li>
-                      </ul>
-                      <Button href="/courses" variant="primary" size="sm" className="mt-4">
-                          Explore Courses
-                        </Button>
-                    </div>
-                  </div>
-                </Card>
-              </motion.div>
-            </div>
-
-            {/* Sidebar (1/3 width on desktop) */}
-            <div className="lg:col-span-1 space-y-6">
-              {/* Community Stats with external heading to match leaderboard structure */}
-              <div className="space-y-6">
-                <motion.h2
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.6 }}
-                  className="text-2xl md:text-3xl font-bold text-cyber-text-primary"
-                >
-                  Community Stats
-                </motion.h2>
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.4 }}
-                >
-                  <CommunityStats
-                    totalUsers={totalUsers}
-                    totalXP={totalXP}
-                    activeToday={activeToday}
-                  />
-                </motion.div>
-              </div>
-
-              {/* Updates Card */}
-              <div className="space-y-6">
-                <div className="flex items-center justify-between">
-                  <motion.h2
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.6 }}
-                    className="text-2xl md:text-3xl font-bold text-cyber-text-primary"
-                  >
-                    Latest Updates
-                  </motion.h2>
-                  <Badge variant="primary" size="sm">New</Badge>
-                </div>
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.5 }}
-                >
-                  <UpdatesCard updates={updates} />
-                </motion.div>
-              </div>
-            </div>
-          </div>
-        </Container>
-      </section>
     </main>
   );
 }

@@ -110,7 +110,7 @@ export function CoursesClient({ courses }: CoursesClientProps) {
           </div>
 
           <div className="grid gap-5 lg:grid-cols-[auto_1fr] lg:items-start lg:gap-x-6">
-            <h2 className="pixel-label pt-2 text-cyber-text-muted" style={{ fontFamily: "var(--font-ui)", fontSize: "0.8rem" }}>
+            <h2 className="pixel-label pt-2 text-cyber-text-muted">
               Category
             </h2>
             <div className="flex flex-wrap gap-2.5">
@@ -129,7 +129,7 @@ export function CoursesClient({ courses }: CoursesClientProps) {
               ))}
             </div>
 
-            <h2 className="pixel-label pt-2 text-cyber-text-muted" style={{ fontFamily: "var(--font-ui)", fontSize: "0.8rem" }}>
+            <h2 className="pixel-label pt-2 text-cyber-text-muted">
               Level
             </h2>
             <div className="flex flex-wrap gap-2.5">

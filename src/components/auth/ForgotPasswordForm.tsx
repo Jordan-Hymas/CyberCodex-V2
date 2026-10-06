@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Input, Button } from "@/components/ui";
+import { Input, Button, Alert } from "@/components/ui";
 
 export function ForgotPasswordForm() {
   const [email, setEmail] = useState("");
@@ -54,16 +54,7 @@ export function ForgotPasswordForm() {
       />
 
       {message && (
-        <div
-          className={cn(
-            "p-4 rounded-lg",
-            message.type === "success"
-              ? "bg-green-500/10 text-green-500 border border-green-500/20"
-              : "bg-cyber-danger/10 text-cyber-danger border border-cyber-danger/20"
-          )}
-        >
-          {message.text}
-        </div>
+        <Alert variant={message.type === "success" ? "success" : "error"}>{message.text}</Alert>
       )}
 
       <Button type="submit" isLoading={isLoading} fullWidth>

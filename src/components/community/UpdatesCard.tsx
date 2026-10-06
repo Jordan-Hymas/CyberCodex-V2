@@ -1,7 +1,4 @@
-"use client";
-
-import { Card, Badge } from "@/components/ui";
-import { motion } from "framer-motion";
+import { Badge, type BadgeProps } from "@/components/ui";
 
 export interface Update {
   id: string;
@@ -15,64 +12,35 @@ export interface UpdatesCardProps {
   updates: Update[];
 }
 
+const typeStyle: Record<Update["type"], { label: string; variant: BadgeProps["variant"] }> = {
+  feature: { label: "New", variant: "primary" },
+  fix: { label: "Fix", variant: "pink" },
+  update: { label: "Update", variant: "secondary" },
+  announcement: { label: "News", variant: "warning" },
+};
+
 export function UpdatesCard({ updates }: UpdatesCardProps) {
-  const getTypeVariant = (type: Update["type"]) => {
-    switch (type) {
-      case "feature":
-        return "primary";
-      case "fix":
-        return "danger";
-      case "update":
-        return "secondary";
-      case "announcement":
-        return "warning";
-      default:
-        return "default";
-    }
-  };
-
-  const getTypeLabel = (type: Update["type"]) => {
-    switch (type) {
-      case "feature":
-        return "New Feature";
-      case "fix":
-        return "Bug Fix";
-      case "update":
-        return "Update";
-      case "announcement":
-        return "Announcement";
-      default:
-        return type;
-    }
-  };
-
   return (
-    <div className="space-y-3 overflow-y-auto scrollbar-cyber min-h-[660px] max-h-[660px] pr-1">
-        {updates.map((update, index) => (
-          <motion.div
-            key={update.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: index * 0.1 }}
-          >
-            <Card padding="md" hover className="space-y-2">
-              <div className="flex items-start justify-between gap-2">
-                <Badge variant={getTypeVariant(update.type)} size="sm">
-                  {getTypeLabel(update.type)}
-                </Badge>
-                <time className="text-xs text-cyber-text-muted whitespace-nowrap">
-                  {update.date}
-                </time>
-              </div>
-              <h4 className="font-semibold text-cyber-text-primary">
-                {update.title}
-              </h4>
-              <p className="text-sm text-cyber-text-secondary leading-relaxed">
-                {update.description}
-              </p>
-            </Card>
-          </motion.div>
-        ))}
-    </div>
+    <ol className="pixel-panel divide-y-2 divide-dashed divide-cyber-border">
+      {updates.map((update) => {
+        const style = typeStyle[update.type];
+        return (
+          <li key={update.id} className="space-y-2 p-4">
+            <div className="flex items-center justify-between gap-2">
+              <Badge variant={style.variant} size="sm">
+                {style.label}
+              </Badge>
+              <time dateTime={update.date} className="font-ui text-xs text-cyber-text-muted">
+                {update.date}
+              </time>
+            </div>
+            <h3 className="text-cyber-text-primary" style={{ fontSize: "1.05rem" }}>
+              {update.title}
+            </h3>
+            <p className="text-sm leading-relaxed text-cyber-text-secondary">{update.description}</p>
+          </li>
+        );
+      })}
+    </ol>
   );
 }
