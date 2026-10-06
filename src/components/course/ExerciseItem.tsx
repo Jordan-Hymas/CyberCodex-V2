@@ -10,68 +10,54 @@ export interface ExerciseItemProps {
   className?: string;
 }
 
-export function ExerciseItem({
-  exercise,
-  courseSlug,
-  exerciseNumber,
-  chapterId,
-  className,
-}: ExerciseItemProps) {
-  const isLocked = exercise.isLocked;
-  const isCompleted = exercise.isCompleted;
+export function ExerciseItem({ exercise, courseSlug, exerciseNumber, className }: ExerciseItemProps) {
+  const { isLocked, isCompleted } = exercise;
+  const isUnwritten = exercise.hasContent === false;
+  const href = `/courses/${courseSlug}/${exercise.id}`;
 
   return (
-    <div
-      className={cn(
-        "flex items-center justify-between py-3 px-4 rounded-lg transition-all",
-        "hover:bg-cyber-dark-secondary/50",
-        isLocked && "opacity-50",
-        className
-      )}
-    >
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-3">
-          <span className="text-sm text-cyber-text-secondary font-medium whitespace-nowrap">
-            Exercise {exerciseNumber}
-          </span>
-          <span className="text-cyber-text-muted">·</span>
-          <span className="text-cyber-text-primary truncate">{exercise.title}</span>
-        </div>
-        {exercise.description && (
-          <p className="text-sm text-cyber-text-secondary mt-1 truncate">
-            {exercise.description}
-          </p>
+    <li className={cn("flex items-center gap-3 px-4 py-3 md:px-5", (isLocked || isUnwritten) && "opacity-60", className)}>
+      {/* Status tile */}
+      <span
+        className={cn(
+          "grid h-8 w-8 shrink-0 place-items-center border-2 border-cyber-ink font-ui text-xs",
+          isCompleted
+            ? "bg-cyber-primary text-cyber-ink"
+            : isLocked
+              ? "bg-cyber-ink text-cyber-text-muted"
+              : "bg-cyber-dark-tertiary text-cyber-text-primary"
         )}
+        aria-label={isCompleted ? "Completed" : isLocked ? "Locked" : `Exercise ${exerciseNumber}`}
+      >
+        {isCompleted ? "✓" : isLocked ? "🔒" : exerciseNumber}
+      </span>
+
+      <div className="min-w-0 flex-1">
+        <p className="truncate text-cyber-text-primary">{exercise.title}</p>
+        {exercise.description && <p className="truncate text-sm text-cyber-text-muted">{exercise.description}</p>}
       </div>
 
-      <div className="ml-4 flex-shrink-0">
+      {exercise.xpReward ? (
+        <span className="hidden shrink-0 font-ui text-sm text-cyber-warning sm:inline">+{exercise.xpReward} XP</span>
+      ) : null}
+
+      <div className="shrink-0">
         {isLocked ? (
-          <Button
-            variant="ghost"
-            size="sm"
-            disabled
-            className="border border-cyber-border"
-          >
-            <span className="text-cyber-text-muted">???</span>
-          </Button>
+          <span className="font-ui text-sm text-cyber-text-muted">Locked</span>
+        ) : isUnwritten ? (
+          <span className="border border-cyber-border px-1.5 py-0.5 font-ui text-xs uppercase tracking-wider text-cyber-text-muted">
+            Soon
+          </span>
         ) : isCompleted ? (
-          <Button href={`/courses/${courseSlug}/${exercise.id}`}
-              variant="ghost"
-              size="sm"
-              className="border border-cyber-primary text-cyber-primary hover:bg-cyber-primary/10"
-            >
-              ✓ Review
-            </Button>
+          <Button href={href} variant="ghost" size="sm" className="text-cyber-primary">
+            Review
+          </Button>
         ) : (
-          <Button href={`/courses/${courseSlug}/${exercise.id}`}
-              variant="primary"
-              size="sm"
-              className="bg-cyber-secondary hover:bg-cyber-secondary/90"
-            >
-              Start
-            </Button>
+          <Button href={href} size="sm">
+            Start
+          </Button>
         )}
       </div>
-    </div>
+    </li>
   );
 }

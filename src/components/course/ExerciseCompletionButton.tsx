@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui";
+import { Mascot } from "@/components/brand";
 
 export interface ExerciseCompletionButtonProps {
   courseId: string;
@@ -85,14 +86,14 @@ export function ExerciseCompletionButton({
 
   if (showSuccess) {
     return (
-      <div className="flex flex-col items-center gap-3 p-4 bg-cyber-primary/10 border border-cyber-primary rounded-lg">
-        <div className="text-2xl">🎉</div>
-        <div className="text-center">
-          <p className="text-cyber-primary font-semibold">Exercise Completed!</p>
-          <p className="text-sm text-cyber-text-secondary">+{xpReward} XP</p>
+      <div className="flex items-center gap-4 border-[3px] border-cyber-ink bg-cyber-primary p-4 text-cyber-ink shadow-[6px_6px_0_0_var(--color-cyber-ink)] animate-slide-up">
+        <Mascot mood="cheers" width={56} />
+        <div>
+          <p className="font-ui text-lg">Exercise complete!</p>
+          <p className="text-sm">+{xpReward} XP</p>
         </div>
         {nextExerciseId && (
-          <p className="text-xs text-cyber-text-muted">Moving to next exercise...</p>
+          <p className="ml-auto text-sm">Loading next exercise…</p>
         )}
       </div>
     );

@@ -12,6 +12,8 @@ export interface Exercise {
   type: "exercise" | "project" | "article" | "quiz" | "interactive-python";
   isLocked: boolean;
   isCompleted: boolean;
+  /** False when the exercise is in the curriculum but its MDX isn't written yet */
+  hasContent?: boolean;
   xpReward?: number;
   // Interactive Python exercise fields
   starterCode?: string;
@@ -77,7 +79,8 @@ export interface CourseCurriculum {
 export interface UserProfile {
   name: string;
   level: number;
-  avatar?: string;
+  avatar?: string; // image URL
+  isGuest?: boolean;
   xp?: number;
   totalXp?: number;
 }

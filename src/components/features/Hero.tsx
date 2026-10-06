@@ -28,7 +28,7 @@ export function Hero({ stats }: HeroProps) {
           priority
           unoptimized
           sizes="100vw"
-          className="object-cover object-center"
+          className="object-cover object-center pixelated"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-cyber-dark via-cyber-dark/85 to-cyber-dark/30" />
         <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-cyber-dark to-transparent" />

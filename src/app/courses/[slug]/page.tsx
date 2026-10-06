@@ -1,9 +1,10 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import { getAllCurriculumSlugs, getCurriculumBySlug } from "@/lib/curriculum";
+import { getAllCurriculumSlugs, getAllExerciseIds, getCurriculumBySlug } from "@/lib/curriculum";
 import { getCourseBySlug } from "@/lib/mdx";
-import { courseCategories } from "@/lib/config";
-import { Container } from "@/components/ui";
+import Link from "next/link";
+import { courseCategories, difficultyLevels } from "@/lib/config";
+import { Badge } from "@/components/ui";
 import { CourseLayout, CourseSidebar, ChapterList } from "@/components/course";
 import { auth } from "@/lib/auth/auth";
 import { prisma } from "@/lib/db/prisma";
@@ -79,7 +80,7 @@ export default async function CoursePage({ params }: CoursePageProps) {
       user = {
         name: userData.username || userData.name || "Anonymous",
         level: userData.level,
-        avatar: userData.image || "👤",
+        avatar: userData.image ?? undefined,
         xp: userData.xp,
         totalXp: userData.totalXp,
       };
@@ -153,7 +154,7 @@ export default async function CoursePage({ params }: CoursePageProps) {
     user = {
       name: "Guest",
       level: 1,
-      avatar: "👤",
+      isGuest: true,
     };
   }
 
@@ -167,54 +168,61 @@ export default async function CoursePage({ params }: CoursePageProps) {
     };
   });
 
+  const difficulty = courseMetadata ? difficultyLevels[courseMetadata.difficulty] : null;
+  const writtenExercises = new Set(getAllExerciseIds(slug));
+  const chapters = curriculum.chapters.map((chapter) => ({
+    ...chapter,
+    exercises: chapter.exercises.map((ex) => ({ ...ex, hasContent: writtenExercises.has(ex.id) })),
+  }));
+  const exerciseCount = curriculum.chapters.reduce((sum, c) => sum + c.exercises.length, 0);
+
   return (
-    <main className="min-h-screen bg-cyber-dark pb-20">
-      {/* Hero Banner Section */}
-      <div className="relative pt-24 pb-12 mb-8 overflow-hidden">
-        {/* Background Image/GIF */}
-        <div className="absolute inset-0 z-0">
-          {category?.iconGif && (
-            <>
-              <Image
-                src={category.iconGif}
-                alt={`${category.name} Background`}
-                fill
-                className="object-cover opacity-40"
-                priority
-                unoptimized
-              />
-            </>
-          )}
-          {!category?.iconGif && (
-            // Fallback gradient background
-            <div className="absolute inset-0 bg-gradient-to-br from-cyber-primary/20 via-cyber-secondary/20 to-cyber-dark" />
-          )}
-          {/* Gradient overlay for better text readability */}
-          <div className="absolute inset-0 bg-gradient-to-b from-cyber-dark/80 via-cyber-dark/90 to-cyber-dark" />
-        </div>
-
-        {/* Header Content */}
-        <Container className="max-w-7xl">
-          <div className="relative z-10">
-            {/* Breadcrumb */}
-            <div className="flex items-center gap-2 text-sm text-cyber-text-muted mb-6">
-              <a href="/courses" className="hover:text-cyber-primary transition-colors">
-                Courses
-              </a>
-              <span>/</span>
-              <span className="text-cyber-text-secondary">{curriculum.metadata.title}</span>
-            </div>
-
-            {/* Title & Description */}
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 gradient-text">
-              {curriculum.metadata.title}
-            </h1>
-            <p className="text-lg md:text-xl text-cyber-text-secondary max-w-3xl leading-relaxed">
-              {curriculum.metadata.description}
-            </p>
+    <main className="min-h-screen pb-24">
+      <header className="relative mb-12 overflow-hidden border-b-[3px] border-cyber-ink">
+        {category?.iconGif && (
+          <div className="absolute inset-0" aria-hidden="true">
+            <Image src={category.iconGif} alt="" fill priority unoptimized sizes="100vw" className="object-cover pixelated" />
+            <div className="absolute inset-0 bg-gradient-to-r from-cyber-dark via-cyber-dark/85 to-cyber-dark/30" />
           </div>
-        </Container>
-      </div>
+        )}
+        <div className="container-custom relative pt-28 pb-12 md:pt-32 md:pb-16">
+          <nav aria-label="Breadcrumb" className="mb-6 font-ui text-sm text-cyber-text-muted">
+            <Link href="/courses" className="hover:text-cyber-primary">
+              Courses
+            </Link>
+            <span className="mx-2" aria-hidden="true">/</span>
+            <span className="text-cyber-text-secondary" aria-current="page">
+              {curriculum.metadata.title}
+            </span>
+          </nav>
+          <h1 className="text-display-2 mb-4 max-w-4xl">{curriculum.metadata.title}</h1>
+          <p className="mb-6 max-w-3xl text-lg leading-relaxed text-cyber-text-secondary md:text-xl">
+            {curriculum.metadata.description}
+          </p>
+          <div className="flex flex-wrap items-center gap-3">
+            {difficulty && <Badge variant={difficulty.color} size="lg">{difficulty.label}</Badge>}
+            {[
+              courseMetadata?.duration,
+              `${curriculum.chapters.length} chapters`,
+              `${exerciseCount} exercises`,
+            ]
+              .filter(Boolean)
+              .map((item) => (
+                <span
+                  key={item}
+                  className="border-2 border-cyber-ink bg-cyber-dark-secondary px-3 py-1 font-ui text-sm text-cyber-text-primary shadow-[2px_2px_0_0_var(--color-cyber-ink)]"
+                >
+                  {item}
+                </span>
+              ))}
+            {curriculum.progress.totalXp > 0 && (
+              <span className="border-2 border-cyber-ink bg-cyber-dark-secondary px-3 py-1 font-ui text-sm text-cyber-warning shadow-[2px_2px_0_0_var(--color-cyber-ink)]">
+                +{curriculum.progress.totalXp} XP
+              </span>
+            )}
+          </div>
+        </div>
+      </header>
 
       {/* Main Content */}
       <CourseLayout
@@ -228,7 +236,7 @@ export default async function CoursePage({ params }: CoursePageProps) {
         }
       >
         <ChapterList
-          chapters={curriculum.chapters}
+          chapters={chapters}
           courseSlug={slug}
           completedExercises={completedExercises}
         />

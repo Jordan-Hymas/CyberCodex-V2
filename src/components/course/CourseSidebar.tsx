@@ -1,6 +1,4 @@
-"use client";
-
-import { Card, CardHeader, CardTitle, CardContent, Button, ProgressBar } from "@/components/ui";
+import { Button, ProgressBar, Avatar } from "@/components/ui";
 import type { UserProfile, CourseProgress, Badge } from "@/types/curriculum";
 import { cn } from "@/lib/utils";
 
@@ -11,89 +9,80 @@ export interface CourseSidebarProps {
   className?: string;
 }
 
-export function CourseSidebar({
-  user,
-  progress,
-  badges,
-  className,
-}: CourseSidebarProps) {
-  return (
-    <div className={cn("space-y-4 lg:space-y-6", className)}>
-      {/* User Profile */}
-      <Card className="border-cyber-border bg-cyber-dark-secondary/50">
-        <CardContent className="pt-6 pb-6">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="w-14 h-14 rounded-full bg-gradient-to-br from-cyber-primary to-cyber-secondary flex items-center justify-center text-2xl shadow-lg shadow-cyber-primary/20">
-              {user.avatar || "👤"}
-            </div>
-            <div>
-              <p className="font-semibold text-cyber-text-primary text-lg">{user.name}</p>
-              <p className="text-sm text-cyber-text-secondary">Level {user.level}</p>
-            </div>
-          </div>
-          <Button variant="ghost" className="w-full border border-cyber-border hover:border-cyber-primary transition-all">
-            View Profile
-          </Button>
-        </CardContent>
-      </Card>
+export function CourseSidebar({ user, progress, badges, className }: CourseSidebarProps) {
+  const avatarUrl = user.avatar && /^(https?:)?\//.test(user.avatar) ? user.avatar : null;
 
-      {/* Course Progress */}
-      <Card className="border-cyber-border bg-cyber-dark-secondary/50">
-        <CardHeader className="pb-4">
-          <CardTitle className="text-lg">Course Progress</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4 pb-6">
-          <ProgressBar
-            label="Exercises"
-            current={progress.exercisesCompleted}
-            total={progress.totalExercises}
-          />
+  return (
+    <div className={cn("space-y-6", className)}>
+      {/* Player card */}
+      <section className="pixel-panel p-5">
+        <div className="mb-4 flex items-center gap-4">
+          <Avatar src={avatarUrl} alt={user.name} size="xl" showBorder />
+          <div className="min-w-0">
+            <p className="truncate font-ui text-lg text-cyber-text-primary">{user.name}</p>
+            <p className="font-ui text-sm text-cyber-warning">LV {user.level}</p>
+          </div>
+        </div>
+        {user.isGuest ? (
+          <>
+            <p className="mb-4 text-sm text-cyber-text-secondary">Sign up to save progress and earn XP as you go.</p>
+            <Button href="/signup" fullWidth>
+              Create free account
+            </Button>
+          </>
+        ) : (
+          <Button href="/profile" variant="secondary" fullWidth>
+            View profile
+          </Button>
+        )}
+      </section>
+
+      {/* Progress */}
+      <section className="pixel-panel space-y-4 p-5">
+        <h2 className="font-ui text-lg" style={{ fontFamily: "var(--font-ui)", fontSize: "1.1rem" }}>
+          Course progress
+        </h2>
+        <ProgressBar label="Exercises" current={progress.exercisesCompleted} total={progress.totalExercises} />
+        {progress.totalProjects > 0 && (
           <ProgressBar
             label="Projects"
             current={progress.projectsCompleted}
             total={progress.totalProjects}
+            variant="accent"
           />
-          <ProgressBar
-            label="XP Earned"
-            current={progress.xpEarned}
-            total={progress.totalXp}
-            variant="secondary"
-          />
-        </CardContent>
-      </Card>
+        )}
+        <ProgressBar label="XP" current={progress.xpEarned} total={progress.totalXp} variant="warning" />
+      </section>
 
-      {/* Course Badges */}
-      <Card className="border-cyber-border bg-cyber-dark-secondary/50">
-        <CardHeader className="pb-4">
-          <CardTitle className="flex items-center justify-between text-lg">
-            Course Badges
-            <span className="text-sm text-cyber-text-secondary font-normal">
+      {/* Badges */}
+      {badges.length > 0 && (
+        <section className="pixel-panel p-5">
+          <div className="mb-2 flex items-center justify-between">
+            <h2 style={{ fontFamily: "var(--font-ui)", fontSize: "1.1rem" }}>Badges</h2>
+            <span className="font-ui text-sm text-cyber-text-muted">
               {progress.badgesEarned}/{progress.totalBadges}
             </span>
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pb-6">
-          <p className="text-sm text-cyber-text-secondary mb-4">
-            Complete chapters to earn badges – collect &apos;em all!
-          </p>
-          <div className="grid grid-cols-4 gap-2.5">
+          </div>
+          <p className="mb-4 text-sm text-cyber-text-secondary">Finish chapters to unlock them.</p>
+          <ul className="grid grid-cols-4 gap-2.5">
             {badges.map((badge) => (
-              <div
+              <li
                 key={badge.id}
                 className={cn(
-                  "aspect-square rounded-lg flex items-center justify-center text-2xl transition-all cursor-help",
+                  "grid aspect-square place-items-center border-2 border-cyber-ink text-2xl",
                   badge.isUnlocked
-                    ? "bg-gradient-to-br from-cyber-primary/20 to-cyber-secondary/20 border-2 border-cyber-primary shadow-lg shadow-cyber-primary/20"
-                    : "bg-cyber-dark-secondary border-2 border-cyber-border grayscale opacity-40 hover:opacity-50"
+                    ? "bg-cyber-warning shadow-[3px_3px_0_0_var(--color-cyber-ink)]"
+                    : "bg-cyber-ink text-cyber-text-muted"
                 )}
-                title={badge.isUnlocked ? badge.name : "Locked - " + badge.description}
+                title={badge.isUnlocked ? badge.name : `Locked: ${badge.description}`}
               >
-                {badge.icon}
-              </div>
+                <span className={cn(!badge.isUnlocked && "opacity-30 grayscale")}>{badge.icon}</span>
+                <span className="sr-only">{badge.isUnlocked ? badge.name : `Locked: ${badge.description}`}</span>
+              </li>
             ))}
-          </div>
-        </CardContent>
-      </Card>
+          </ul>
+        </section>
+      )}
     </div>
   );
 }

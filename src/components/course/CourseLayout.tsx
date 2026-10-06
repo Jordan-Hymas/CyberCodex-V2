@@ -1,5 +1,4 @@
 import { ReactNode } from "react";
-import { Container } from "@/components/ui";
 import { cn } from "@/lib/utils";
 
 export interface CourseLayoutProps {
@@ -19,7 +18,7 @@ export function CourseLayout({
     <div className={cn("w-full", className)}>
       {hero && <div className="w-full">{hero}</div>}
 
-      <Container className="max-w-7xl py-0 px-4 md:px-6">
+      <div className="container-custom">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
           {/* Main content area - scrolls with page */}
           <div className="lg:col-span-8 order-2 lg:order-1">
@@ -35,7 +34,7 @@ export function CourseLayout({
             </div>
           </div>
         </div>
-      </Container>
+      </div>
     </div>
   );
 }

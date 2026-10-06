@@ -4,6 +4,7 @@ import { useCallback } from "react";
 import CodeMirror from "@uiw/react-codemirror";
 import { python } from "@codemirror/lang-python";
 import { EditorView } from "@codemirror/view";
+import { WindowBar } from "@/components/ui/WindowBar";
 
 export interface PythonCodeEditorProps {
   value: string;
@@ -18,7 +19,7 @@ export function PythonCodeEditor({
   onChange,
   readOnly = false,
   minHeight = "300px",
-  maxHeight = "600px",
+  maxHeight,
 }: PythonCodeEditorProps) {
   const handleChange = useCallback(
     (val: string) => {
@@ -28,18 +29,11 @@ export function PythonCodeEditor({
   );
 
   return (
-    <div className="code-editor-wrapper">
-      <div className="code-editor-header">
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-red-500"></div>
-          <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-          <div className="w-3 h-3 rounded-full bg-green-500"></div>
-        </div>
-        <span className="text-sm text-cyber-text-secondary">script.py</span>
-      </div>
+    <div className="code-editor-wrapper flex h-full min-h-0 flex-col bg-cyber-ink">
+      <WindowBar title="script.py" accent="bg-cyber-secondary" />
       <CodeMirror
         value={value}
-        height="auto"
+        height="100%"
         minHeight={minHeight}
         maxHeight={maxHeight}
         extensions={[python(), EditorView.lineWrapping]}
@@ -66,116 +60,43 @@ export function PythonCodeEditor({
           completionKeymap: true,
           lintKeymap: true,
         }}
-        className="code-editor"
+        className="code-editor min-h-0 flex-1 overflow-auto"
       />
+
       <style jsx global>{`
-        .code-editor-wrapper {
-          border: none;
-          border-radius: 0;
-          overflow: hidden;
-          background: #1a1f3a;
-        }
-
-        .code-editor-header {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding: 0.75rem 1rem;
-          background: #151a2f;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
         .code-editor {
-          font-family: "Fira Code", "Courier New", monospace;
+          font-family: var(--font-mono);
           font-size: 14px;
         }
-
-        .cm-editor {
-          background: #1a1f3a !important;
-          color: #e0e7ff !important;
+        .code-editor .cm-editor {
+          height: 100%;
+          background: var(--color-cyber-ink) !important;
+          color: var(--color-cyber-text-primary) !important;
         }
-
-        .cm-gutters {
-          background: #151a2f !important;
-          color: #64748b !important;
-          border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
+        .code-editor .cm-gutters {
+          background: #181a38 !important;
+          color: var(--color-cyber-text-muted) !important;
+          border-right: 2px solid var(--color-cyber-dark-tertiary) !important;
         }
-
-        .cm-activeLineGutter {
-          background: rgba(76, 111, 255, 0.15) !important;
+        .code-editor .cm-activeLineGutter {
+          background: var(--color-cyber-dark-tertiary) !important;
+          color: var(--color-cyber-warning) !important;
         }
-
-        .cm-activeLine {
-          background: rgba(76, 111, 255, 0.08) !important;
+        .code-editor .cm-activeLine {
+          background: rgb(52 58 108 / 0.45) !important;
         }
-
-        .cm-selectionBackground {
-          background: rgba(76, 111, 255, 0.25) !important;
+        .code-editor .cm-selectionBackground,
+        .code-editor .cm-focused .cm-selectionBackground {
+          background: rgb(255 95 162 / 0.35) !important;
         }
-
-        .cm-cursor {
-          border-left-color: #4c6fff !important;
+        .code-editor .cm-cursor {
+          border-left: 2px solid var(--color-cyber-primary) !important;
         }
-
-        .cm-line {
+        .code-editor .cm-line {
           padding-left: 0.5rem;
         }
-
-        /* Python syntax highlighting */
-        .cm-keyword {
-          color: #ff0080 !important;
-        }
-
-        .cm-string {
-          color: #00ff41 !important;
-        }
-
-        .cm-comment {
-          color: #64748b !important;
-          font-style: italic;
-        }
-
-        .cm-number {
-          color: #ffd700 !important;
-        }
-
-        .cm-variableName {
-          color: #00d9ff !important;
-        }
-
-        .cm-propertyName {
-          color: #e0e7ff !important;
-        }
-
-        .cm-operator {
-          color: #ff0080 !important;
-        }
-
-        .cm-punctuation {
-          color: #94a3b8 !important;
-        }
-
-        .cm-bracket {
-          color: #ffd700 !important;
-        }
-
-        /* Scrollbar styling */
-        .cm-scroller::-webkit-scrollbar {
-          width: 8px;
-          height: 8px;
-        }
-
-        .cm-scroller::-webkit-scrollbar-track {
-          background: rgba(0, 0, 0, 0.2);
-        }
-
-        .cm-scroller::-webkit-scrollbar-thumb {
-          background: var(--color-cyber-border);
-          border-radius: 4px;
-        }
-
-        .cm-scroller::-webkit-scrollbar-thumb:hover {
-          background: var(--color-cyber-primary);
+        .code-editor .cm-focused {
+          outline: none !important;
         }
       `}</style>
     </div>

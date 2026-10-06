@@ -1,5 +1,3 @@
-"use client";
-
 import { ChapterItem } from "./ChapterItem";
 import type { Chapter } from "@/types/curriculum";
 import { cn } from "@/lib/utils";
@@ -12,7 +10,7 @@ export interface ChapterListProps {
 }
 
 export function ChapterList({ chapters, courseSlug, completedExercises = [], className }: ChapterListProps) {
-  // Calculate starting exercise number for each chapter
+  // Number exercises continuously across chapters
   let exerciseCounter = 0;
   const chaptersWithStartingNumbers = chapters.map((chapter) => {
     const startingExerciseNumber = exerciseCounter + 1;
@@ -20,29 +18,35 @@ export function ChapterList({ chapters, courseSlug, completedExercises = [], cla
     return { chapter, startingExerciseNumber };
   });
 
+  // The first chapter with unfinished work is "current" and starts open
+  const currentIndex = Math.max(
+    0,
+    chapters.findIndex((c) => c.exercises.some((e) => !completedExercises.includes(e.id)))
+  );
+
   return (
-    <div className={cn("", className)}>
-      <div className="mb-6 pb-4 border-b border-cyber-border/50">
-        <h2 className="text-2xl md:text-3xl font-bold text-cyber-text-primary mb-2">
-          Course Curriculum
-        </h2>
-        <p className="text-sm md:text-base text-cyber-text-secondary">
-          {chapters.length} chapters • {exerciseCounter} exercises
+    <div className={className}>
+      <div className="mb-8 flex flex-wrap items-end justify-between gap-2">
+        <h2 className="text-display-2 !text-[clamp(1.25rem,2vw,1.75rem)]">Quest log</h2>
+        <p className="font-ui text-cyber-text-secondary">
+          {chapters.length} chapters · {exerciseCounter} exercises
         </p>
       </div>
 
-      <div className="space-y-2">
+      {/* Path: a dashed line connects the chapter nodes */}
+      <ol className="relative space-y-5 before:absolute before:bottom-6 before:left-[1.4rem] before:top-6 before:border-l-[3px] before:border-dashed before:border-cyber-border md:before:left-[1.65rem]">
         {chaptersWithStartingNumbers.map(({ chapter, startingExerciseNumber }, index) => (
           <ChapterItem
             key={chapter.id}
             chapter={chapter}
             courseSlug={courseSlug}
-            isFirst={index === 0}
+            defaultOpen={index === currentIndex}
             startingExerciseNumber={startingExerciseNumber}
             completedExercises={completedExercises}
+            className={cn("relative")}
           />
         ))}
-      </div>
+      </ol>
     </div>
   );
 }

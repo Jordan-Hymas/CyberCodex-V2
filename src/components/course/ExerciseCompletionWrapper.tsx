@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
+import { Button } from "@/components/ui";
+import { Mascot } from "@/components/brand";
 import { useSession } from "next-auth/react";
 import { ExerciseCompletionButton } from "./ExerciseCompletionButton";
 
@@ -56,24 +57,16 @@ export function ExerciseCompletionWrapper({
   // Don't show button if not authenticated
   if (status === "loading" || loading) {
     return (
-      <div className="flex justify-center py-4">
-        <div className="text-cyber-text-muted text-sm">Loading...</div>
-      </div>
+      <div className="py-4 font-ui text-sm text-cyber-text-muted">Loading…</div>
     );
   }
 
   if (!session?.user) {
     return (
-      <div className="p-4 bg-cyber-dark-secondary/50 border border-cyber-border rounded-lg text-center">
-        <p className="text-cyber-text-secondary text-sm mb-3">
-          Sign in to track your progress and earn XP
-        </p>
-        <Link
-          href="/login"
-          className="inline-block px-6 py-2 bg-cyber-primary text-cyber-dark font-semibold rounded-lg hover:bg-cyber-secondary transition-colors"
-        >
-          Sign In
-        </Link>
+      <div className="pixel-panel flex flex-col items-start gap-4 p-5 sm:flex-row sm:items-center">
+        <Mascot mood="looking" width={56} />
+        <p className="flex-1 text-cyber-text-secondary">Sign in to track your progress and earn XP for this exercise.</p>
+        <Button href="/login">Sign in</Button>
       </div>
     );
   }
