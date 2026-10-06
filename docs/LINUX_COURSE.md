@@ -20,7 +20,8 @@ The learning sequence draws inspiration from small, cumulative challenges in [pw
 - `src/app/api/linux/[exerciseId]/route.ts`: validated POST actions: open, command, submit, reset. No caller-supplied user ID or filesystem state.
 - `src/components/lab/LinuxLesson.tsx`: server-rendered lesson and access checks.
 - `src/components/lab/LinuxLab.tsx`: session-scoped client controls, flag form, hints, reset, continuation.
-- `src/components/lab/LinuxTerminal.tsx`: xterm lifecycle and command transport; no browser-held filesystem or expected flag.
+- `src/components/lab/LinuxTerminal.tsx`: xterm lifecycle; adapts the shared `ShellSession` front end to the lab API. No browser-held filesystem or expected flag.
+- API actions `complete` (directory listing) and `read` (open file) are read-only and do not bump the version; `save` writes a file like `>` and re-runs reward checks.
 - `prisma/schema.prisma`: `LinuxLabSession`, unique on `(userId, exerciseId)`, cascading on account deletion.
 - `content/courses/linux-fundamentals/`: catalog curriculum and MDX lesson representations.
 
@@ -68,7 +69,7 @@ This is **not a full Linux VM, container, or Bash implementation**. â€œAdvancedâ
 - `printf`, `tr`, `test`, option parsing, and text utilities implement their documented educational subset.
 - Set variables in one input before using them in the next; full Bash expansion/scoping and subshell pipeline semantics are not modeled.
 - No command substitution, background execution, heredocs, Bash control structures, or full POSIX shell grammar.
-- The terminal currently provides end-of-line input, history arrows, backspace, Ctrl+C and Ctrl+L; multiline paste is inserted as editable text rather than automatically executed. Tab completion and full terminal editors are not yet provided in the new remote shell.
+- The terminal front end (`src/lib/terminal/shell.ts`, shared with the practice terminal) provides cursor editing, history, Ctrl+A/E/U/K/W/C/L, Tab completion of commands and paths (server `complete` action, honoring directory read/traverse bits), and a nano-style editor (`src/lib/terminal/nano.ts`) that loads with the read-only `read` action and saves through the versioned `save` action using the same permission and 64 KiB limits as redirection. Multiline paste stays one editable line rather than auto-executing.
 
 Keep these limits visible in course promises. A future isolated lab service is needed for faithful process control, scripting, networking and system administration. Do not execute learner text in the Next.js host shell to fill that gap.
 

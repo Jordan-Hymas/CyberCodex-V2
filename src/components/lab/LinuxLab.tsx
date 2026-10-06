@@ -4,7 +4,7 @@ import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 const LinuxTerminal = dynamic(() => import('./LinuxTerminal').then(m => m.LinuxTerminal), { ssr: false, loading: () => <p>Loading terminal…</p> });
-type Snapshot = { version: number; cwd: string; completed: boolean; attempts: number; output?: string; error?: string; clear?: boolean; message?: string };
+type Snapshot = { version: number; cwd: string; completed: boolean; attempts: number; output?: string; error?: string; clear?: boolean; message?: string; commands?: string[]; entries?: { name: string; dir: boolean }[]; file?: { path: string; text: string; isNew: boolean } };
 export function LinuxLab({ exerciseId, userId, nextId, hints }: { exerciseId: string; userId: string; nextId?: string; hints: string[] }) {
   const { data: session, status } = useSession();
   // Switching accounts unmounts the old console and drops pending requests/state.
@@ -15,20 +15,23 @@ export function LinuxLab({ exerciseId, userId, nextId, hints }: { exerciseId: st
 function PersonalLab({ exerciseId, nextId, hints }: { exerciseId: string; nextId?: string; hints: string[] }) {
   const [snapshot,setSnapshot] = useState<Snapshot | null>(null), [error,setError] = useState(''), [busy,setBusy] = useState(false), [flag,setFlag] = useState(''), [message,setMessage] = useState(''), [generation,setGeneration] = useState(0), [stale,setStale] = useState(false);
   const current = useRef<Snapshot | null>(null), inFlight = useRef(false), live = useRef(true), controller = useRef<AbortController | null>(null);
-  const request = useCallback(async (action: string, extra: Record<string, unknown> = {}) => {
+  const commandNames = useRef<string[]>([]);
+  // quiet: read-only terminal helpers (tab completion, opening files) skip the busy/status UI
+  const request = useCallback(async (action: string, extra: Record<string, unknown> = {}, quiet = false) => {
     if (inFlight.current) throw Error('Wait for the current action to finish.');
-    inFlight.current = true; setBusy(true); setError('');
+    inFlight.current = true; if (!quiet) { setBusy(true); setError(''); }
     const abort = new AbortController(); controller.current = abort;
     try {
       const response = await fetch(`/api/linux/${encodeURIComponent(exerciseId)}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action, version: current.current?.version, ...extra }), signal: abort.signal });
       const data = await response.json();
       if (!live.current) throw Error('Mission closed.');
       if (!response.ok) { if (response.status === 409) setStale(true); throw Error(data.error ?? 'Request failed.'); }
-      current.current = data; setSnapshot(data); setStale(false);
+      if (data.commands) commandNames.current = data.commands;
+      current.current = data; if (!quiet) setSnapshot(data); setStale(false);
       if (data.message) setMessage(data.message);
       return data as Snapshot;
-    } catch (err) { if (live.current && !abort.signal.aborted) setError((err as Error).message); throw err; }
-    finally { inFlight.current = false; if (live.current) setBusy(false); }
+    } catch (err) { if (live.current && !abort.signal.aborted && !quiet) setError((err as Error).message); throw err; }
+    finally { inFlight.current = false; if (live.current && !quiet) setBusy(false); }
   }, [exerciseId]);
   useEffect(() => {
     live.current = true;
@@ -39,9 +42,18 @@ function PersonalLab({ exerciseId, nextId, hints }: { exerciseId: string; nextId
     if (stale) throw Error('Reopen the environment using the button below.');
     return request('command', { command });
   };
+  const listDir = async (path: string) => (await request('complete', { path }, true).catch(() => null))?.entries ?? [];
+  const readFile = async (path: string) => {
+    const data = await request('read', { path }, true);
+    return data.file ? { content: data.file.text, isNew: data.file.isNew } : { error: data.error?.trim() || 'cannot open file' };
+  };
+  const writeFile = async (path: string, content: string) => {
+    if (stale) return 'reopen the environment using the button below';
+    try { await request('save', { path, content }); return null; } catch (err) { return (err as Error).message; }
+  };
   return <div className="space-y-4">
     <p className="text-sm text-cyber-text-muted">Private, saved teaching environment • bounded Linux simulation • no installation needed</p>
-    {snapshot && <div className="h-[420px] border-2 border-cyber-border bg-[#12132b]"><LinuxTerminal key={generation} cwd={snapshot.cwd} run={run} /></div>}
+    {snapshot && <div className="h-[420px] border-2 border-cyber-border bg-[#12132b]"><LinuxTerminal key={generation} cwd={snapshot.cwd} commands={commandNames.current} run={run} listDir={listDir} readFile={readFile} writeFile={writeFile} /></div>}
     {error && <p role="alert" className="text-cyber-danger">{error}</p>}
     {(!snapshot || stale) && <button className="underline" disabled={busy} onClick={() => void request('open').then(() => setGeneration(g => g + 1)).catch(() => {})}>Reopen environment</button>}
     <form className="flex flex-wrap gap-3" onSubmit={event => { event.preventDefault(); void request('submit', { flag: flag.trim() }).catch(() => {}); }}>

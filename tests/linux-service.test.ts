@@ -23,8 +23,20 @@ test('database-backed personal missions: isolation, persistence, resets, progres
  await relax(a.id,first);
  const changed = await labAction(a.id,first,{action:'command',version:wrong.version,command:'mkdir scratch'});
  assert.equal((await labAction(a.id,first,{action:'open'})).version,changed.version);
+ // Editor helpers: complete/read are read-only, save is versioned and persisted.
+ const listed=await labAction(a.id,first,{action:'complete',path:'/home/user'}); assert.equal(listed.version,changed.version); assert.ok(listed.entries!.some(e=>e.name==='scratch'&&e.dir));
+ assert.ok((await labAction(a.id,first,{action:'open'})).commands!.includes('nano'));
+ await relax(a.id,first);
+ const saved=await labAction(a.id,first,{action:'save',version:changed.version,path:'scratch/note.txt',content:'from nano\n'}); assert.equal(saved.version,changed.version+1);
+ const opened=await labAction(a.id,first,{action:'read',path:'/home/user/scratch/note.txt'}); assert.equal(opened.file!.text,'from nano\n'); assert.equal(opened.version,saved.version);
+ assert.ok((await labAction(a.id,first,{action:'read',path:'/home/user/scratch'})).error);
+ await relax(a.id,first);
+ await assert.rejects(labAction(a.id,first,{action:'save',version:changed.version,path:'x.txt',content:'stale'}),(e: unknown)=>e instanceof LabError && e.status===409);
+ await relax(a.id,first);
+ const changedAfterSave=await labAction(a.id,first,{action:'command',version:saved.version,command:'rm scratch/note.txt'});
  assert.ok(JSON.parse((await prisma.linuxLabSession.findUniqueOrThrow({where:{userId_exerciseId:{userId:a.id,exerciseId:first}}})).state).shell.files['/home/user/scratch']);
  assert.equal(JSON.parse((await prisma.linuxLabSession.findUniqueOrThrow({where:{userId_exerciseId:{userId:b.id,exerciseId:first}}})).state).shell.files['/home/user/scratch'],undefined);
+ void changedAfterSave;
  await assert.rejects(labAction(a.id,first,{action:'command',version:wrong.version,command:'pwd'}), (e: unknown) => e instanceof LabError && e.status === 409);
  await assert.rejects(labAction(a.id,missions[2].id,{action:'open'}), (e: unknown) => e instanceof LabError && e.status===403);
  let priorFlag = '';

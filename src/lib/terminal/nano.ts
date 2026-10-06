@@ -13,7 +13,9 @@ export interface NanoHost {
   cols: () => number;
   rows: () => number;
   /** Save file contents; returns an error message on failure */
-  save: (path: string, content: string) => string | null;
+  save: (path: string, content: string) => string | null | Promise<string | null>;
+  /** Run an async step; the host queues keystrokes until it finishes */
+  busy: (step: Promise<unknown>) => void;
   /** Resolve a filename typed at the "File Name to Write" prompt */
   resolve: (name: string) => string;
   /** Inverse of resolve: how to show a path (relative to the shell's cwd) */
@@ -78,6 +80,7 @@ export class NanoEditor {
   private lastWasCut = false;
   private showingHelp = false;
   private lastSearch = "";
+  private closed = false;
 
   constructor(
     private host: NanoHost,
@@ -98,6 +101,7 @@ export class NanoEditor {
   }
 
   private close() {
+    this.closed = true;
     this.host.write(`${CSI}?1049l`);
     this.host.exit();
   }
@@ -186,8 +190,8 @@ export class NanoEditor {
         this.prompt = { kind: "writeout", label: "File Name to Write", value: this.path ? this.displayName() : "" };
         break;
       case "\x13": // ^S
-        if (this.path) this.writeTo(this.path);
-        else this.prompt = { kind: "writeout", label: "File Name to Write", value: "" };
+        if (this.path) return this.writeTo(this.path);
+        this.prompt = { kind: "writeout", label: "File Name to Write", value: "" };
         break;
       case "\x18": // ^X
         if (!this.modified) {
@@ -231,8 +235,8 @@ export class NanoEditor {
       const key = data.toLowerCase();
       if (key === "y") {
         if (this.path) {
-          if (this.writeTo(this.path)) this.close();
           this.prompt = null;
+          this.writeTo(this.path, () => this.close());
         } else {
           this.prompt = { kind: "writeout", label: "File Name to Write", value: "", exitAfter: true };
         }
@@ -267,11 +271,7 @@ export class NanoEditor {
         this.status = "[ Cancelled ]";
         return;
       }
-      const path = this.host.resolve(name);
-      if (this.writeTo(path)) {
-        this.path = path;
-        if (prompt.exitAfter) this.close();
-      }
+      this.writeTo(this.host.resolve(name), prompt.exitAfter ? () => this.close() : undefined);
       return;
     }
 
@@ -371,15 +371,28 @@ export class NanoEditor {
     this.status = `[ "${term}" not found ]`;
   }
 
-  private writeTo(path: string): boolean {
-    const error = this.host.save(path, this.getContent());
-    if (error) {
-      this.status = `[ Error writing ${path}: ${error} ]`;
-      return false;
-    }
-    this.modified = false;
-    this.status = `[ Wrote ${this.lines.length} line${this.lines.length === 1 ? "" : "s"} ]`;
-    return true;
+  /** Save to path (possibly async); runs `after` on success */
+  private writeTo(path: string, after?: () => void) {
+    this.status = "[ Saving... ]";
+    this.render();
+    const step = (async () => {
+      let error: string | null;
+      try {
+        error = await this.host.save(path, this.getContent());
+      } catch (e) {
+        error = (e as Error).message;
+      }
+      if (error) {
+        this.status = `[ Error writing ${this.host.relative(path)}: ${error} ]`;
+      } else {
+        this.path = path;
+        this.modified = false;
+        this.status = `[ Wrote ${this.lines.length} line${this.lines.length === 1 ? "" : "s"} ]`;
+        after?.();
+      }
+      if (!this.closed) this.render();
+    })();
+    this.host.busy(step);
   }
 
   // ------------------------------------------------------------- movement
@@ -437,6 +450,7 @@ export class NanoEditor {
   }
 
   private render() {
+    if (this.closed) return;
     const cols = this.host.cols();
     const textRows = this.textRows();
 

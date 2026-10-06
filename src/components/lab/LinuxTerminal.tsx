@@ -1,59 +1,66 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
-import type { Terminal } from '@xterm/xterm';
 import '@xterm/xterm/css/xterm.css';
+import { ShellSession, type DirEntry, type ReadResult, type ShellBackend } from '@/lib/terminal/shell';
+import { keepCtrlKeys, xtermOptions } from './xtermTheme';
+
 export type TerminalReply = { output?: string; error?: string; cwd: string; clear?: boolean };
-export function LinuxTerminal({ cwd, run }: { cwd: string; run: (command: string) => Promise<TerminalReply> }) {
+
+export interface LinuxTerminalProps {
+  cwd: string;
+  /** Command names for tab completion (from the server's command list) */
+  commands: string[];
+  run: (command: string) => Promise<TerminalReply>;
+  listDir: (path: string) => Promise<DirEntry[]>;
+  readFile: (path: string) => Promise<ReadResult>;
+  writeFile: (path: string, content: string) => Promise<string | null>;
+}
+
+const WELCOME =
+  'Personal Linux mission. Type help for commands.\n' +
+  'Tab completes commands and file names; nano FILE edits a file. Reset restores only this mission.\n';
+
+/** xterm front end for the server-owned mission shell. No filesystem or flag lives in the browser. */
+export function LinuxTerminal(props: LinuxTerminalProps) {
   const container = useRef<HTMLDivElement>(null);
-  const runRef = useRef(run); runRef.current = run;
-  const cwdRef = useRef(cwd); cwdRef.current = cwd;
+  const propsRef = useRef(props); propsRef.current = props;
+  const cwdRef = useRef(props.cwd);
   const [failure, setFailure] = useState('');
+
   useEffect(() => {
-    let disposed = false, term: Terminal | undefined, cleanup = () => {};
+    let disposed = false, cleanup = () => {};
     async function mount() {
       const [{ Terminal }, { FitAddon }] = await Promise.all([import('@xterm/xterm'), import('@xterm/addon-fit')]);
       if (disposed || !container.current) return;
-      term = new Terminal({ convertEol: true, cursorBlink: true, fontSize: 14, fontFamily: 'monospace', scrollback: 1200, theme: { background: '#12132b', foreground: '#f5f3ff', cursor: '#3dfc8a' } });
-      const terminal = term, fit = new FitAddon(); terminal.loadAddon(fit); terminal.open(container.current);
-      const resize = () => { if (!disposed && container.current?.clientWidth && container.current?.clientHeight) fit.fit(); };
+      const term = new Terminal(xtermOptions), fit = new FitAddon();
+      term.loadAddon(fit); term.open(container.current);
+      term.attachCustomKeyEventHandler(keepCtrlKeys);
+      const resize = () => { if (!disposed && container.current?.clientWidth && container.current?.clientHeight) { try { fit.fit(); } catch { /* not measurable yet */ } } };
       const observer = new ResizeObserver(resize); observer.observe(container.current); resize();
-      let buffer = '', busy = false, history: string[] = [], cursor = 0;
-      const prompt = () => terminal.write(`\x1b[32muser@cybercodex\x1b[0m:${cwdRef.current}$ `);
-      const replace = (value: string) => { terminal.write('\r\x1b[2K'); prompt(); terminal.write(value); buffer = value; };
-      const safe = (text: string) => text.replace(/[\x00-\x08\x0b-\x1f\x7f]/g, '');
-      terminal.writeln('Personal Linux mission. Type help for commands. Reset restores only this mission.'); prompt();
-      const subscription = terminal.onData(async data => {
-        if (busy || disposed) return;
-        if (data === '\x1b[A') { cursor = Math.max(0, cursor - 1); replace(history[cursor] ?? ''); return; }
-        if (data === '\x1b[B') { cursor = Math.min(history.length, cursor + 1); replace(history[cursor] ?? ''); return; }
-        if (data === '\x03') { terminal.write('^C\r\n'); buffer = ''; prompt(); return; }
-        if (data === '\x0c') { terminal.clear(); replace(buffer); return; }
-        if (data === '\x7f') { if (buffer.length) { buffer = buffer.slice(0,-1); terminal.write('\b \b'); } return; }
-        if (data === '\r') {
-          const command = buffer.trim(); terminal.write('\r\n'); buffer = '';
-          if (!command) { prompt(); return; }
-          history = [...history,command].slice(-100); cursor = history.length; busy = true;
-          try {
-            const result = await runRef.current(command);
-            if (disposed) return;
-            cwdRef.current = result.cwd;
-            if (result.clear) terminal.clear();
-            if (result.output) terminal.write(safe(result.output));
-            if (result.error) terminal.write(`\x1b[31m${safe(result.error)}\x1b[0m`);
-            if ((result.output && !result.output.endsWith('\n')) || (result.error && !result.error.endsWith('\n'))) terminal.write('\r\n');
-          } catch (error) { if (!disposed) terminal.writeln(`\x1b[31m${safe((error as Error).message)}\x1b[0m`); }
-          finally { busy = false; if (!disposed) prompt(); }
-          return;
-        }
-        // Pasted multi-line text is kept editable, never auto-executed.
-        if (data.startsWith('\x1b')) return;
-        const printable = data.replace(/[\r\n]+/g, ' ').replace(/[^\x20-\x7e]/g, '').slice(0, 2048 - buffer.length);
-        buffer += printable; terminal.write(printable);
-      });
-      cleanup = () => { subscription.dispose(); observer.disconnect(); terminal.dispose(); };
+
+      const backend: ShellBackend = {
+        cwd: () => cwdRef.current,
+        commandNames: () => propsRef.current.commands,
+        run: async line => {
+          const reply = await propsRef.current.run(line);
+          cwdRef.current = reply.cwd;
+          return reply;
+        },
+        listDir: path => propsRef.current.listDir(path),
+        readFile: path => propsRef.current.readFile(path),
+        writeFile: (path, content) => propsRef.current.writeFile(path, content),
+      };
+      // Pasted multi-line text stays editable instead of auto-running (mission safety).
+      const session = new ShellSession({ write: d => term.write(d), cols: () => term.cols, rows: () => term.rows, clear: () => term.clear() }, backend, { pasteRunsLines: false });
+      const data = term.onData(d => { if (!disposed) session.handleData(d); });
+      const resized = term.onResize(() => session.resize());
+      session.start(WELCOME);
+      term.focus();
+      cleanup = () => { data.dispose(); resized.dispose(); observer.disconnect(); term.dispose(); };
     }
     mount().catch(() => { if (!disposed) setFailure('Terminal could not initialize. Reload this page to retry.'); });
     return () => { disposed = true; cleanup(); };
   }, []);
-  return <div className="h-full min-h-[320px]" role="region" aria-label="Personal Linux terminal">{failure && <p role="alert">{failure}</p>}<div ref={container} className="h-full p-3" /></div>;
+
+  return <div className="h-full min-h-[320px]" role="region" aria-label="Personal Linux terminal">{failure && <p role="alert">{failure}</p>}<div ref={container} className="terminal-container h-full p-3" /></div>;
 }

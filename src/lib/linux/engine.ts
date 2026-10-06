@@ -25,6 +25,7 @@ export const commands: Record<string, string> = {
   true: 'true — exit successfully', false: 'false — exit unsuccessfully',
   test: 'test -f|-d|-e path; test string = string; test number -eq number',
   help: 'help [command]', man: 'man command — supported teaching-shell syntax',
+  nano: 'nano [file] — edit a file: ^O write out, ^S save, ^X exit, ^K cut, ^U paste, ^F search, ^G help',
 };
 export function pathOf(cwd: string, value: string): string {
   const raw = value === '~' ? '/home/user' : value.startsWith('~/') ? '/home/user/' + value.slice(2) : value;
@@ -130,6 +131,7 @@ function run(s: Shell, argv: string[], stdin: string): Result {
   const requireArgs = (n: number) => { if (args.length < n) throw Error(`${cmd}: missing operand; try man ${cmd}`); };
   const input = () => args.length ? args.map(a => a === '-' ? stdin : read(s, p(a))).join('') : stdin;
   switch (cmd) {
+    case 'nano': throw Error('nano: run nano on its own line, e.g. nano notes.txt');
     case 'help': case 'man': return ok(args[0] ? (commands[args[0]] ?? 'No manual for this command') + '\n' : 'CyberCodex teaching shell (bounded simulation, not a full Linux OS).\n' + Object.values(commands).join('\n') + '\nOperators: | > >> < && || ; — quotes, $VARIABLE and * ? globbing.\n');
     case 'pwd': return ok(s.cwd + '\n');
     case 'cd': { const dest = p(args[0] === '-' ? s.env.OLDPWD ?? s.cwd : args[0] ?? s.env.HOME); access(s, dest); const n = s.files[dest]; if (!n || n.kind !== 'dir') throw Error(`${dest}: not a directory`); if (!(n.mode & 0o100)) throw Error(`${dest}: permission denied`); s.env.OLDPWD = s.cwd; s.cwd = dest; return ok(args[0] === '-' ? dest + '\n' : ''); }
@@ -223,4 +225,31 @@ export function execute(s: Shell, input: string): Result {
     }
     return { output: output.slice(0, 65536), error: error.slice(0, 4096), status: last, clear };
   } catch (e) { return fail((e as Error).message); }
+}
+
+/** Directory entries for tab completion. Respects traverse and read bits like ls. */
+export function listDir(s: Shell, path: string): { name: string; dir: boolean }[] {
+  const dest = pathOf(s.cwd, path);
+  try { access(s, dest); } catch { return []; }
+  const n = s.files[dest];
+  if (!n || n.kind !== 'dir' || !(n.mode & 0o400) || !(n.mode & 0o100)) return [];
+  return Object.keys(s.files).filter(f => f !== dest && parent(f) === dest).sort()
+    .map(f => ({ name: f.split('/').pop()!, dir: s.files[f].kind === 'dir' })).slice(0, 512);
+}
+/** Open a file for the nano editor. A missing file in a writable directory opens as new. */
+export function readForEdit(s: Shell, path: string): { path: string; text: string; isNew: boolean } {
+  const dest = pathOf(s.cwd, path);
+  access(s, dest);
+  const n = s.files[dest];
+  if (!n) {
+    if (s.files[parent(dest)]?.kind !== 'dir') throw Error(`${path}: no such directory`);
+    return { path: dest, text: '', isNew: true };
+  }
+  return { path: dest, text: read(s, dest), isNew: false };
+}
+/** Save editor contents with the same permission and size rules as redirection. */
+export function saveFile(s: Shell, path: string, text: string): string {
+  const dest = pathOf(s.cwd, path);
+  write(s, dest, text);
+  return dest;
 }

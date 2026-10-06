@@ -1,11 +1,16 @@
 import { prisma } from '@/lib/db/prisma';
 import { missionById, missions, createChallenge, flagMatches, revealReward, objectiveMet, courseId } from './challenges';
-import { execute, type Shell } from './engine';
+import { execute, listDir, readForEdit, saveFile, commands, type Shell } from './engine';
 import { accessError } from './access';
 export class LabError extends Error { constructor(message: string, public status = 400) { super(message); } }
 type Stored = { shell: Shell; flag: string };
-export type LabAction = { action: 'open' | 'command' | 'submit' | 'reset'; version?: number; command?: string; flag?: string };
-export async function labAction(userId: string, exerciseId: string, action: LabAction) {
+export type LabAction = { action: 'open' | 'command' | 'submit' | 'reset' | 'complete' | 'read' | 'save'; version?: number; command?: string; flag?: string; path?: string; content?: string };
+export type LabReply = {
+  version: number; cwd: string; completed: boolean; attempts: number;
+  output: string; error: string; clear: boolean; status: number; awarded: number; message: string;
+  commands?: string[]; entries?: { name: string; dir: boolean }[]; file?: { path: string; text: string; isNew: boolean };
+};
+export async function labAction(userId: string, exerciseId: string, action: LabAction): Promise<LabReply> {
   const mission = missionById(exerciseId);
   if (!mission) throw new LabError('Unknown Linux mission.', 404);
   return prisma.$transaction(async tx => {
@@ -22,7 +27,14 @@ export async function labAction(userId: string, exerciseId: string, action: LabA
       row = await tx.linuxLabSession.create({ data: { userId, exerciseId, state: JSON.stringify({ shell: challenge.shell, flag: challenge.flag }), flagHash: challenge.hash } });
     }
     const snapshot = () => ({ version: row!.version, cwd: (JSON.parse(row!.state) as Stored).shell.cwd, completed: !!row!.solvedAt, attempts: row!.attempts });
-    if (action.action === 'open') return { ...snapshot(), output: '', error: '', clear: false, status: 0, awarded: 0, message: '' };
+    const idle = (extra: Partial<LabReply> = {}): LabReply => ({ ...snapshot(), output: '', error: '', clear: false, status: 0, awarded: 0, message: '', ...extra });
+    if (action.action === 'open') return idle({ commands: Object.keys(commands) });
+    // Read-only helpers for tab completion and the nano editor: no version bump.
+    if (action.action === 'complete') return idle({ entries: listDir((JSON.parse(row.state) as Stored).shell, action.path ?? '.') });
+    if (action.action === 'read') {
+      try { return idle({ file: readForEdit((JSON.parse(row.state) as Stored).shell, action.path ?? '') }); }
+      catch (e) { return idle({ error: (e as Error).message }); }
+    }
     if (action.version !== row.version) throw new LabError('This mission changed in another tab. Reopen it before retrying.', 409);
     const state: Stored = JSON.parse(row.state);
     let output = '', error = '', clear = false, status = 0, awarded = 0, message = '';
@@ -34,6 +46,12 @@ export async function labAction(userId: string, exerciseId: string, action: LabA
       if (Date.now() - row.updatedAt.getTime() < 80) throw new LabError('Please wait briefly before the next command.', 429);
       const result = execute(state.shell, action.command ?? '');
       ({ output, error, clear = false, status } = result);
+      revealReward(mission, state.shell, state.flag);
+      if (Buffer.byteLength(JSON.stringify(state)) > 512000) throw new LabError('Environment storage limit reached. Remove large files or reset.');
+    } else if (action.action === 'save') {
+      if (Date.now() - row.updatedAt.getTime() < 80) throw new LabError('Please wait briefly before saving again.', 429);
+      try { saveFile(state.shell, action.path ?? '', action.content ?? ''); }
+      catch (e) { throw new LabError((e as Error).message, 400); }
       revealReward(mission, state.shell, state.flag);
       if (Buffer.byteLength(JSON.stringify(state)) > 512000) throw new LabError('Environment storage limit reached. Remove large files or reset.');
     } else if (action.action === 'submit') {
