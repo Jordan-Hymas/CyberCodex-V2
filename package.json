@@ -12,7 +12,8 @@
     "db:seed": "tsx prisma/seed.ts",
     "db:create-admin": "tsx scripts/create-admin-user.ts",
     "db:clear-sessions": "tsx scripts/clear-sessions.ts",
-    "test:linux": "node scripts/run-linux-tests.cjs"
+    "test:linux": "node scripts/run-linux-tests.cjs",
+    "db:prune-labs": "node scripts/prune-linux-labs.cjs"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

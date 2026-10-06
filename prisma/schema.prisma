@@ -275,4 +275,6 @@ model LinuxLabSession {
 
   @@unique([userId, exerciseId])
   @@index([userId])
+  // Lets the storage prune find idle environments quickly
+  @@index([updatedAt])
 }

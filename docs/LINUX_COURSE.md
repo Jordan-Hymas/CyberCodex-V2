@@ -73,6 +73,25 @@ This is **not a full Linux VM, container, or Bash implementation**. â€œAdvancedâ
 
 Keep these limits visible in course promises. A future isolated lab service is needed for faithful process control, scripting, networking and system administration. Do not execute learner text in the Next.js host shell to fill that gap.
 
+## Storage lifecycle
+
+Each learner gets one `LinuxLabSession` row per mission, but only environments in active use keep a filesystem. Everything else is compacted to an empty `state` (the row stays: it records completion, attempts and the prerequisite chain). Limits live in `LAB_LIMITS` in `src/lib/linux/service.ts`.
+
+- Opening a mission compacts the learner's other solved missions. In practice a learner has one or two live environments of a few KB each.
+- Reopening a compacted mission builds a fresh environment with a new flag. Completion and XP are untouched, and the terminal explains why it is fresh.
+- Unsolved environments idle for 14 days are compacted (fresh start next time). Solved environments idle for 24 hours are compacted. Never-solved rows idle for 90 days are deleted. Solved rows are never deleted.
+- Each saved state records a fixture version. When a mission's files change, unsolved environments built from older fixtures are rebuilt on open.
+- One environment is capped at 256 KB serialized (files are capped at 64 KiB, 512 entries).
+- Pruning runs opportunistically (at most every 10 minutes per server process, outside the request) and via `npm run db:prune-labs` for cron. Set `LINUX_LAB_AUTOPRUNE=off` to disable the opportunistic run (the test runner does).
+- Commands against a compacted environment return 409 and ask the learner to reopen it.
+
+## Mission authoring: traps and coaching
+
+- `decoys`: each entry declares a decoy flag (`{{DECOY:n}}`, `{{DECOY64:n}}`, `{{DECOYREV:n}}` in fixtures). Decoys are unique per instance and indistinguishable from real flags; submitting one shows its `hint` and does not fail the mission. Reference solutions must never print a decoy (tested).
+- `coach`: rules with a JavaScript regex `when` tested against the command (optionally only when it failed); the first match prints a yellow tip in the terminal.
+- `start`: the directory the mission begins in. `steps`, `commands` and `why` feed the briefing panel. The terminal opens with a mission intro (goal, start directory and its visible entries).
+- Beginner missions use signposts rather than decoys until the checkpoint; intermediate missions plant decoys in near misses; advanced missions rely on traps that only correct technique avoids.
+
 ## Extending lessons
 
 1. Add a stable mission ID, level, explanation, example, task, hints, pitfall, and understanding question.

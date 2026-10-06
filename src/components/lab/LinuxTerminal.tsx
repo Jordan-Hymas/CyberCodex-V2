@@ -15,11 +15,9 @@ export interface LinuxTerminalProps {
   listDir: (path: string) => Promise<DirEntry[]>;
   readFile: (path: string) => Promise<ReadResult>;
   writeFile: (path: string, content: string) => Promise<string | null>;
+  /** Mission-specific welcome (may contain ANSI colours) */
+  welcome: string;
 }
-
-const WELCOME =
-  'Your personal Linux mission. Type help to list commands.\n' +
-  'Tab completes names. Highlight text to copy it.\n';
 
 /** xterm front end for the server-owned mission shell. No filesystem or flag lives in the browser. */
 export function LinuxTerminal(props: LinuxTerminalProps) {
@@ -58,7 +56,7 @@ export function LinuxTerminal(props: LinuxTerminalProps) {
       const session = new ShellSession({ write: d => term.write(d), cols: () => term.cols, rows: () => term.rows, clear: () => term.clear() }, backend, { pasteRunsLines: false });
       const data = term.onData(d => { if (!disposed) session.handleData(d); });
       const resized = term.onResize(() => session.resize());
-      session.start(WELCOME);
+      session.start(propsRef.current.welcome);
       term.focus();
       cleanup = () => { stopCopy(); data.dispose(); resized.dispose(); observer.disconnect(); term.dispose(); };
     }

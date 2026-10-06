@@ -6,6 +6,10 @@ export const missions = missionData;
 export const courseId = 'linux-fundamentals';
 export function missionById(id: string) { return missions.find(m => m.id === id); }
 export function flagHash(flag: string) { return createHash('sha256').update(flag).digest('hex'); }
+/** Changes whenever a mission's fixtures change, so stale saved environments can be rebuilt. */
+export function fixtureVersion(m: Mission) {
+  return createHash('sha256').update(JSON.stringify([m.files, m.start, m.decoys.length, m.goal])).digest('hex').slice(0, 12);
+}
 export function flagMatches(flag: string, hash: string) {
   const actual = Buffer.from(flagHash(flag.trim()), 'hex'), expected = Buffer.from(hash, 'hex');
   return actual.length === expected.length && timingSafeEqual(actual, expected);
@@ -29,7 +33,7 @@ export function createChallenge(mission: Mission) {
   if (mission.goal?.kind === 'fixture-mode') shell.files[mission.goal.path].mode = mission.goal.mode!;
   // Start where the task begins (e.g. inside work/ for a relative-path mission)
   if (shell.files[mission.start]?.kind === 'dir') shell.cwd = mission.start;
-  return { shell, flag, decoys, hash: flagHash(flag) };
+  return { shell, flag, decoys, hash: flagHash(flag), fixture: fixtureVersion(mission) };
 }
 export function objectiveMet(m: Mission, s: Shell, flag: string): boolean {
   const g = m.goal;

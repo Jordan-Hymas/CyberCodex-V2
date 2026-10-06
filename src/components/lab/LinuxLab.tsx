@@ -13,7 +13,27 @@ type Snapshot = {
   version: number; cwd: string; completed: boolean; attempts: number; output?: string; error?: string; clear?: boolean; message?: string; tip?: string;
   awarded?: number; commands?: string[]; entries?: { name: string; dir: boolean }[]; file?: { path: string; text: string; isNew: boolean };
   progress?: { totalXp: number; level: number; levelXp: number };
+  intro?: MissionIntro;
 };
+type MissionIntro = { number: number; total: number; title: string; goal: string; cwd: string; entries: string[]; notice?: string };
+
+const ansi = { reset: '\x1b[0m', bold: '\x1b[1m', violet: '\x1b[35m', cyan: '\x1b[36m', yellow: '\x1b[33m', muted: '\x1b[90m' };
+
+/** Terminal welcome: what this mission is, where you start and what's there. */
+function welcomeText(intro?: MissionIntro) {
+  if (!intro) return '';
+  const home = '/home/user';
+  const where = intro.cwd === home ? `~ (${home})` : intro.cwd.startsWith(home + '/') ? `~${intro.cwd.slice(home.length)}` : intro.cwd;
+  const shown = intro.entries.slice(0, 8).join('  ') + (intro.entries.length > 8 ? `  …and ${intro.entries.length - 8} more` : '');
+  const lines = [
+    `${ansi.bold}${ansi.violet}Mission ${intro.number}/${intro.total} · ${intro.title}${ansi.reset}`,
+    `Goal: ${intro.goal}`,
+    `${ansi.cyan}You start in ${where}.${ansi.reset} ${intro.entries.length ? `Here: ${shown}` : 'Nothing visible here yet.'}`,
+  ];
+  if (intro.notice) lines.push(`${ansi.yellow}${intro.notice}${ansi.reset}`);
+  if (intro.number === 1) lines.push(`${ansi.muted}Type help for commands · Tab completes names · highlight text to copy it${ansi.reset}`);
+  return lines.join('\n') + '\n';
+}
 
 interface LinuxLabProps {
   exerciseId: string;
@@ -48,6 +68,7 @@ function PersonalLab({ exerciseId, nextId, hints, header, briefing }: Omit<Linux
   const [celebration, setCelebration] = useState<{ awarded: number; progress?: Snapshot['progress']; key: number } | null>(null);
   const current = useRef<Snapshot | null>(null), inFlight = useRef(false), live = useRef(true), controller = useRef<AbortController | null>(null);
   const commandNames = useRef<string[]>([]);
+  const intro = useRef<MissionIntro | undefined>(undefined);
 
   // quiet: read-only terminal helpers (tab completion, opening files) skip the busy/status UI
   const request = useCallback(async (action: string, extra: Record<string, unknown> = {}, quiet = false) => {
@@ -60,6 +81,7 @@ function PersonalLab({ exerciseId, nextId, hints, header, briefing }: Omit<Linux
       if (!live.current) throw Error('Mission closed.');
       if (!response.ok) { if (response.status === 409) setStale(true); throw Error(data.error ?? 'Request failed.'); }
       if (data.commands) commandNames.current = data.commands;
+      if (data.intro) intro.current = data.intro;
       current.current = data; if (!quiet) setSnapshot(data); setStale(false);
       if (data.message) setMessage(data.message);
       return data as Snapshot;
@@ -133,7 +155,7 @@ function PersonalLab({ exerciseId, nextId, hints, header, briefing }: Omit<Linux
     <div className="relative flex min-h-0 flex-1 flex-col bg-cyber-ink">
       <WindowBar title="user@cybercodex: personal mission" right={snapshot?.completed ? '✓ captured' : undefined} />
       <div className="min-h-0 flex-1">
-        {snapshot ? <LinuxTerminal key={generation} cwd={snapshot.cwd} commands={commandNames.current} run={run} listDir={listDir} readFile={readFile} writeFile={writeFile} />
+        {snapshot ? <LinuxTerminal key={generation} cwd={snapshot.cwd} commands={commandNames.current} run={run} listDir={listDir} readFile={readFile} writeFile={writeFile} welcome={welcomeText(intro.current)} />
           : <p className="p-4 font-ui text-cyber-text-muted">{error ? '' : 'Opening your environment…'}</p>}
       </div>
 

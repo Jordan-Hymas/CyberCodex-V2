@@ -14,7 +14,7 @@ try {
   fs.copyFileSync(path.join(root, 'src/lib/linux/missions.json'), path.join(temp, 'missions.json'));
   cp.execFileSync(process.execPath, [path.join(root, 'scripts/check-linux-content.cjs')], { stdio: 'inherit' });
   const db = path.join(temp, 'tests.db'); fs.writeFileSync(db, '');
-  const env = { ...process.env, DATABASE_URL: 'file:' + db };
+  const env = { ...process.env, DATABASE_URL: 'file:' + db, LINUX_LAB_AUTOPRUNE: 'off' };
   cp.execFileSync(process.execPath, [path.join(root, 'node_modules/prisma/build/index.js'), 'migrate', 'deploy'], { cwd: root, env, stdio: 'pipe' });
   // Direct invocation prints the nested node:test cases across Node versions.
   cp.execFileSync(process.execPath, [path.join(temp, 'engine.test.js')], { env, stdio: 'inherit' });

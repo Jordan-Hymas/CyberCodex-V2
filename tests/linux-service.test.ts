@@ -1,7 +1,7 @@
 import { test, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { prisma } from '@/lib/db/prisma';
-import { labAction, LabError } from '../src/lib/linux/service';
+import { labAction, LabError, pruneLabSessions, LAB_LIMITS } from '../src/lib/linux/service';
 import { missions } from '../src/lib/linux/challenges';
 import { hasLinuxPro } from '../src/lib/linux/access';
 after(async () => prisma.$disconnect());
@@ -83,4 +83,42 @@ test('paid access respects cancellation dates and payment status',()=>{
  assert.equal(hasLinuxPro({subscriptionTier:'pro',subscriptionStatus:'canceled',subscriptionEndsAt:new Date(Date.now()+60000)}),true);
  assert.equal(hasLinuxPro({subscriptionTier:'pro',subscriptionStatus:'past_due',subscriptionEndsAt:null}),false);
  assert.equal(hasLinuxPro({subscriptionTier:'free',subscriptionStatus:'active',subscriptionEndsAt:null}),false);
+});
+test('storage lifecycle: intro, compaction, rebuilds and pruning', async () => {
+ const u = await prisma.user.create({ data: { email: 'storage@linux.test' } });
+ const [m1, m2] = missions;
+ const key = (exerciseId: string) => ({ userId_exerciseId: { userId: u.id, exerciseId } });
+ const stateOf = async (exerciseId: string) => (await prisma.linuxLabSession.findUniqueOrThrow({ where: key(exerciseId) })).state;
+ // Intro describes this mission and only visible entries
+ let s1 = await labAction(u.id, m1.id, { action: 'open' });
+ assert.equal(s1.intro!.number, 1); assert.equal(s1.intro!.cwd, '/home/user'); assert.ok(s1.intro!.entries.includes('dispatch.txt'));
+ const lsMission = missions.find(m => m.id === 'ls-command')!;
+ // Solve mission 1
+ const flag1 = JSON.parse(await stateOf(m1.id)).flag; await relax(u.id, m1.id);
+ s1 = await labAction(u.id, m1.id, { action: 'submit', version: s1.version, flag: flag1 }); assert.equal(s1.completed, true);
+ // Opening mission 2 compacts solved mission 1
+ await labAction(u.id, m2.id, { action: 'open' });
+ assert.equal(await stateOf(m1.id), '');
+ await assert.rejects(labAction(u.id, m1.id, { action: 'command', version: s1.version, command: 'ls' }), (e: unknown) => e instanceof LabError && e.status === 409);
+ // Reopening a solved mission rebuilds it with a new flag and keeps completion
+ const again = await labAction(u.id, m1.id, { action: 'open' });
+ assert.equal(again.completed, true); assert.match(again.intro!.notice ?? '', /already solved/);
+ assert.notEqual(JSON.parse(await stateOf(m1.id)).flag, flag1);
+ // Outdated fixtures are rebuilt for unsolved missions
+ const st2 = JSON.parse(await stateOf(m2.id)); st2.fixture = 'old'; st2.shell.files['/home/user/stale'] = { kind: 'file', text: 'x', mode: 420 };
+ await prisma.linuxLabSession.update({ where: key(m2.id), data: { state: JSON.stringify(st2) } });
+ const rebuilt = await labAction(u.id, m2.id, { action: 'open' });
+ assert.match(rebuilt.intro!.notice ?? '', /updated/); assert.equal(JSON.parse(await stateOf(m2.id)).shell.files['/home/user/stale'], undefined);
+ // Pruning: idle unsolved compacted, abandoned deleted, solved rows kept
+ const old = (ms: number) => new Date(Date.now() - ms - 1000);
+ await prisma.linuxLabSession.update({ where: key(m2.id), data: { updatedAt: old(LAB_LIMITS.unsolvedIdleMs) } });
+ await prisma.linuxLabSession.update({ where: key(m1.id), data: { updatedAt: old(LAB_LIMITS.abandonedMs) } });
+ const pruned = await pruneLabSessions();
+ assert.ok(pruned.compacted >= 1);
+ assert.equal(await stateOf(m2.id), '');
+ assert.ok(await prisma.linuxLabSession.findUnique({ where: key(m1.id) }), 'solved rows are never deleted');
+ const back = await labAction(u.id, m2.id, { action: 'open' }); assert.match(back.intro!.notice ?? '', /14 days/);
+ await prisma.linuxLabSession.update({ where: key(m2.id), data: { updatedAt: old(LAB_LIMITS.abandonedMs) } });
+ await pruneLabSessions(); assert.equal(await prisma.linuxLabSession.findUnique({ where: key(m2.id) }), null);
+ void lsMission;
 });
