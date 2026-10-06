@@ -1,0 +1,34 @@
+---
+title: "Keep a copy of the evidence"
+description: "Filter the OK line from source.log and save exactly that line to evidence.txt."
+type: exercise
+xpReward: 60
+---
+
+## Learn
+
+tee copies standard input both to standard output and to a file. It is useful when you want to inspect an intermediate pipeline result and retain it.
+
+tee is named after a pipe junction: data continues to the terminal or next pipeline stage and is also written to a file. By default that file is replaced; -a appends. It helps preserve evidence while you inspect it.
+
+## Syntax example
+
+```sh
+cat sample.log | tee copy.log
+```
+
+Example filenames illustrate syntax; inspect your mission files before running them.
+
+## Your mission
+
+Filter the OK line from source.log and save exactly that line to evidence.txt.
+
+## Common mistake
+
+tee does not filter the input. Perform selection before tee if you only want selected records saved.
+
+## Check your understanding
+
+Where would you place tee to inspect the output of a middle pipeline stage?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

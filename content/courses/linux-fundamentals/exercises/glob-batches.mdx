@@ -1,0 +1,34 @@
+---
+title: "Inspect a batch with globbing"
+description: "Read all .txt files inside batches to locate the receipt."
+type: exercise
+xpReward: 40
+---
+
+## Learn
+
+An unquoted * expands to matching names within one path component. A question mark matches one character. Dotfiles are not matched unless the pattern explicitly begins with a dot.
+
+Globbing happens before a command runs. If three names match, the command receives three arguments. The wildcard is limited to a single directory component in this simulator. A pattern with no matches remains literal, so the command can report that no such file exists.
+
+## Syntax example
+
+```sh
+ls /home/user/*.txt
+```
+
+Example filenames illustrate syntax; inspect your mission files before running them.
+
+## Your mission
+
+Read all .txt files inside batches to locate the receipt.
+
+## Common mistake
+
+Quoting the wildcard prevents shell expansion. Dotfiles require an explicit dot in the pattern.
+
+## Check your understanding
+
+What different sets of names do *.txt and ?.txt select?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

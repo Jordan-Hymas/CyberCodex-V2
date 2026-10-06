@@ -1,0 +1,34 @@
+---
+title: "Separate repeated messages"
+description: "Find the only nonduplicated line in messages.txt."
+type: exercise
+xpReward: 40
+---
+
+## Learn
+
+sort puts lines in order. uniq compares adjacent lines; -u prints only lines that occur once in each adjacent group. Sort first when duplicates may be separated.
+
+uniq acts on runs of equal adjacent lines. A file can contain duplicates far apart that uniq alone will not combine. Sorting first groups equal lines together. The -c option counts each adjacent group; -u keeps only groups with a single member.
+
+## Syntax example
+
+```sh
+sort sample.txt | uniq -c
+```
+
+Example filenames illustrate syntax; inspect your mission files before running them.
+
+## Your mission
+
+Find the only nonduplicated line in messages.txt.
+
+## Common mistake
+
+sort changes order. Do not use it when the original sequence carries meaning you must preserve.
+
+## Check your understanding
+
+Why does uniq without sort sometimes leave repeated values?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

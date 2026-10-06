@@ -1,0 +1,35 @@
+---
+title: "One floor up"
+description: "From /home/user/work, read ../store/receipt.txt."
+type: exercise
+xpReward: 25
+---
+
+## Learn
+
+Relative paths can contain .. anywhere. A path such as ../store/file.txt begins at the parent directory and then enters store.
+
+The . component means stay at the current location; .. means move to the parent. They can occur inside longer paths. Resolve a path one component at a time if you become confused. Paths never climb above the root directory.
+
+## Syntax example
+
+```sh
+cd /home/user
+cat ./example.txt
+```
+
+Example filenames illustrate syntax; inspect your mission files before running them.
+
+## Your mission
+
+From /home/user/work, read ../store/receipt.txt.
+
+## Common mistake
+
+../store is not the same as /store. The former depends on the current directory.
+
+## Check your understanding
+
+Starting in /home/user/work, where does ../../ resolve?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

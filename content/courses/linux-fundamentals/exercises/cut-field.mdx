@@ -1,0 +1,34 @@
+---
+title: "Extract a manifest field"
+description: "Extract field 3 of manifest.txt, separated by colons."
+type: exercise
+xpReward: 40
+---
+
+## Learn
+
+cut -d chooses a delimiter and -f chooses a one-based field. This simple delimiter tool is not a general CSV parser with quoted-field support.
+
+Delimited records split a line into fields. cut numbers fields from one, so field two follows the first delimiter. This lab intentionally uses simple records with no escaped delimiters. For a more complex file format, use a parser appropriate to that format.
+
+## Syntax example
+
+```sh
+cut -d : -f 2 sample.txt
+```
+
+Example filenames illustrate syntax; inspect your mission files before running them.
+
+## Your mission
+
+Extract field 3 of manifest.txt, separated by colons.
+
+## Common mistake
+
+If a delimiter appears inside a quoted value, this simple cut command still treats it as a delimiter.
+
+## Check your understanding
+
+What does field 1 mean when there is no delimiter on the line?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

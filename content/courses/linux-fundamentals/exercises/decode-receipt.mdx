@@ -1,0 +1,34 @@
+---
+title: "Decode the shipment label"
+description: "Decode label.b64 to reveal the flag."
+type: exercise
+xpReward: 40
+---
+
+## Learn
+
+base64 represents bytes with printable characters. Encoding is not encryption: anyone can decode it. -d reverses the encoding.
+
+Base64 is a reversible representation useful for transporting bytes in text channels. Encoded data may include padding characters at the end. Decoding yields the original bytes; do not assume that encoded content is secret or safe merely because it looks unreadable.
+
+## Syntax example
+
+```sh
+echo demo | base64
+```
+
+Example filenames illustrate syntax; inspect your mission files before running them.
+
+## Your mission
+
+Decode label.b64 to reveal the flag.
+
+## Common mistake
+
+Copying only part of an encoded line can cause an invalid-input error.
+
+## Check your understanding
+
+Why should a password not be protected with base64 alone?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

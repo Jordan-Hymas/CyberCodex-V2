@@ -1,0 +1,34 @@
+---
+title: "Undo a reversed transmission"
+description: "Reverse the characters of reversed.txt to recover the flag."
+type: exercise
+xpReward: 60
+---
+
+## Learn
+
+rev reverses characters within each line. It does not reverse the order of lines. Combine simple transforms by reasoning about how data was changed.
+
+A transformation may change ordering within records or ordering among records. rev only reverses characters inside each line. If a message was reversed before encoding, undo those operations in reverse order to recover the original data.
+
+## Syntax example
+
+```sh
+echo abc | rev
+```
+
+Example filenames illustrate syntax; inspect your mission files before running them.
+
+## Your mission
+
+Reverse the characters of reversed.txt to recover the flag.
+
+## Common mistake
+
+rev does not reverse the entire file as one character sequence.
+
+## Check your understanding
+
+If a value was reversed and then base64-encoded, which operation should you undo first?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

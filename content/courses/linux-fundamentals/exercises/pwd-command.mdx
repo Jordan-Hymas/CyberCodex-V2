@@ -1,67 +1,35 @@
 ---
-title: "Print Working Directory"
-description: "Learn to use pwd to find your current location in the filesystem"
+title: "Your place in the tree"
+description: "Inspect your location with pwd. Read coordinates.txt from that location."
+type: exercise
+xpReward: 25
 ---
 
-The `pwd` command (Print Working Directory) is one of the simplest yet most useful commands in Linux. It tells you exactly where you are in the filesystem.
+## Learn
 
-## What is a Working Directory?
+pwd prints an absolute path. The slash at the start means the filesystem root. Your working directory determines how relative paths are interpreted.
 
-When you're using the terminal, you're always "in" a directory (folder). This is called your **working directory** or **current directory**. All commands you run operate relative to this location unless you specify otherwise.
+Think of the filesystem as a tree with one root, /. Your home directory is one branch of that tree. pwd reports your current location without modifying anything. It is a useful first diagnostic when a filename you expected to exist cannot be found.
 
-## Using pwd
+## Syntax example
 
-Simply type:
-
-```bash
+```sh
 pwd
+ls
 ```
 
-The output shows your current location. For example:
+Example filenames illustrate syntax; inspect your mission files before running them.
 
-```
-/home/user
-```
+## Your mission
 
-This means you're in the "user" directory, which is inside the "home" directory, which is at the root (/) of the filesystem.
+Inspect your location with pwd. Read coordinates.txt from that location.
 
-## Why Use pwd?
+## Common mistake
 
-You'll use `pwd` frequently to:
+A directory and a file can have similar names; a path tells you where an entry belongs.
 
-- **Verify your location** before running commands
-- **Understand command output** that shows relative paths
-- **Debug issues** when commands don't find files
-- **Navigate complex directory structures**
+## Check your understanding
 
-## Understanding the Output
+Why might cat notes.txt work in one directory and fail in another?
 
-The output of `pwd` is an **absolute path** - it shows the complete path from the root directory (/) to your current location.
-
-Breaking down `/home/user`:
-- `/` - Root directory (top of filesystem)
-- `home/` - A directory inside root
-- `user` - Your current location inside home
-
-## Practice
-
-Try these exercises:
-
-1. Run `pwd` to see where you are
-2. Remember this location (we'll use it later!)
-3. Run `pwd` again - notice it doesn't change unless you move
-
-## Tips
-
-- `pwd` has no options or arguments - just type `pwd`
-- It always shows an absolute path (starting with /)
-- Use it anytime you're unsure of your location
-- Combine with other commands: `ls $(pwd)` lists your current directory
-
-## What's Next?
-
-Now that you know where you are, let's learn how to see what's in your current directory with the `ls` command!
-
----
-
-**XP Reward:** 25 XP
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

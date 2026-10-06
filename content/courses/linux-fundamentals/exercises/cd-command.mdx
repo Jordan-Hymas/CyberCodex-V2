@@ -1,127 +1,36 @@
 ---
-title: "Changing Directories"
-description: "Learn to navigate the Linux filesystem with cd"
+title: "Walk to the relay"
+description: "Navigate into stations/relay and read message.txt, then return home."
+type: exercise
+xpReward: 25
 ---
 
-The `cd` command (change directory) is your primary tool for navigating the Linux filesystem. Mastering `cd` is essential for efficient command-line work.
+## Learn
 
-## Learning Objectives
+cd changes your working directory. .. names its parent, and . names the current directory. cd by itself returns home.
 
-- Change to different directories
-- Use absolute and relative paths
-- Navigate to home directory
-- Move up directory levels
-- Understand the directory structure
+The shell remembers one working directory. cd changes that shell state, so the next command resolves relative paths from the new location. cd - returns to the previous location in this simulator, while cd with no operand returns home.
 
-## Basic Usage
+## Syntax example
 
-To change to a directory, use:
-
-```bash
-cd directory_name
+```sh
+cd /tmp
+pwd
+cd -
 ```
 
-For example:
+Example filenames illustrate syntax; inspect your mission files before running them.
 
-```bash
-cd documents
-cd /home/user
-cd /etc
-```
+## Your mission
 
-## Going Home
+Navigate into stations/relay and read message.txt, then return home.
 
-Running `cd` with no arguments takes you to your home directory:
+## Common mistake
 
-```bash
-cd
-```
+Changing directory does not display all files automatically. Follow it with pwd or ls if you need confirmation.
 
-You can also use the tilde (`~`) symbol:
+## Check your understanding
 
-```bash
-cd ~
-```
+What is the difference between cd .. and cd /?
 
-## Going Up One Level
-
-Use `..` to go up one directory level:
-
-```bash
-cd ..
-```
-
-## Going Up Multiple Levels
-
-You can chain `..` to go up multiple levels:
-
-```bash
-cd ../..
-```
-
-This moves up two directory levels.
-
-## Absolute vs Relative Paths
-
-**Absolute paths** start from the root directory (`/`):
-
-```bash
-cd /home/user/documents
-cd /etc
-```
-
-**Relative paths** start from your current location:
-
-```bash
-cd documents           # Goes to documents in current directory
-cd ./documents        # Same as above (. means current directory)
-cd ../downloads       # Go up one level, then into downloads
-```
-
-## Special Directory Symbols
-
-- `.` - Current directory
-- `..` - Parent directory (one level up)
-- `~` - Home directory
-- `/` - Root directory (top of filesystem)
-
-## Practice Challenges
-
-1. Go to your home directory
-2. Change to `/home/user/documents`
-3. Go up one directory level
-4. Go to `/tmp` directory
-5. Return to your home directory
-
-Try these commands to verify where you are:
-
-```bash
-pwd    # Prints your current directory
-ls     # Lists contents of current directory
-```
-
-## Common Patterns
-
-```bash
-cd            # Go home
-cd ~          # Go home (alternative)
-cd -          # Go to previous directory
-cd /          # Go to root directory
-cd ..         # Go up one level
-cd ../..      # Go up two levels
-```
-
-## Tips
-
-- If a directory name has spaces, use quotes: `cd "My Documents"`
-- Tab completion helps! Type `cd doc` and press Tab to auto-complete
-- Use `pwd` to check where you are after using `cd`
-- The `ls` command shows what directories you can `cd` into
-
-## What's Next?
-
-You now know how to navigate the filesystem! Next, we'll learn about the difference between absolute and relative paths in more detail.
-
----
-
-**XP Reward:** 25 XP
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

@@ -1,0 +1,34 @@
+---
+title: "Append without erasing"
+description: "Append restored as a second line in status.log, keeping the first line."
+type: exercise
+xpReward: 40
+---
+
+## Learn
+
+The &gt;&gt; operator appends output. It preserves existing content, unlike &gt;. A newline separates records in a text log.
+
+Appending makes a log grow without rewriting its earlier records. echo normally adds a newline, so appended records become separate lines. If earlier content lacks a final newline, the next text may run into it; inspect the resulting file when formatting matters.
+
+## Syntax example
+
+```sh
+echo "next entry" >> sample.log
+```
+
+Example filenames illustrate syntax; inspect your mission files before running them.
+
+## Your mission
+
+Append restored as a second line in status.log, keeping the first line.
+
+## Common mistake
+
+Using &gt; instead of &gt;&gt; replaces the entire previous log.
+
+## Check your understanding
+
+How would the output differ if you appended the same record twice?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

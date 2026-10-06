@@ -1,0 +1,35 @@
+---
+title: "Traverse a locked directory"
+description: "Restore owner traversal on vault, then read vault/receipt."
+type: exercise
+xpReward: 60
+---
+
+## Learn
+
+Execute permission on a directory controls traversal. Read permission permits listing names; these are distinct. A readable file cannot be reached through a directory you cannot traverse.
+
+Directory x allows walking through a path component. Directory r allows listing entry names. On a real system, a directory can allow traversal without allowing a listing. This lab models owner permissions so you can observe the difference without changing your actual system.
+
+## Syntax example
+
+```sh
+stat folder
+chmod u+x folder
+```
+
+Example filenames illustrate syntax; inspect your mission files before running them.
+
+## Your mission
+
+Restore owner traversal on vault, then read vault/receipt.
+
+## Common mistake
+
+Adding read permission to a file does not fix a missing traversal bit on its parent directory.
+
+## Check your understanding
+
+Why can a readable file still return permission denied?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

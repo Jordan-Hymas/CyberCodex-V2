@@ -1,0 +1,34 @@
+---
+title: "Intermediate checkpoint: process a manifest"
+description: "Find the READY record in /var/log/manifest, extract its colon-separated payload, and decode that payload."
+type: exercise
+xpReward: 40
+---
+
+## Learn
+
+A pipeline can combine selection, field extraction, and decoding. Inspect each stage separately if you are unsure what data it produces.
+
+Complex pipelines are easier to debug incrementally. Run the first stage and inspect its output. Add a second stage and check the shape again. Decode only the payload, not the record label. If a stage outputs nothing, inspect that stage before adding more commands.
+
+## Syntax example
+
+```sh
+grep READY example.txt | cut -d : -f 2
+```
+
+Example filenames illustrate syntax; inspect your mission files before running them.
+
+## Your mission
+
+Find the READY record in /var/log/manifest, extract its colon-separated payload, and decode that payload.
+
+## Common mistake
+
+Including the READY: prefix in the base64 decoder input will not produce the intended message.
+
+## Check your understanding
+
+Which intermediate output would you inspect first if decoding failed?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

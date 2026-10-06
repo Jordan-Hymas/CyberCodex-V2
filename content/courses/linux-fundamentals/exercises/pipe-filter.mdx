@@ -1,0 +1,34 @@
+---
+title: "Filter the signal"
+description: "Filter stream.log down to the DELIVER line using a pipeline, then copy the flag."
+type: exercise
+xpReward: 40
+---
+
+## Learn
+
+A pipe sends one command’s standard output to the next command’s standard input. It does not turn that output into filenames.
+
+Standard input is a data stream consumed by a command. Standard output is the stream it produces. A pipe joins these streams. The right side receives the left side’s output as data, not as command-line arguments, which is why cat sample.log | grep READY needs no filename for grep.
+
+## Syntax example
+
+```sh
+cat sample.log | grep READY
+```
+
+Example filenames illustrate syntax; inspect your mission files before running them.
+
+## Your mission
+
+Filter stream.log down to the DELIVER line using a pipeline, then copy the flag.
+
+## Common mistake
+
+Do not add a filename to the receiving command unless you intend it to read that file instead of the pipe.
+
+## Check your understanding
+
+Why is a pipe different from running two commands separated by a semicolon?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

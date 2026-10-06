@@ -1,0 +1,34 @@
+---
+title: "Search the relay log"
+description: "Find the line containing RECEIPT in /var/log/relay.log and extract its flag."
+type: exercise
+xpReward: 40
+---
+
+## Learn
+
+grep selects lines matching a pattern. By default matching is case sensitive. grep -n adds line numbers, while -i ignores case.
+
+Text logs are sequences of records, commonly one per line. grep reduces noise by selecting matching records. -n helps locate a match in the original file; -v reverses selection. This simulator supports literal text and optional start/end anchors, not the full GNU regular-expression language.
+
+## Syntax example
+
+```sh
+grep -n ERROR sample.log
+```
+
+Example filenames illustrate syntax; inspect your mission files before running them.
+
+## Your mission
+
+Find the line containing RECEIPT in /var/log/relay.log and extract its flag.
+
+## Common mistake
+
+Case matters unless you select -i. The search pattern and filename are separate arguments.
+
+## Check your understanding
+
+How would you display every line except those containing DEBUG?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

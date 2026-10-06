@@ -1,0 +1,34 @@
+---
+title: "Advanced checkpoint: restore the relay"
+description: "Locate dispatch.dat under /opt/academy, select the RELEASE record, decode its second colon-delimited field, and save the decoded flag in /home/user/final.txt. Submit that flag."
+type: exercise
+xpReward: 60
+---
+
+## Learn
+
+Combine discovery, filtering, decoding, and evidence preservation. Verify each stage rather than guessing a long command. There can be more than one correct sequence of commands.
+
+A capstone brings discovery and transformation together. Keep an evidence trail: know where the source came from, what each pipeline stage changes, and where the final result is saved. Equivalent valid command sequences are accepted because the result matters more than one memorized solution.
+
+## Syntax example
+
+```sh
+find /opt/academy -type f
+```
+
+Example filenames illustrate syntax; inspect your mission files before running them.
+
+## Your mission
+
+Locate dispatch.dat under /opt/academy, select the RELEASE record, decode its second colon-delimited field, and save the decoded flag in /home/user/final.txt. Submit that flag.
+
+## Common mistake
+
+The final flag must also be saved at the requested path before the mission is complete.
+
+## Check your understanding
+
+How would you debug this workflow if you found the file but produced an empty final report?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

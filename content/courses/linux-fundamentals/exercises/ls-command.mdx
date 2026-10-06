@@ -1,111 +1,36 @@
 ---
-title: "Listing Files and Directories"
-description: "Master the ls command to view files and directories"
+title: "The dispatch shelf"
+description: "Locate the hidden dispatch in your home folder and read it."
+type: exercise
+xpReward: 25
 ---
 
-The `ls` command is one of the most frequently used commands in Linux. It lists the contents of directories, helping you see what files and folders exist in your current location.
+## Learn
 
-## Learning Objectives
+ls lists directory entries. Names beginning with a dot are hidden from its default view. ls -a includes them, and ls -l shows permissions and other details.
 
-- Use `ls` to list directory contents
-- Understand different `ls` options and flags
-- View hidden files and detailed information
-- Navigate and explore the filesystem
+An option changes how a command works, while a path operand tells it what to inspect. Linux filenames are case sensitive. Hidden entries are a naming convention, not an access-control feature: if you know the name and have permission, you can read them.
 
-## Basic Usage
+## Syntax example
 
-The simplest form of `ls` lists files in your current directory:
-
-```bash
+```sh
 ls
-```
-
-This shows you all visible files and folders in your current location.
-
-## Listing a Specific Directory
-
-You can list the contents of any directory by providing its path:
-
-```bash
-ls /home
-ls /home/user
-ls documents
-```
-
-## Common ls Options
-
-### Long Format (-l)
-
-The `-l` flag shows detailed information about each file:
-
-```bash
+ls -a
 ls -l
 ```
 
-This displays:
-- File permissions
-- Number of links
-- Owner name
-- Group name
-- File size
-- Modification date
-- File name
+Example filenames illustrate syntax; inspect your mission files before running them.
 
-### Show Hidden Files (-a)
+## Your mission
 
-Files starting with `.` are hidden by default. Use `-a` to see them:
+Locate the hidden dispatch in your home folder and read it.
 
-```bash
-ls -a
-```
+## Common mistake
 
-### Combine Flags
+The dot at the beginning of a filename is part of its name. Listing a file does not automatically read its contents.
 
-You can combine multiple flags:
+## Check your understanding
 
-```bash
-ls -la
-```
+Does hiding a file with a dot protect its contents from another user?
 
-This shows all files (including hidden ones) in long format.
-
-## Practice Challenges
-
-1. List all files in your current directory
-2. List files in the `/home/user` directory
-3. Use `ls -l` to see detailed information
-4. Find hidden files using `ls -a`
-5. Use `ls -la` to see everything with details
-
-## Understanding the Output
-
-When you run `ls -l`, you'll see output like:
-
-```
-drwxr-xr-x  2 user user 4096 Jan 15 10:30 documents
--rw-r--r--  1 user user   75 Jan 15 09:15 welcome.txt
-```
-
-Breaking this down:
-- First character: `d` = directory, `-` = file
-- Next 9 characters: permissions (we'll learn about these later!)
-- Numbers: link count
-- Names: owner and group
-- Number: size in bytes
-- Date/time: last modified
-- Text: filename
-
-## Tips
-
-- `ls` only shows files/folders in the current directory unless you specify a path
-- Directories often show in a different color than files
-- The `.` represents the current directory
-- The `..` represents the parent directory
-
-## What's Next?
-
-Now that you can see what files exist, let's learn how to navigate between directories using the `cd` command!
-
----
-
-**XP Reward:** 25 XP
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

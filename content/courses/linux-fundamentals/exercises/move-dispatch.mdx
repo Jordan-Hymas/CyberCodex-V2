@@ -1,0 +1,34 @@
+---
+title: "Rename the incoming report"
+description: "Rename incoming.txt to approved.txt without changing its content."
+type: exercise
+xpReward: 25
+---
+
+## Learn
+
+mv moves or renames an entry. Unlike cp, it removes the old path. Check both the new name and the absence of the old one.
+
+A rename changes the path used to reach an entry. Moving between directories is the same basic operation with a different destination. When the destination is a directory, this simulator keeps the source basename inside it. Verify that the old path is gone.
+
+## Syntax example
+
+```sh
+mv draft.txt final.txt
+```
+
+Example filenames illustrate syntax; inspect your mission files before running them.
+
+## Your mission
+
+Rename incoming.txt to approved.txt without changing its content.
+
+## Common mistake
+
+A successfully renamed file should not remain under its old name unless you copied it instead.
+
+## Check your understanding
+
+How can you prove you moved a file rather than copied it?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

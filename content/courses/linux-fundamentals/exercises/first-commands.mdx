@@ -1,95 +1,35 @@
 ---
-title: "Your First Commands"
-description: "Learn essential Linux commands to interact with the system"
+title: "Know your operator"
+description: "Run whoami and id. Then read /home/user/operator.txt to collect your dispatch."
+type: exercise
+xpReward: 25
 ---
 
-Welcome to your first hands-on Linux exercise! In this lesson, you'll learn some of the most basic and essential commands that every Linux user should know.
+## Learn
 
-## Learning Objectives
+whoami identifies the current user. id also shows user and group IDs. Here those identities are simulated and belong only to your learning environment.
 
-By the end of this exercise, you will be able to:
+The username is a human-readable identity; the numeric UID is what a real Linux kernel uses for ownership checks. Groups provide additional access categories. This environment has a single simulated owner so you can practice commands without changing your computer or another learner’s files.
 
-- Display text using the `echo` command
-- Check the current date and time
-- View system information
-- Clear the terminal screen
+## Syntax example
 
-## The echo Command
-
-The `echo` command displays text to the terminal. It's one of the simplest commands but very useful for displaying messages.
-
-**Try this:**
-
-```bash
-echo "Hello, Linux!"
+```sh
+whoami
+id
 ```
 
-You can also use `echo` to display variables or combine multiple words:
+Example filenames illustrate syntax; inspect your mission files before running them.
 
-```bash
-echo Welcome to CyberCodex
-```
+## Your mission
 
-## Checking the Date
+Run whoami and id. Then read /home/user/operator.txt to collect your dispatch.
 
-The `date` command shows the current date and time:
+## Common mistake
 
-```bash
-date
-```
+The user shown inside this lab is not your email address, and it is not a login to the website’s server.
 
-## System Information
+## Check your understanding
 
-Want to know what system you're running? Use the `uname` command:
+How are a username, UID, and group different?
 
-```bash
-uname
-```
-
-For more detailed information, add the `-a` flag:
-
-```bash
-uname -a
-```
-
-## Clearing the Screen
-
-When your terminal gets cluttered, use `clear` to start fresh:
-
-```bash
-clear
-```
-
-**Note:** This command will clear all the output from your screen!
-
-## Practice Challenges
-
-Use the terminal to complete these tasks:
-
-1. Display a welcome message: "Welcome to Linux Fundamentals"
-2. Check the current date and time
-3. View the full system information
-4. Clear your terminal screen
-5. Display your favorite quote using echo
-
-## Expected Output
-
-For challenge #1, you should see:
-
-```
-Welcome to Linux Fundamentals
-```
-
-## Tips
-
-- Commands are case-sensitive in Linux (`Echo` won't work, only `echo`)
-- You can combine commands on one line with `&&`: `date && whoami`
-- Press Ctrl+L as a shortcut for `clear`
-
-## What's Next?
-
-Great job! You've learned the basics of interacting with Linux. In the next exercise, we'll learn how to get help with commands using the `man` and `help` commands.
-
----
-
-**XP Reward:** 25 XP
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

@@ -1,114 +1,34 @@
 ---
-title: "Reading File Contents"
-description: "Learn to view file contents using the cat command"
+title: "Read without moving"
+description: "Read /opt/academy/dispatch.txt without changing directory."
+type: exercise
+xpReward: 25
 ---
 
-The `cat` command (short for concatenate) is used to display the contents of files. It's one of the most common ways to quickly view text files in Linux.
+## Learn
 
-## Learning Objectives
+An absolute path works from any current directory. cat can read several files in order; a relative path instead starts from your current directory.
 
-- Display file contents with `cat`
-- View multiple files at once
-- Understand when to use `cat`
-- Practice reading different files
+An absolute path begins at /. A relative path begins at your current working directory. Reading by an absolute path is useful in instructions and scripts when you want to be independent of where a terminal happens to start.
 
-## Basic Usage
+## Syntax example
 
-To display a file's contents:
-
-```bash
-cat filename
+```sh
+cat /etc/example.conf
 ```
 
-For example:
+Example filenames illustrate syntax; inspect your mission files before running them.
 
-```bash
-cat welcome.txt
-```
+## Your mission
 
-## Viewing Multiple Files
+Read /opt/academy/dispatch.txt without changing directory.
 
-You can display multiple files in sequence:
+## Common mistake
 
-```bash
-cat file1.txt file2.txt
-```
+A leading slash is meaningful; etc/example.conf and /etc/example.conf refer to different locations.
 
-The output will show file1.txt followed by file2.txt.
+## Check your understanding
 
-## Practice with the Welcome File
+How could you read a file in another directory without entering that directory?
 
-Your system has a welcome file. Try reading it:
-
-```bash
-cat welcome.txt
-```
-
-You should see a welcome message!
-
-## When to Use cat
-
-`cat` is perfect for:
-- Quickly viewing small files
-- Checking file contents
-- Combining multiple files
-- Redirecting file contents (we'll learn this later)
-
-`cat` might not be ideal for:
-- Very large files (use `less` or `more` instead)
-- Binary files (non-text files)
-
-## Practice Challenges
-
-1. Read the contents of `welcome.txt`
-2. First, use `ls` to see what files exist
-3. Try to cat a file that doesn't exist and observe the error
-4. Read the same file twice: `cat welcome.txt welcome.txt`
-
-## Common Errors
-
-If you try to cat a file that doesn't exist:
-
-```bash
-cat nonexistent.txt
-```
-
-You'll see an error:
-
-```
-cat: nonexistent.txt: No such file or directory
-```
-
-If you try to cat a directory:
-
-```bash
-cat documents
-```
-
-You'll see:
-
-```
-cat: documents: Is a directory
-```
-
-## Understanding the Output
-
-When you successfully `cat` a file:
-- The entire file contents are displayed
-- The output scrolls past if the file is long
-- After the output, you're back at the command prompt
-
-## Tips
-
-- Always check if a file exists with `ls` before using `cat`
-- For long files, consider using `less` or `more` (we'll learn these later)
-- `cat` can also be used to create files (advanced usage)
-- Combine `cat` with other commands using pipes `|` (coming soon!)
-
-## What's Next?
-
-Now that you can read files, let's learn how to create files using the `touch` command!
-
----
-
-**XP Reward:** 25 XP
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

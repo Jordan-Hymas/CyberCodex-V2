@@ -1,0 +1,34 @@
+---
+title: "Locate a filename"
+description: "Find parcel.txt below /opt/academy and read it."
+type: exercise
+xpReward: 40
+---
+
+## Learn
+
+find walks a directory tree. -name matches an entry name, not its contents. Quote wildcard patterns so the shell does not expand them first.
+
+find searches names and metadata in a directory tree; grep searches file contents. Choosing the starting directory controls the search scope. A quoted -name pattern is interpreted by find rather than expanded by the shell before find starts.
+
+## Syntax example
+
+```sh
+find /home/user -name "*.txt"
+```
+
+Example filenames illustrate syntax; inspect your mission files before running them.
+
+## Your mission
+
+Find parcel.txt below /opt/academy and read it.
+
+## Common mistake
+
+A filename match does not mean the file contains the desired record. Inspect it after discovery.
+
+## Check your understanding
+
+When would you use find first and grep second?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

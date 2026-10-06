@@ -1,0 +1,34 @@
+---
+title: "Write a report"
+description: "Write exactly relay ready followed by a newline to status.txt."
+type: exercise
+xpReward: 40
+---
+
+## Learn
+
+The &gt; operator writes standard output to a file, replacing its contents. The shell handles redirection before running the command. Be careful when overwriting an existing file.
+
+Redirection belongs to the shell. With &gt;, the destination is created or truncated before the command starts. This is why reading and writing the same file in one command can erase the input before it is read. Use a different output path for transformations.
+
+## Syntax example
+
+```sh
+echo "status ok" > sample.txt
+```
+
+Example filenames illustrate syntax; inspect your mission files before running them.
+
+## Your mission
+
+Write exactly relay ready followed by a newline to status.txt.
+
+## Common mistake
+
+Avoid cat sample.txt &gt; sample.txt. Use a separate temporary destination.
+
+## Check your understanding
+
+Why can &gt; destroy data even when the command itself is only reading?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

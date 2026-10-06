@@ -1,0 +1,34 @@
+---
+title: "Read through standard input"
+description: "Decode the receipt using base64 with input redirection."
+type: exercise
+xpReward: 60
+---
+
+## Learn
+
+The &lt; operator connects a file to a command’s standard input. The command does not need to receive that filename as an argument.
+
+Input redirection gives a command an already-open input stream. It is useful for tools that naturally read standard input. It differs from passing a filename: the command sees the stream rather than using an operand to choose the source. Here both forms can achieve the same count.
+
+## Syntax example
+
+```sh
+wc -l < sample.log
+```
+
+Example filenames illustrate syntax; inspect your mission files before running them.
+
+## Your mission
+
+Decode the receipt using base64 with input redirection.
+
+## Common mistake
+
+The arrow points from the file into the command. &gt; points output toward a destination file.
+
+## Check your understanding
+
+Can you explain the data flow of wc -l &lt; sample.log &gt; count.txt?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

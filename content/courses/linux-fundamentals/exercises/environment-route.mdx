@@ -1,0 +1,35 @@
+---
+title: "Store the route"
+description: "Set DEST to /opt/academy/signal, then use \"$DEST/receipt\" to read the flag."
+type: exercise
+xpReward: 60
+---
+
+## Learn
+
+`export` sets a shell variable; $NAME expands its value in a later command. Single quotes preserve literal dollar signs, whereas double quotes permit expansion.
+
+Variables let you name a reusable value. Referencing $PLACE expands that value in a later command. This teaching shell keeps HOME, USER, and PATH fixed and does not implement full shell scoping or word splitting. Use a separate command after export before using the new variable.
+
+## Syntax example
+
+```sh
+export PLACE=/tmp
+echo "$PLACE"
+```
+
+Example filenames illustrate syntax; inspect your mission files before running them.
+
+## Your mission
+
+Set DEST to /opt/academy/signal, then use "$DEST/receipt" to read the flag.
+
+## Common mistake
+
+Single quotes around $PLACE print its name literally.
+
+## Check your understanding
+
+Why are quotes useful around expanded paths that may contain spaces?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

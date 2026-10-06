@@ -1,3 +1,5 @@
+import { missions as linuxMissions } from "@/lib/linux/challenges";
+import { hasLinuxPro } from "@/lib/linux/access";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { getAllCurriculumSlugs, getAllExerciseIds, getCurriculumBySlug } from "@/lib/curriculum";
@@ -170,9 +172,31 @@ export default async function CoursePage({ params }: CoursePageProps) {
 
   const difficulty = courseMetadata ? difficultyLevels[courseMetadata.difficulty] : null;
   const writtenExercises = new Set(getAllExerciseIds(slug));
+  let linuxCompleted: string[] = [];
+  let linuxPaid = false;
+  if (slug === "linux-fundamentals" && session?.user?.id) {
+    const learner = await prisma.user.findUnique({ where: { id: session.user.id } });
+    linuxPaid = !!learner && hasLinuxPro(learner);
+    linuxCompleted = (await prisma.linuxLabSession.findMany({ where: { userId: session.user.id, solvedAt: { not: null } }, select: { exerciseId: true } })).map(s => s.exerciseId);
+    completedExercises = linuxCompleted;
+    userProgress = {
+      ...curriculum.progress,
+      exercisesCompleted: linuxCompleted.length,
+      xpEarned: linuxMissions.filter(m => linuxCompleted.includes(m.id)).reduce((total, m) => total + m.xp, 0),
+    };
+  }
   const chapters = curriculum.chapters.map((chapter) => ({
     ...chapter,
-    exercises: chapter.exercises.map((ex) => ({ ...ex, hasContent: writtenExercises.has(ex.id) })),
+    isLocked: slug === "linux-fundamentals" ? chapter.isPremium && !linuxPaid : chapter.isLocked,
+    exercises: chapter.exercises.map((ex) => {
+      const index = linuxMissions.findIndex(m => m.id === ex.id);
+      return { ...ex, hasContent: writtenExercises.has(ex.id),
+        ...(slug === "linux-fundamentals" ? {
+          isCompleted: linuxCompleted.includes(ex.id),
+          isLocked: (chapter.isPremium && !linuxPaid) || (index > 0 && !linuxCompleted.includes(linuxMissions[index - 1].id)),
+        } : {}),
+      };
+    }),
   }));
   const exerciseCount = curriculum.chapters.reduce((sum, c) => sum + c.exercises.length, 0);
 

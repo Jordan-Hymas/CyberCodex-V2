@@ -1,0 +1,34 @@
+---
+title: "Recover after a failed check"
+description: "Use test and || to create restored.txt containing recovered when missing.txt does not exist."
+type: exercise
+xpReward: 60
+---
+
+## Learn
+
+&amp;&amp; runs the next command only after success. || runs it only after failure. test checks a condition and communicates through its exit status rather than printed text.
+
+Commands communicate success with zero and other outcomes with nonzero status. &amp;&amp; and || make later commands conditional on that status. test often prints nothing; silence is normal. The lab supports a small documented test subset rather than the whole shell expression language.
+
+## Syntax example
+
+```sh
+test -f sample.txt && echo present
+```
+
+Example filenames illustrate syntax; inspect your mission files before running them.
+
+## Your mission
+
+Use test and || to create restored.txt containing recovered when missing.txt does not exist.
+
+## Common mistake
+
+Do not judge success only by whether output was printed.
+
+## Check your understanding
+
+Which branch executes when test -f missing.txt is false?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

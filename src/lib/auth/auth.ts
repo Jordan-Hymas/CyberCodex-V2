@@ -6,6 +6,23 @@ import prisma from "@/lib/db/prisma";
 import authConfig from "./auth.config";
 import { loginSchema } from "@/lib/validations/auth";
 import { verifyPassword } from "./password";
+import { devAdminLogin } from "./dev-admin";
+
+/** Standard email + Argon2 password check. Returns null on any failure. */
+async function findVerifiedUser(credentials: unknown) {
+  const validatedFields = loginSchema.safeParse(credentials);
+  if (!validatedFields.success) return null;
+
+  const { email, password } = validatedFields.data;
+  const user = await prisma.user.findUnique({ where: { email } });
+
+  // Generic failure to prevent user enumeration
+  if (!user || !user.password) return null;
+
+  // Verify password using Argon2 (Node.js only)
+  const isValid = await verifyPassword(user.password, password);
+  return isValid ? user : null;
+}
 
 /**
  * Main Auth.js configuration with Prisma adapter
@@ -27,31 +44,11 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        // Validate input
-        const validatedFields = loginSchema.safeParse(credentials);
+        // TEMPORARY: dev-only admin/admin shortcut. Remove before launch.
+        const devAdmin = await devAdminLogin(credentials?.email, credentials?.password);
 
-        if (!validatedFields.success) {
-          return null;
-        }
-
-        const { email, password } = validatedFields.data;
-
-        // Find user
-        const user = await prisma.user.findUnique({
-          where: { email },
-        });
-
-        if (!user || !user.password) {
-          // Generic error to prevent user enumeration
-          return null;
-        }
-
-        // Verify password using Argon2 (Node.js only)
-        const isValid = await verifyPassword(user.password, password);
-
-        if (!isValid) {
-          return null;
-        }
+        const user = devAdmin ?? (await findVerifiedUser(credentials));
+        if (!user) return null;
 
         // Return user object with all fields (will be available in session)
         return {
@@ -88,9 +85,24 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         token.subscriptionTier = user.subscriptionTier;
       }
 
+      // JWT subject is the signed identity; never trust a client-supplied id.
+      if (token.sub) token.id = token.sub;
+
       // Handle session updates
       if (trigger === "update" && session) {
-        token = { ...token, ...session };
+        const fresh = await prisma.user.findUnique({ where: { id: token.id as string } });
+        if (fresh) {
+          token.username = fresh.username;
+          token.emailVerified = fresh.emailVerified;
+          token.level = fresh.level;
+          token.xp = fresh.xp;
+          token.totalXp = fresh.totalXp;
+          token.streak = fresh.streak;
+          token.rank = fresh.rank;
+          token.subscriptionTier = fresh.subscriptionTier;
+          token.name = fresh.name;
+          token.picture = fresh.image;
+        }
       }
 
       return token;

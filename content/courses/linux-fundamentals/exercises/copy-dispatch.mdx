@@ -1,0 +1,35 @@
+---
+title: "Copy a field report"
+description: "Create backup and copy report.txt to backup/report.txt. The reward file appears when the backup contains the original text."
+type: exercise
+xpReward: 25
+---
+
+## Learn
+
+cp copies a file while leaving the source in place. mkdir creates a directory. A destination file needs an existing parent directory.
+
+A copy creates another independent file containing the same data. Editing one copy later should not change the other. Creating a directory establishes a destination; cp does not invent all missing parent folders for you. Inspect both files after copying.
+
+## Syntax example
+
+```sh
+mkdir copies
+cp example.txt copies/example.txt
+```
+
+Example filenames illustrate syntax; inspect your mission files before running them.
+
+## Your mission
+
+Create backup and copy report.txt to backup/report.txt. The reward file appears when the backup contains the original text.
+
+## Common mistake
+
+Copying to an existing filename may replace its contents. Check the destination carefully.
+
+## Check your understanding
+
+When would you choose cp instead of mv?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

@@ -1,0 +1,35 @@
+---
+title: "Select the last dispatch"
+description: "Read only the last line of dispatches.txt."
+type: exercise
+xpReward: 40
+---
+
+## Learn
+
+head reads the beginning of input and tail reads the end. -n sets a line count. These commands help inspect large files without flooding the terminal.
+
+Reading a small slice helps you understand a file before processing it. head and tail preserve record order within the selected slice. Here -n accepts a nonnegative line count; live tail-follow mode is not part of the simulation.
+
+## Syntax example
+
+```sh
+head -n 3 sample.log
+tail -n 2 sample.log
+```
+
+Example filenames illustrate syntax; inspect your mission files before running them.
+
+## Your mission
+
+Read only the last line of dispatches.txt.
+
+## Common mistake
+
+tail -n 1 selects one line, not one character.
+
+## Check your understanding
+
+Which command would you use to inspect a file header?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

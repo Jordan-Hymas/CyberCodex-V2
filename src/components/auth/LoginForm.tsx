@@ -84,8 +84,9 @@ export function LoginForm({ callbackUrl, verified, errorCode }: LoginFormProps) 
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <Input
-          label="Email"
-          type="email"
+          label="Email or username"
+          type="text"
+          autoComplete="username"
           value={formData.email}
           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
           placeholder="your@email.com"

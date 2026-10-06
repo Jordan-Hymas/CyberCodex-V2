@@ -3,58 +3,61 @@
     "courseId": "linux-fundamentals",
     "slug": "linux-fundamentals",
     "title": "Linux Fundamentals",
-    "description": "Master the essential Linux commands and concepts for cybersecurity and system administration",
+    "description": "36 original flag missions: beginner, intermediate and advanced command-line practice in a personal Linux simulation.",
     "category": "Operating Systems",
     "difficulty": "Beginner",
-    "duration": "6 hours",
     "icon": "/media/icons/linux.gif"
   },
   "progress": {
     "exercisesCompleted": 0,
-    "totalExercises": 28,
+    "totalExercises": 36,
     "projectsCompleted": 0,
-    "totalProjects": 1,
+    "totalProjects": 0,
     "xpEarned": 0,
-    "totalXp": 700,
+    "totalXp": 1500,
     "badgesEarned": 0,
-    "totalBadges": 6
+    "totalBadges": 0
   },
   "chapters": [
     {
       "id": "1",
       "number": 1,
-      "title": "Introduction to Linux",
-      "description": "Learn about Linux history, the terminal, and basic commands",
+      "title": "Beginner: first steps",
+      "description": "Original flag missions in your personal saved Linux environment.",
       "isLocked": false,
       "isPremium": false,
       "exercises": [
         {
           "id": "welcome-to-linux",
-          "title": "Welcome to Linux",
-          "type": "article",
-          "isLocked": false,
-          "isCompleted": false,
-          "xpReward": 20
-        },
-        {
-          "id": "what-is-terminal",
-          "title": "What is the Terminal?",
-          "type": "article",
-          "isLocked": false,
-          "isCompleted": false,
-          "xpReward": 20
-        },
-        {
-          "id": "first-commands",
-          "title": "Your First Commands",
+          "title": "First contact: read your dispatch",
+          "description": "Read dispatch.txt in your home directory, copy the CYBER{...} flag, and submit it below.",
           "type": "exercise",
           "isLocked": false,
           "isCompleted": false,
           "xpReward": 25
         },
         {
-          "id": "getting-help",
-          "title": "Getting Help with Commands",
+          "id": "first-commands",
+          "title": "Know your operator",
+          "description": "Run whoami and id. Then read /home/user/operator.txt to collect your dispatch.",
+          "type": "exercise",
+          "isLocked": false,
+          "isCompleted": false,
+          "xpReward": 25
+        },
+        {
+          "id": "pwd-command",
+          "title": "Your place in the tree",
+          "description": "Inspect your location with pwd. Read coordinates.txt from that location.",
+          "type": "exercise",
+          "isLocked": false,
+          "isCompleted": false,
+          "xpReward": 25
+        },
+        {
+          "id": "ls-command",
+          "title": "The dispatch shelf",
+          "description": "Locate the hidden dispatch in your home folder and read it.",
           "type": "exercise",
           "isLocked": false,
           "isCompleted": false,
@@ -65,46 +68,42 @@
     {
       "id": "2",
       "number": 2,
-      "title": "Navigating the Filesystem",
-      "description": "Master directory navigation and understanding Linux file structure",
+      "title": "Beginner: paths and discovery",
+      "description": "Original flag missions in your personal saved Linux environment.",
       "isLocked": false,
       "isPremium": false,
       "exercises": [
         {
-          "id": "pwd-command",
-          "title": "Print Working Directory",
-          "type": "exercise",
-          "isLocked": false,
-          "isCompleted": false,
-          "xpReward": 25
-        },
-        {
-          "id": "ls-command",
-          "title": "Listing Files and Directories",
-          "type": "exercise",
-          "isLocked": false,
-          "isCompleted": false,
-          "xpReward": 25
-        },
-        {
           "id": "cd-command",
-          "title": "Changing Directories",
+          "title": "Walk to the relay",
+          "description": "Navigate into stations/relay and read message.txt, then return home.",
           "type": "exercise",
           "isLocked": false,
           "isCompleted": false,
           "xpReward": 25
         },
         {
-          "id": "relative-vs-absolute",
-          "title": "Relative vs Absolute Paths",
+          "id": "cat-command",
+          "title": "Read without moving",
+          "description": "Read /opt/academy/dispatch.txt without changing directory.",
           "type": "exercise",
           "isLocked": false,
           "isCompleted": false,
-          "xpReward": 30
+          "xpReward": 25
         },
         {
-          "id": "tree-command",
-          "title": "Viewing Directory Trees",
+          "id": "getting-help",
+          "title": "Ask the manual",
+          "description": "Read man ls, then locate the hidden file inside /opt/academy/helpdesk.",
+          "type": "exercise",
+          "isLocked": false,
+          "isCompleted": false,
+          "xpReward": 25
+        },
+        {
+          "id": "relative-paths",
+          "title": "One floor up",
+          "description": "From /home/user/work, read ../store/receipt.txt.",
           "type": "exercise",
           "isLocked": false,
           "isCompleted": false,
@@ -115,146 +114,134 @@
     {
       "id": "3",
       "number": 3,
-      "title": "Working with Files",
-      "description": "Learn to create, read, modify, and delete files",
+      "title": "Beginner: files and checkpoint",
+      "description": "Original flag missions in your personal saved Linux environment.",
       "isLocked": false,
       "isPremium": false,
       "exercises": [
         {
-          "id": "cat-command",
-          "title": "Reading File Contents",
+          "id": "quoted-paths",
+          "title": "Names with spaces",
+          "description": "Read the file named shift notes.txt.",
           "type": "exercise",
           "isLocked": false,
           "isCompleted": false,
           "xpReward": 25
         },
         {
-          "id": "touch-command",
-          "title": "Creating Empty Files",
+          "id": "copy-dispatch",
+          "title": "Copy a field report",
+          "description": "Create backup and copy report.txt to backup/report.txt. The reward file appears when the backup contains the original text.",
           "type": "exercise",
           "isLocked": false,
           "isCompleted": false,
           "xpReward": 25
         },
         {
-          "id": "mkdir-command",
-          "title": "Creating Directories",
+          "id": "move-dispatch",
+          "title": "Rename the incoming report",
+          "description": "Rename incoming.txt to approved.txt without changing its content.",
           "type": "exercise",
           "isLocked": false,
           "isCompleted": false,
           "xpReward": 25
         },
         {
-          "id": "cp-command",
-          "title": "Copying Files and Directories",
+          "id": "beginner-relay",
+          "title": "Beginner checkpoint: locate the parcel",
+          "description": "Find the hidden parcel in /opt/academy/relay/archive and submit its flag.",
           "type": "exercise",
           "isLocked": false,
           "isCompleted": false,
-          "xpReward": 30
-        },
-        {
-          "id": "mv-command",
-          "title": "Moving and Renaming Files",
-          "type": "exercise",
-          "isLocked": false,
-          "isCompleted": false,
-          "xpReward": 30
-        },
-        {
-          "id": "rm-command",
-          "title": "Removing Files and Directories",
-          "type": "exercise",
-          "isLocked": false,
-          "isCompleted": false,
-          "xpReward": 30
+          "xpReward": 25
         }
       ]
     },
     {
       "id": "4",
       "number": 4,
-      "title": "File Permissions",
-      "description": "Understand and modify Linux file permissions and ownership",
+      "title": "Intermediate: search and selection",
+      "description": "Original flag missions in your personal saved Linux environment.",
       "isLocked": false,
-      "isPremium": false,
+      "isPremium": true,
       "exercises": [
         {
-          "id": "understanding-permissions",
-          "title": "Understanding File Permissions",
-          "type": "article",
-          "isLocked": false,
-          "isCompleted": false,
-          "xpReward": 20
-        },
-        {
-          "id": "reading-permissions",
-          "title": "Reading Permission Strings",
+          "id": "search-log",
+          "title": "Search the relay log",
+          "description": "Find the line containing RECEIPT in /var/log/relay.log and extract its flag.",
           "type": "exercise",
           "isLocked": false,
           "isCompleted": false,
-          "xpReward": 25
+          "xpReward": 40
         },
         {
-          "id": "chmod-basics",
-          "title": "Changing Permissions with chmod",
+          "id": "find-parcel",
+          "title": "Locate a filename",
+          "description": "Find parcel.txt below /opt/academy and read it.",
           "type": "exercise",
           "isLocked": false,
           "isCompleted": false,
-          "xpReward": 30
+          "xpReward": 40
         },
         {
-          "id": "octal-notation",
-          "title": "Using Octal Notation",
+          "id": "glob-batches",
+          "title": "Inspect a batch with globbing",
+          "description": "Read all .txt files inside batches to locate the receipt.",
           "type": "exercise",
           "isLocked": false,
           "isCompleted": false,
-          "xpReward": 35
+          "xpReward": 40
         },
         {
-          "id": "common-permissions",
-          "title": "Common Permission Patterns",
+          "id": "head-tail",
+          "title": "Select the last dispatch",
+          "description": "Read only the last line of dispatches.txt.",
           "type": "exercise",
           "isLocked": false,
           "isCompleted": false,
-          "xpReward": 30
+          "xpReward": 40
         }
       ]
     },
     {
       "id": "5",
       "number": 5,
-      "title": "Text Processing",
-      "description": "Learn powerful text manipulation and search commands",
+      "title": "Intermediate: streams and reports",
+      "description": "Original flag missions in your personal saved Linux environment.",
       "isLocked": false,
-      "isPremium": false,
+      "isPremium": true,
       "exercises": [
         {
-          "id": "echo-command",
-          "title": "Displaying Text with echo",
+          "id": "pipe-filter",
+          "title": "Filter the signal",
+          "description": "Filter stream.log down to the DELIVER line using a pipeline, then copy the flag.",
           "type": "exercise",
           "isLocked": false,
           "isCompleted": false,
-          "xpReward": 25
+          "xpReward": 40
         },
         {
-          "id": "grep-basics",
-          "title": "Searching with grep",
+          "id": "redirect-report",
+          "title": "Write a report",
+          "description": "Write exactly relay ready followed by a newline to status.txt.",
           "type": "exercise",
           "isLocked": false,
           "isCompleted": false,
-          "xpReward": 30
+          "xpReward": 40
         },
         {
-          "id": "find-command",
-          "title": "Finding Files",
+          "id": "append-log",
+          "title": "Append without erasing",
+          "description": "Append restored as a second line in status.log, keeping the first line.",
           "type": "exercise",
           "isLocked": false,
           "isCompleted": false,
-          "xpReward": 35
+          "xpReward": 40
         },
         {
-          "id": "combining-commands",
-          "title": "Combining Commands",
+          "id": "unique-receipt",
+          "title": "Separate repeated messages",
+          "description": "Find the only nonduplicated line in messages.txt.",
           "type": "exercise",
           "isLocked": false,
           "isCompleted": false,
@@ -265,108 +252,188 @@
     {
       "id": "6",
       "number": 6,
-      "title": "System Essentials",
-      "description": "Essential system commands and wrapping up",
+      "title": "Intermediate: data and permissions",
+      "description": "Original flag missions in your personal saved Linux environment.",
       "isLocked": false,
-      "isPremium": false,
+      "isPremium": true,
       "exercises": [
         {
-          "id": "ps-command",
-          "title": "Viewing Processes",
+          "id": "cut-field",
+          "title": "Extract a manifest field",
+          "description": "Extract field 3 of manifest.txt, separated by colons.",
           "type": "exercise",
           "isLocked": false,
           "isCompleted": false,
-          "xpReward": 30
+          "xpReward": 40
         },
         {
-          "id": "system-info",
-          "title": "System Information Commands",
+          "id": "decode-receipt",
+          "title": "Decode the shipment label",
+          "description": "Decode label.b64 to reveal the flag.",
           "type": "exercise",
           "isLocked": false,
           "isCompleted": false,
-          "xpReward": 30
+          "xpReward": 40
         },
         {
-          "id": "clear-command",
-          "title": "Managing Your Terminal",
+          "id": "restore-permission",
+          "title": "Recover read permission",
+          "description": "Inspect sealed.txt, restore owner read permission, and read it.",
           "type": "exercise",
           "isLocked": false,
           "isCompleted": false,
-          "xpReward": 20
+          "xpReward": 40
         },
         {
-          "id": "final-project",
-          "title": "Linux Fundamentals Final Project",
-          "type": "project",
+          "id": "intermediate-relay",
+          "title": "Intermediate checkpoint: process a manifest",
+          "description": "Find the READY record in /var/log/manifest, extract its colon-separated payload, and decode that payload.",
+          "type": "exercise",
           "isLocked": false,
           "isCompleted": false,
-          "xpReward": 100
+          "xpReward": 40
+        }
+      ]
+    },
+    {
+      "id": "7",
+      "number": 7,
+      "title": "Advanced: composition and evidence",
+      "description": "Original flag missions in your personal saved Linux environment.",
+      "isLocked": false,
+      "isPremium": true,
+      "exercises": [
+        {
+          "id": "input-redirection",
+          "title": "Read through standard input",
+          "description": "Decode the receipt using base64 with input redirection.",
+          "type": "exercise",
+          "isLocked": false,
+          "isCompleted": false,
+          "xpReward": 60
+        },
+        {
+          "id": "tee-evidence",
+          "title": "Keep a copy of the evidence",
+          "description": "Filter the OK line from source.log and save exactly that line to evidence.txt.",
+          "type": "exercise",
+          "isLocked": false,
+          "isCompleted": false,
+          "xpReward": 60
+        },
+        {
+          "id": "compare-dispatches",
+          "title": "Spot a changed line",
+          "description": "Compare before.txt and after.txt and recover the newly added flag.",
+          "type": "exercise",
+          "isLocked": false,
+          "isCompleted": false,
+          "xpReward": 60
+        },
+        {
+          "id": "reverse-dispatch",
+          "title": "Undo a reversed transmission",
+          "description": "Reverse the characters of reversed.txt to recover the flag.",
+          "type": "exercise",
+          "isLocked": false,
+          "isCompleted": false,
+          "xpReward": 60
+        }
+      ]
+    },
+    {
+      "id": "8",
+      "number": 8,
+      "title": "Advanced: variables and recovery",
+      "description": "Original flag missions in your personal saved Linux environment.",
+      "isLocked": false,
+      "isPremium": true,
+      "exercises": [
+        {
+          "id": "environment-route",
+          "title": "Store the route",
+          "description": "Set DEST to /opt/academy/signal, then use \"$DEST/receipt\" to read the flag.",
+          "type": "exercise",
+          "isLocked": false,
+          "isCompleted": false,
+          "xpReward": 60
+        },
+        {
+          "id": "directory-permission",
+          "title": "Traverse a locked directory",
+          "description": "Restore owner traversal on vault, then read vault/receipt.",
+          "type": "exercise",
+          "isLocked": false,
+          "isCompleted": false,
+          "xpReward": 60
+        },
+        {
+          "id": "conditional-recovery",
+          "title": "Recover after a failed check",
+          "description": "Use test and || to create restored.txt containing recovered when missing.txt does not exist.",
+          "type": "exercise",
+          "isLocked": false,
+          "isCompleted": false,
+          "xpReward": 60
+        },
+        {
+          "id": "count-records",
+          "title": "Count accepted records",
+          "description": "Count lines containing ACCEPT in traffic.txt and write the count to count.txt.",
+          "type": "exercise",
+          "isLocked": false,
+          "isCompleted": false,
+          "xpReward": 60
+        }
+      ]
+    },
+    {
+      "id": "9",
+      "number": 9,
+      "title": "Advanced: automation checkpoints",
+      "description": "Original flag missions in your personal saved Linux environment.",
+      "isLocked": false,
+      "isPremium": true,
+      "exercises": [
+        {
+          "id": "normalize-message",
+          "title": "Normalize a status stream",
+          "description": "Translate status.txt to lowercase and save it as normalized.txt.",
+          "type": "exercise",
+          "isLocked": false,
+          "isCompleted": false,
+          "xpReward": 60
+        },
+        {
+          "id": "numeric-order",
+          "title": "Order numeric priorities",
+          "description": "Sort priorities.txt numerically and save the smallest value to first.txt.",
+          "type": "exercise",
+          "isLocked": false,
+          "isCompleted": false,
+          "xpReward": 60
+        },
+        {
+          "id": "clean-workspace",
+          "title": "Clean the staging folder",
+          "description": "Remove the two temporary files in staging, then remove the empty staging directory. Preserve keep.txt.",
+          "type": "exercise",
+          "isLocked": false,
+          "isCompleted": false,
+          "xpReward": 60
+        },
+        {
+          "id": "advanced-relay",
+          "title": "Advanced checkpoint: restore the relay",
+          "description": "Locate dispatch.dat under /opt/academy, select the RELEASE record, decode its second colon-delimited field, and save the decoded flag in /home/user/final.txt. Submit that flag.",
+          "type": "exercise",
+          "isLocked": false,
+          "isCompleted": false,
+          "xpReward": 60
         }
       ]
     }
   ],
-  "badges": [
-    {
-      "id": "linux-explorer",
-      "name": "Linux Explorer",
-      "description": "Complete Chapter 1: Introduction to Linux",
-      "icon": "🐧",
-      "isLocked": true
-    },
-    {
-      "id": "navigator",
-      "name": "Directory Navigator",
-      "description": "Complete Chapter 2: Navigating the Filesystem",
-      "icon": "🧭",
-      "isLocked": true
-    },
-    {
-      "id": "file-master",
-      "name": "File Master",
-      "description": "Complete Chapter 3: Working with Files",
-      "icon": "📁",
-      "isLocked": true
-    },
-    {
-      "id": "permission-guru",
-      "name": "Permission Guru",
-      "description": "Complete Chapter 4: File Permissions",
-      "icon": "🔒",
-      "isLocked": true
-    },
-    {
-      "id": "text-wizard",
-      "name": "Text Wizard",
-      "description": "Complete Chapter 5: Text Processing",
-      "icon": "📝",
-      "isLocked": true
-    },
-    {
-      "id": "linux-master",
-      "name": "Linux Master",
-      "description": "Complete all exercises and the final project",
-      "icon": "👑",
-      "isLocked": true
-    }
-  ],
-  "cheatSheets": [
-    {
-      "id": "navigation-commands",
-      "title": "Navigation Commands Cheat Sheet",
-      "description": "Quick reference for directory navigation",
-      "downloadUrl": "/downloads/navigation-cheatsheet.pdf"
-    },
-    {
-      "id": "file-operations",
-      "title": "File Operations Cheat Sheet",
-      "description": "Common file manipulation commands",
-      "downloadUrl": "/downloads/file-operations-cheatsheet.pdf"
-    },
-    {
-      "id": "permissions-guide",
-      "title": "Permissions Quick Guide",
-      "description": "Understanding and using chmod",
-      "downloadUrl": "/downloads/permissions-guide.pdf"
-    }
-  ]
+  "badges": [],
+  "cheatSheets": []
 }

@@ -1,0 +1,34 @@
+---
+title: "Names with spaces"
+description: "Read the file named shift notes.txt."
+type: exercise
+xpReward: 25
+---
+
+## Learn
+
+Quotes make a filename containing spaces one argument. Single and double quotes both group text, but single quotes also prevent variable expansion.
+
+The shell splits unquoted text into arguments. Matching quotes preserve spaces inside one argument and are removed before the command receives it. Single quotes preserve the text literally. Double quotes preserve spaces while allowing variable references used in later lessons.
+
+## Syntax example
+
+```sh
+echo "a phrase with spaces"
+```
+
+Example filenames illustrate syntax; inspect your mission files before running them.
+
+## Your mission
+
+Read the file named shift notes.txt.
+
+## Common mistake
+
+Apostrophes inside single-quoted text end that quote. Choose double quotes when appropriate.
+
+## Check your understanding
+
+Why is cat "a b.txt" different from cat a b.txt?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

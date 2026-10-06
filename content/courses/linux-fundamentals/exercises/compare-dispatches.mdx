@@ -1,0 +1,34 @@
+---
+title: "Spot a changed line"
+description: "Compare before.txt and after.txt and recover the newly added flag."
+type: exercise
+xpReward: 60
+---
+
+## Learn
+
+diff compares file content and reports differences. A difference gives it a nonzero exit status even though comparison worked; this is not the same as a runtime failure.
+
+Comparison is useful when a configuration or report has changed. This lab shows first-file lines with &lt; and second-file lines with &gt;; it does not implement GNU diff’s full patch format. A status of one means differences were found, so conditional commands need to account for that.
+
+## Syntax example
+
+```sh
+diff first.txt second.txt
+```
+
+Example filenames illustrate syntax; inspect your mission files before running them.
+
+## Your mission
+
+Compare before.txt and after.txt and recover the newly added flag.
+
+## Common mistake
+
+Do not include the diff marker when copying a recovered value.
+
+## Check your understanding
+
+Why might diff first.txt second.txt &amp;&amp; echo identical be useful?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

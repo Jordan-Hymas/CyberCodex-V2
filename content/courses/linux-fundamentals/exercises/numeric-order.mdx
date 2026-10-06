@@ -1,0 +1,34 @@
+---
+title: "Order numeric priorities"
+description: "Sort priorities.txt numerically and save the smallest value to first.txt."
+type: exercise
+xpReward: 60
+---
+
+## Learn
+
+Lexical sorting compares characters, so 10 can appear before 2. sort -n compares numeric values. head then selects the highest-priority item if smaller numbers mean earlier service.
+
+Numbers stored as text can be sorted numerically or lexically. Choose based on what the data represents. Numeric sorting is appropriate for counts and priorities, while lexical sorting may be appropriate for identifiers. Once ordered, select a small slice for inspection.
+
+## Syntax example
+
+```sh
+sort -n numbers.txt
+```
+
+Example filenames illustrate syntax; inspect your mission files before running them.
+
+## Your mission
+
+Sort priorities.txt numerically and save the smallest value to first.txt.
+
+## Common mistake
+
+A value that starts with digits is not always semantically a number; a postal code, for example, is an identifier.
+
+## Check your understanding
+
+Why can lexical ordering put 10 before 2?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

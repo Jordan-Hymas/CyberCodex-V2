@@ -1,0 +1,34 @@
+---
+title: "Count accepted records"
+description: "Count lines containing ACCEPT in traffic.txt and write the count to count.txt."
+type: exercise
+xpReward: 60
+---
+
+## Learn
+
+wc -l counts newline characters. A pipeline can filter records first and then count only the accepted set. A final line without a newline changes that count.
+
+Counting meaningful records begins with deciding what qualifies as a match. After filtering, wc -l counts newline characters. The lab returns a plain count so it can be stored or used as evidence. Real utilities may add a filename label when given a filename operand.
+
+## Syntax example
+
+```sh
+grep OK sample.log | wc -l
+```
+
+Example filenames illustrate syntax; inspect your mission files before running them.
+
+## Your mission
+
+Count lines containing ACCEPT in traffic.txt and write the count to count.txt.
+
+## Common mistake
+
+A file containing text without a final newline may have fewer newline characters than visible text records.
+
+## Check your understanding
+
+Why is filtering before counting different from counting the entire file?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

@@ -1,3 +1,4 @@
+import { LinuxLesson } from "@/components/lab/LinuxLesson";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { serialize } from "next-mdx-remote/serialize";
@@ -61,6 +62,8 @@ export default async function ExercisePage({ params }: ExercisePageProps) {
   if (!exercise || !curriculum) {
     notFound();
   }
+
+  if (slug === "linux-fundamentals") return <LinuxLesson exerciseId={exerciseId} />;
 
   const hasTerminal = TERMINAL_ENABLED_COURSES.includes(slug);
   const isInteractivePython = exercise.frontmatter.type === "interactive-python";
