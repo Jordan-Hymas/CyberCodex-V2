@@ -17,6 +17,7 @@ export interface PricingCardProps {
   ctaText: string;
   ctaVariant?: "primary" | "secondary" | "accent" | "ghost";
   onCtaClick?: () => void;
+  ctaHref?: string;
   badge?: string;
   highlighted?: boolean;
   icon?: ReactNode;
@@ -32,6 +33,7 @@ export function PricingCard({
   ctaText,
   ctaVariant = "primary",
   onCtaClick,
+  ctaHref,
   badge,
   highlighted = false,
   icon,
@@ -79,7 +81,7 @@ export function PricingCard({
       {/* Features List */}
       <div className="space-y-3 flex-grow mb-6">
         {features.map((feature, index) => (
-          <div key={index} className="flex items-start space-x-3">
+          <div key={index} className="flex items-start gap-3">
             <span
               className={cn(
                 "grid h-5 w-5 flex-shrink-0 place-items-center border-2 border-cyber-ink font-ui text-xs font-bold leading-none text-cyber-ink mt-0.5",
@@ -106,6 +108,7 @@ export function PricingCard({
         variant={ctaVariant}
         size="lg"
         fullWidth
+        href={ctaHref}
         onClick={onCtaClick}
       >
         {ctaText}

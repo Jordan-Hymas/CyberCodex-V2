@@ -1,5 +1,4 @@
 import { cn } from "@/lib/utils";
-import Image from "next/image";
 
 interface Feature {
   readonly name: string;
@@ -15,108 +14,69 @@ interface FeatureCategory {
 
 export interface FeatureComparisonProps {
   features: readonly FeatureCategory[];
+  freeLabel?: string;
+  proLabel?: string;
   className?: string;
 }
 
-export function FeatureComparison({ features, className }: FeatureComparisonProps) {
-  const renderValue = (value: boolean | string) => {
-    if (typeof value === "boolean") {
-      return value ? (
-        <svg
-          className="w-6 h-6 text-cyber-primary mx-auto"
-          fill="none"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="2"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path d="M5 13l4 4L19 7" />
-        </svg>
-      ) : (
-        <span className="text-cyber-text-muted text-2xl">-</span>
-      );
-    }
-    return <span className="text-cyber-text-primary text-sm font-medium">{value}</span>;
-  };
-
+function Value({ value }: { value: boolean | string }) {
+  if (typeof value === "string") {
+    return <span className="font-ui text-sm text-cyber-text-primary">{value}</span>;
+  }
   return (
-    <div className={cn("w-full", className)}>
-      {/* Header Row */}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 mb-8">
-        {/* Logo - Hidden on mobile, shown on desktop */}
-        <div className="hidden md:flex col-span-1 items-center justify-center">
-          <div className="font-pixel leading-tight text-center" style={{ fontSize: 'clamp(1.125rem, 2vw, 1.5rem)' }}>
-            <span className="text-cyber-primary">Cyber</span>
-            <span className="text-cyber-text-primary">Codex.io</span>
-          </div>
-        </div>
-        <div className="text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 mb-3 rounded-lg overflow-hidden">
-            <Image
-              src="/images/categories/possibleCharacter.gif"
-              alt="Explorer"
-              width={64}
-              height={64}
-              className="object-cover"
-              unoptimized
-            />
-          </div>
-          <h3 className="text-xl font-bold text-cyber-text-secondary mb-1">Explorer</h3>
-          <button className="px-6 py-2 mt-2 border border-cyber-border rounded-lg text-cyber-text-primary hover:border-cyber-primary transition-colors duration-200">
-            Start for Free
-          </button>
-        </div>
-        <div className="text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 mb-3 rounded-lg overflow-hidden">
-            <Image
-              src="/images/logo/coin.webp"
-              alt="Elite Hacker"
-              width={64}
-              height={64}
-              className="object-cover"
-              unoptimized
-            />
-          </div>
-          <h3 className="text-xl font-bold text-cyber-primary mb-1">ELITE</h3>
-          <button className="px-6 py-2 mt-2 bg-cyber-primary text-cyber-dark rounded-lg font-bold hover:bg-cyber-primary/90 transition-colors duration-200">
-            Join Elite
-          </button>
-        </div>
-      </div>
+    <span
+      className={cn(
+        "mx-auto grid h-6 w-6 place-items-center border-2 border-cyber-ink font-ui text-xs",
+        value ? "bg-cyber-primary text-cyber-ink" : "bg-cyber-dark-tertiary text-cyber-text-muted"
+      )}
+      aria-label={value ? "Included" : "Not included"}
+    >
+      {value ? "✓" : "–"}
+    </span>
+  );
+}
 
-      {/* Feature Rows */}
-      <div className="space-y-8">
+export function FeatureComparison({ features, freeLabel = "Explorer", proLabel = "Elite", className }: FeatureComparisonProps) {
+  return (
+    <div className={cn("pixel-panel overflow-x-auto", className)}>
+      <table className="w-full min-w-[34rem] border-collapse text-left">
+        <thead>
+          <tr className="border-b-[3px] border-cyber-ink bg-cyber-ink">
+            <th scope="col" className="px-5 py-4 font-ui text-cyber-text-muted">
+              Feature
+            </th>
+            <th scope="col" className="w-36 px-4 py-4 text-center font-ui text-cyber-text-primary">
+              {freeLabel}
+            </th>
+            <th scope="col" className="w-36 px-4 py-4 text-center font-ui text-cyber-warning">
+              {proLabel}
+            </th>
+          </tr>
+        </thead>
         {features.map((category) => (
-          <div key={category.category}>
-            <h4 className="text-xs font-bold text-cyber-text-muted uppercase tracking-wider mb-4 px-2">
-              {category.category}
-            </h4>
-            <div className="space-y-2">
-              {category.features.map((feature) => (
-                <div
-                  key={feature.name}
-                  className="grid grid-cols-[1fr_auto_auto] md:grid-cols-3 gap-4 md:gap-6 items-center py-4 px-4 rounded-lg hover:bg-cyber-dark-secondary transition-colors duration-200"
-                >
-                  <div className="col-span-1 flex items-center space-x-2">
-                    <span className="text-cyber-text-primary font-medium text-sm md:text-base">
-                      {feature.name}
-                    </span>
-                    <button
-                      title={feature.info}
-                      className="inline-flex items-center justify-center w-4 h-4 rounded-full border border-cyber-border text-cyber-text-muted hover:text-cyber-primary hover:border-cyber-primary transition-colors duration-200 text-xs flex-shrink-0"
-                    >
-                      i
-                    </button>
-                  </div>
-                  <div className="text-center w-12 md:w-auto">{renderValue(feature.free)}</div>
-                  <div className="text-center w-12 md:w-auto">{renderValue(feature.pro)}</div>
-                </div>
-              ))}
-            </div>
-          </div>
+          <tbody key={category.category}>
+            <tr>
+              <th colSpan={3} scope="colgroup" className="bg-cyber-dark-tertiary px-5 py-2 pixel-label text-cyber-secondary">
+                {category.category}
+              </th>
+            </tr>
+            {category.features.map((feature) => (
+              <tr key={feature.name} className="border-t-2 border-dashed border-cyber-border">
+                <th scope="row" className="px-5 py-3 font-normal">
+                  <span className="block text-cyber-text-primary">{feature.name}</span>
+                  <span className="block text-sm text-cyber-text-muted">{feature.info}</span>
+                </th>
+                <td className="px-4 py-3 text-center">
+                  <Value value={feature.free} />
+                </td>
+                <td className="px-4 py-3 text-center">
+                  <Value value={feature.pro} />
+                </td>
+              </tr>
+            ))}
+          </tbody>
         ))}
-      </div>
+      </table>
     </div>
   );
 }
