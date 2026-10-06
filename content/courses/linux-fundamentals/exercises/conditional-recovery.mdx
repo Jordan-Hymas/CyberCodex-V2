@@ -1,27 +1,31 @@
 ---
 title: "Recover after a failed check"
-description: "Use test and || to create restored.txt containing recovered when missing.txt does not exist."
+description: "Write one line that creates restored.txt containing recovered, but only if missing.txt does not exist. Use test and ||."
 type: exercise
 xpReward: 60
 ---
 
 ## Learn
 
-&& runs the next command only after success. || runs it only after failure. test checks a condition and communicates through its exit status rather than printed text.
+&& runs the next command only if the previous one succeeded, and || runs it only if the previous one failed. test -f file succeeds when the file exists.
 
-Commands communicate success with zero and other outcomes with nonzero status. && and || make later commands conditional on that status. test often prints nothing; silence is normal. The lab supports a small documented test subset rather than the whole shell expression language.
+Conditionals let a single line react to the system, which is the heart of scripting. command1 || command2 reads as "try this, otherwise do that".
 
 ## Example
 
 ```sh
-test -f sample.txt && echo present
+test -f config.ini || echo missing
+test -d logs && echo "logs exist"
 ```
 
 Example filenames illustrate syntax; inspect your mission files before running them.
 
 ## Your mission
 
-Use test and || to create restored.txt containing recovered when missing.txt does not exist.
+Write one line that creates restored.txt containing recovered, but only if missing.txt does not exist. Use test and ||.
+
+1. Check what test -f missing.txt returns.
+2. Chain it with || so the recovery only runs on failure.
 
 ## Common mistake
 

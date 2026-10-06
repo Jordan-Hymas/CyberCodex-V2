@@ -1,13 +1,15 @@
 import { prisma } from '@/lib/db/prisma';
-import { missionById, missions, createChallenge, flagMatches, revealReward, objectiveMet, courseId } from './challenges';
+import { missionById, missions, createChallenge, flagMatches, revealReward, objectiveMet, courseId, decoyIndex, coachTip } from './challenges';
 import { execute, listDir, readForEdit, saveFile, commands, type Shell } from './engine';
 import { accessError } from './access';
 export class LabError extends Error { constructor(message: string, public status = 400) { super(message); } }
-type Stored = { shell: Shell; flag: string };
+type Stored = { shell: Shell; flag: string; decoys?: string[] };
 export type LabAction = { action: 'open' | 'command' | 'submit' | 'reset' | 'complete' | 'read' | 'save'; version?: number; command?: string; flag?: string; path?: string; content?: string };
 export type LabReply = {
   version: number; cwd: string; completed: boolean; attempts: number;
   output: string; error: string; clear: boolean; status: number; awarded: number; message: string;
+  /** Mission-specific coaching after a common mistake */
+  tip?: string;
   commands?: string[]; entries?: { name: string; dir: boolean }[]; file?: { path: string; text: string; isNew: boolean };
   /** Learner XP after a successful capture (level = floor(totalXp / 100) + 1) */
   progress?: { totalXp: number; level: number; levelXp: number };
@@ -26,7 +28,7 @@ export async function labAction(userId: string, exerciseId: string, action: LabA
     if (!row) {
       if (action.action !== 'open') throw new LabError('Open your mission before sending commands.', 409);
       const challenge = createChallenge(mission);
-      row = await tx.linuxLabSession.create({ data: { userId, exerciseId, state: JSON.stringify({ shell: challenge.shell, flag: challenge.flag }), flagHash: challenge.hash } });
+      row = await tx.linuxLabSession.create({ data: { userId, exerciseId, state: JSON.stringify({ shell: challenge.shell, flag: challenge.flag, decoys: challenge.decoys }), flagHash: challenge.hash } });
     }
     const snapshot = () => ({ version: row!.version, cwd: (JSON.parse(row!.state) as Stored).shell.cwd, completed: !!row!.solvedAt, attempts: row!.attempts });
     const idle = (extra: Partial<LabReply> = {}): LabReply => ({ ...snapshot(), output: '', error: '', clear: false, status: 0, awarded: 0, message: '', ...extra });
@@ -39,16 +41,17 @@ export async function labAction(userId: string, exerciseId: string, action: LabA
     }
     if (action.version !== row.version) throw new LabError('This mission changed in another tab. Reopen it before retrying.', 409);
     const state: Stored = JSON.parse(row.state);
-    let output = '', error = '', clear = false, status = 0, awarded = 0, message = '';
+    let output = '', error = '', clear = false, status = 0, awarded = 0, message = '', tip = '';
     let solvedAt = row.solvedAt, attempts = row.attempts, hash = row.flagHash;
     let progress: LabReply['progress'];
     if (action.action === 'reset') {
-      const fresh = createChallenge(mission); state.shell = fresh.shell; state.flag = fresh.flag; hash = fresh.hash;
+      const fresh = createChallenge(mission); state.shell = fresh.shell; state.flag = fresh.flag; state.decoys = fresh.decoys; hash = fresh.hash;
       message = 'Environment reset. A new flag was generated; your earned completion is preserved.'; clear = true;
     } else if (action.action === 'command') {
       if (Date.now() - row.updatedAt.getTime() < 80) throw new LabError('Please wait briefly before the next command.', 429);
       const result = execute(state.shell, action.command ?? '');
       ({ output, error, clear = false, status } = result);
+      tip = coachTip(mission, action.command ?? '', status !== 0 || !!error);
       revealReward(mission, state.shell, state.flag);
       if (Buffer.byteLength(JSON.stringify(state)) > 512000) throw new LabError('Environment storage limit reached. Remove large files or reset.');
     } else if (action.action === 'save') {
@@ -60,7 +63,10 @@ export async function labAction(userId: string, exerciseId: string, action: LabA
     } else if (action.action === 'submit') {
       if (row.nextAttemptAt && row.nextAttemptAt > new Date()) throw new LabError('Wait a second before submitting again.', 429);
       attempts++;
-      if (!flagMatches(action.flag ?? '', hash)) message = 'That flag does not match this mission instance. Copy the complete CYBER{...} value from your own terminal.';
+      const decoy = decoyIndex(action.flag ?? '', state.decoys);
+      if (!flagMatches(action.flag ?? '', hash)) message = decoy >= 0
+        ? `Decoy flag! ${mission.decoys[decoy]?.hint ?? 'That one was planted to mislead you. Reread the task.'}`
+        : 'That flag does not match this mission instance. Copy the complete CYBER{...} value from your own terminal.';
       else if (!objectiveMet(mission, state.shell, state.flag)) message = 'The flag is valid, but the required filesystem task is not complete yet.';
       else {
         solvedAt ??= new Date();
@@ -84,6 +90,6 @@ export async function labAction(userId: string, exerciseId: string, action: LabA
     const changed = await tx.linuxLabSession.updateMany({ where: { id: row.id, version: row.version }, data: { state: JSON.stringify(state), flagHash: hash, version: { increment: 1 }, solvedAt, attempts, nextAttemptAt: action.action === 'submit' ? new Date(Date.now() + 1000) : row.nextAttemptAt } });
     if (!changed.count) throw new LabError('Mission changed in another tab. Reopen it before retrying.', 409);
     row = (await tx.linuxLabSession.findUnique({ where: key }))!;
-    return { ...snapshot(), output, error, clear, status, awarded, message, progress };
+    return { ...snapshot(), output, error, clear, status, awarded, message, progress, tip: tip || undefined };
   }, { maxWait: 5000, timeout: 10000 });
 }

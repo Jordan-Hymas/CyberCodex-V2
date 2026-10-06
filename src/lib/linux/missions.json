@@ -10,6 +10,11 @@
         "path": "/home/user/dispatch.txt",
         "text": "Welcome, operator. Your first dispatch contains {{FLAG}}\n",
         "mode": 420
+      },
+      {
+        "path": "/home/user/readme.txt",
+        "text": "Hello! Your mission file is dispatch.txt. Use cat to read it.\n",
+        "mode": 420
       }
     ],
     "solution": [
@@ -31,29 +36,61 @@
       "Highlight the whole flag with your mouse (it copies automatically) and paste it into the flag box."
     ],
     "why": "Security work starts with reading: config files, logs, notes left on a system. cat is the quickest way to look inside a file.",
-    "start": "/home/user"
+    "start": "/home/user",
+    "commands": [
+      "cat",
+      "ls"
+    ],
+    "coach": [
+      {
+        "when": "CYBER\\{",
+        "tip": "That's a flag, not a command. Paste it into the flag box under the terminal.",
+        "error": false
+      },
+      {
+        "when": "cat dispatch",
+        "tip": "Filenames include their extension. Run ls to see the exact name (dispatch.txt).",
+        "error": true
+      },
+      {
+        "when": "Cat ",
+        "tip": "Commands are case sensitive. Use lowercase: cat",
+        "error": true
+      }
+    ],
+    "decoys": []
   },
   {
     "id": "first-commands",
     "title": "Know your operator",
     "level": "beginner",
-    "concept": "Linux always knows which user is running each command. whoami prints your username, and id adds your numeric user ID (UID) and the groups you belong to.",
-    "brief": "Find out who you are, then collect the dispatch addressed to you.",
+    "concept": "Linux always knows which user is running each command. whoami prints your username, and id adds your numeric user ID (UID) and your groups.",
+    "brief": "Dispatches are sorted by username. Find out who you are, then read the dispatch addressed to you.",
     "files": [
       {
-        "path": "/home/user/operator.txt",
+        "path": "/home/user/dispatches/user.txt",
         "text": "Operator user cleared for {{FLAG}}\n",
+        "mode": 420
+      },
+      {
+        "path": "/home/user/dispatches/admin.txt",
+        "text": "ACCESS DENIED: this dispatch is addressed to admin, not you.\nRun whoami to check which user you are.\n",
+        "mode": 420
+      },
+      {
+        "path": "/home/user/dispatches/guest.txt",
+        "text": "This guest account was retired last year. Nothing for you here.\nRun whoami to check which user you are.\n",
         "mode": 420
       }
     ],
     "solution": [
       "whoami",
       "id",
-      "cat /home/user/operator.txt"
+      "cat dispatches/user.txt"
     ],
     "hints": [
-      "whoami and id don't need any arguments.",
-      "Read the dispatch with cat /home/user/operator.txt."
+      "whoami prints user.",
+      "Run cat dispatches/user.txt. The other files belong to other people."
     ],
     "goal": null,
     "xp": 25,
@@ -62,23 +99,51 @@
     "pitfall": "The user shown in the lab isn't your CyberCodex account or email. It's the practice user inside your environment.",
     "transfer": "How is a username different from a UID, and why would Linux use the number?",
     "steps": [
-      "Run whoami and note the username.",
-      "Run id to see your UID and groups.",
-      "Read your dispatch with cat /home/user/operator.txt."
+      "Run whoami to find your username.",
+      "Run ls dispatches to see who has mail.",
+      "Read the file named after your username: cat dispatches/<your username>.txt"
     ],
     "why": "On any system you break into or defend, the first question is \"who am I running as?\". Your user decides what you can access.",
-    "start": "/home/user"
+    "start": "/home/user",
+    "commands": [
+      "whoami",
+      "id",
+      "cat"
+    ],
+    "coach": [
+      {
+        "when": "CYBER\\{",
+        "tip": "That's a flag, not a command. Paste it into the flag box under the terminal.",
+        "error": false
+      },
+      {
+        "when": "operator.txt",
+        "tip": "Dispatches now live in the dispatches folder. Try ls dispatches.",
+        "error": true
+      }
+    ],
+    "decoys": []
   },
   {
     "id": "pwd-command",
     "title": "Your place in the tree",
     "level": "beginner",
     "concept": "pwd (print working directory) shows exactly where you are in the filesystem, as a full path that starts with /.",
-    "brief": "Confirm where you are, then read the coordinates file stored there.",
+    "brief": "You've been dropped into the field somewhere. Work out where you are, then read the coordinates file in that exact spot.",
     "files": [
       {
-        "path": "/home/user/coordinates.txt",
+        "path": "/home/user/field/sector-4/coordinates.txt",
         "text": "Position confirmed: {{FLAG}}\n",
+        "mode": 420
+      },
+      {
+        "path": "/home/user/field/sector-2/coordinates.txt",
+        "text": "Wrong sector. These are sector 2's coordinates.\nThe mission started you somewhere else; pwd tells you where you were.\n",
+        "mode": 420
+      },
+      {
+        "path": "/home/user/coordinates.txt",
+        "text": "These are headquarters' coordinates, not yours.\nYou were dropped in the field. Go back with cd - or cd ~/field/sector-4\n",
         "mode": 420
       }
     ],
@@ -87,22 +152,35 @@
       "cat coordinates.txt"
     ],
     "hints": [
-      "pwd needs no arguments.",
-      "You start in /home/user, and coordinates.txt is right there."
+      "pwd shows /home/user/field/sector-4.",
+      "Just run cat coordinates.txt without moving. The copy in your home folder is for HQ."
     ],
     "goal": null,
     "xp": 25,
     "example": "pwd         # prints something like /home/user\nls          # lists what's in that directory",
-    "explanation": "The Linux filesystem is one big tree. The very top is the root, written as /. Your home directory, /home/user, is a branch of that tree. Whenever you type a filename without a leading /, Linux looks for it in the directory pwd shows. That's why the same command can work in one place and fail in another.",
+    "explanation": "The Linux filesystem is one big tree. The very top is the root, written as /. Whenever you type a filename without a leading /, Linux looks for it in the directory pwd shows. That's why the same command can read different files depending on where you're standing.",
     "pitfall": "A path tells you where something lives. coordinates.txt here and /coordinates.txt at the root would be two different files.",
     "transfer": "Why might cat notes.txt work in one directory but fail in another?",
     "steps": [
-      "Run pwd to see your current directory.",
-      "Run ls to see what's in it.",
-      "Read coordinates.txt with cat."
+      "Run pwd. This mission does NOT start in your home folder.",
+      "Run ls to see what's here.",
+      "Read coordinates.txt right where you are."
     ],
     "why": "When a command says \"No such file\", checking pwd is the first thing to do. Most of the time you're simply in the wrong place.",
-    "start": "/home/user"
+    "start": "/home/user/field/sector-4",
+    "commands": [
+      "pwd",
+      "ls",
+      "cat"
+    ],
+    "coach": [
+      {
+        "when": "CYBER\\{",
+        "tip": "That's a flag, not a command. Paste it into the flag box under the terminal.",
+        "error": false
+      }
+    ],
+    "decoys": []
   },
   {
     "id": "ls-command",
@@ -117,8 +195,18 @@
         "mode": 420
       },
       {
+        "path": "/home/user/notes.txt",
+        "text": "Nothing useful in here. Hidden files never show up in a plain ls.\n",
+        "mode": 420
+      },
+      {
         "path": "/home/user/.dispatch",
         "text": "{{FLAG}}\n",
+        "mode": 420
+      },
+      {
+        "path": "/home/user/.cache/session",
+        "text": "Temporary session data. Not the dispatch.\n",
         "mode": 420
       }
     ],
@@ -142,18 +230,46 @@
       "Read the hidden file with cat (keep the dot in its name)."
     ],
     "why": "Attackers and admins both stash things in dotfiles. Always use ls -a when you're exploring a system.",
-    "start": "/home/user"
+    "start": "/home/user",
+    "commands": [
+      "ls",
+      "ls -a",
+      "cat"
+    ],
+    "coach": [
+      {
+        "when": "CYBER\\{",
+        "tip": "That's a flag, not a command. Paste it into the flag box under the terminal.",
+        "error": false
+      },
+      {
+        "when": "cat dispatch",
+        "tip": "Hidden files keep their dot. The name is .dispatch",
+        "error": true
+      }
+    ],
+    "decoys": []
   },
   {
     "id": "cd-command",
     "title": "Walk to the relay",
     "level": "beginner",
     "concept": "cd (change directory) moves you to another directory. cd .. goes up one level, cd - jumps back to where you just were, and plain cd takes you home.",
-    "brief": "Walk into the stations/relay directory, read the message waiting there, then head back home.",
+    "brief": "Three stations, one message. Walk into the relay station, read its message, then head back home.",
     "files": [
       {
         "path": "/home/user/stations/relay/message.txt",
         "text": "{{FLAG}}\n",
+        "mode": 420
+      },
+      {
+        "path": "/home/user/stations/depot/message.txt",
+        "text": "Wrong station! This is the depot.\nThe relay is next door: cd ../relay\n",
+        "mode": 420
+      },
+      {
+        "path": "/home/user/stations/tower/message.txt",
+        "text": "Wrong station! This is the tower.\nThe relay is next door: cd ../relay\n",
         "mode": 420
       }
     ],
@@ -174,12 +290,35 @@
     "pitfall": "cd doesn't print anything when it works. No output means success, so run pwd if you want to check.",
     "transfer": "What's the difference between cd .. and cd /?",
     "steps": [
-      "Run cd stations/relay (Tab can complete the names for you).",
-      "Run cat message.txt to read the flag.",
-      "Run cd on its own to return home."
+      "Run ls stations to see the three stations.",
+      "Move in with cd stations/relay (Tab completes the names).",
+      "Read message.txt, then run cd on its own to go home."
     ],
     "why": "Moving around the filesystem quickly is the core skill for every later mission and every real system you'll work on.",
-    "start": "/home/user"
+    "start": "/home/user",
+    "commands": [
+      "cd",
+      "ls",
+      "cat"
+    ],
+    "coach": [
+      {
+        "when": "CYBER\\{",
+        "tip": "That's a flag, not a command. Paste it into the flag box under the terminal.",
+        "error": false
+      },
+      {
+        "when": "cat message.txt",
+        "tip": "message.txt isn't in this folder. Run pwd and ls. The messages live inside each station.",
+        "error": true
+      },
+      {
+        "when": "cd relay",
+        "tip": "There's no relay folder here. It's inside stations: cd stations/relay",
+        "error": true
+      }
+    ],
+    "decoys": []
   },
   {
     "id": "cat-command",
@@ -191,6 +330,11 @@
       {
         "path": "/opt/academy/dispatch.txt",
         "text": "{{FLAG}}\n",
+        "mode": 420
+      },
+      {
+        "path": "/home/user/opt/academy/dispatch.txt",
+        "text": "Out-of-date local copy!\nThe live dispatch is at the absolute path /opt/academy/dispatch.txt (note the leading slash).\n",
         "mode": 420
       }
     ],
@@ -213,7 +357,23 @@
       "Optional: run pwd to confirm you never moved."
     ],
     "why": "Logs and config files live in fixed places like /var/log and /etc. Reading them by absolute path is something you'll do constantly.",
-    "start": "/home/user"
+    "start": "/home/user",
+    "commands": [
+      "cat"
+    ],
+    "coach": [
+      {
+        "when": "CYBER\\{",
+        "tip": "That's a flag, not a command. Paste it into the flag box under the terminal.",
+        "error": false
+      },
+      {
+        "when": "cd ",
+        "tip": "This mission is about reading without moving. Try cat with the full path from /.",
+        "error": false
+      }
+    ],
+    "decoys": []
   },
   {
     "id": "getting-help",
@@ -225,6 +385,16 @@
       {
         "path": "/opt/academy/helpdesk/.receipt",
         "text": "{{FLAG}}\n",
+        "mode": 420
+      },
+      {
+        "path": "/opt/academy/helpdesk/README",
+        "text": "The receipt is hidden in this folder. man ls explains how to see hidden files.\n",
+        "mode": 420
+      },
+      {
+        "path": "/opt/academy/helpdesk/ticket-1042.txt",
+        "text": "Ticket closed: printer on fire. Not related to your receipt.\n",
         "mode": 420
       }
     ],
@@ -249,7 +419,20 @@
       "Read the hidden file by its full path."
     ],
     "why": "Knowing how to find the answer is more valuable than memorizing it. Every tool you meet later will come with a manual.",
-    "start": "/home/user"
+    "start": "/home/user",
+    "commands": [
+      "man",
+      "help",
+      "ls -a"
+    ],
+    "coach": [
+      {
+        "when": "CYBER\\{",
+        "tip": "That's a flag, not a command. Paste it into the flag box under the terminal.",
+        "error": false
+      }
+    ],
+    "decoys": []
   },
   {
     "id": "relative-paths",
@@ -260,7 +443,12 @@
     "files": [
       {
         "path": "/home/user/work/note",
-        "text": "The store is next door.\n",
+        "text": "Supplies are in the store, which is next door to work (one level up, then into store).\n",
+        "mode": 420
+      },
+      {
+        "path": "/home/user/work/store/receipt.txt",
+        "text": "Wrong store! This is the supply closet inside work.\nThe real store is next door: ../store/receipt.txt\n",
         "mode": 420
       },
       {
@@ -273,8 +461,8 @@
       "cat ../store/receipt.txt"
     ],
     "hints": [
-      "You're already in work, so there's no need to cd.",
-      ".. climbs out of work, then store/receipt.txt goes into the neighbouring folder."
+      "Read the note in work first.",
+      ".. climbs out of work, so cat ../store/receipt.txt reads the store next door."
     ],
     "goal": null,
     "xp": 25,
@@ -288,7 +476,19 @@
       "Read the receipt with cat ../store/receipt.txt."
     ],
     "why": "Relative paths keep commands short and portable. You'll see ../ in scripts, configs and exploits all the time.",
-    "start": "/home/user/work"
+    "start": "/home/user/work",
+    "commands": [
+      "cat",
+      "ls .."
+    ],
+    "coach": [
+      {
+        "when": "CYBER\\{",
+        "tip": "That's a flag, not a command. Paste it into the flag box under the terminal.",
+        "error": false
+      }
+    ],
+    "decoys": []
   },
   {
     "id": "quoted-paths",
@@ -301,14 +501,24 @@
         "path": "/home/user/shift notes.txt",
         "text": "{{FLAG}}\n",
         "mode": 420
+      },
+      {
+        "path": "/home/user/shift",
+        "text": "This is the shift roster, not the notes. Did cat read two files?\nWithout quotes, cat shift notes.txt means two files: shift and notes.txt\n",
+        "mode": 420
+      },
+      {
+        "path": "/home/user/notes.txt",
+        "text": "These are someone else's notes. You want the single file called \"shift notes.txt\"\n",
+        "mode": 420
       }
     ],
     "solution": [
       "cat \"shift notes.txt\""
     ],
     "hints": [
-      "Without quotes, cat thinks you gave it two filenames.",
-      "Put the whole name in quotes: cat \"shift notes.txt\"."
+      "Run cat shift notes.txt without quotes and read what it prints.",
+      "Wrap the whole name in quotes: cat \"shift notes.txt\""
     ],
     "goal": null,
     "xp": 25,
@@ -321,7 +531,19 @@
       "Read it with cat \"shift notes.txt\" (including the quotes)."
     ],
     "why": "Real systems are full of awkward filenames, especially anything copied from Windows or macOS. Quoting correctly prevents some nasty mistakes.",
-    "start": "/home/user"
+    "start": "/home/user",
+    "commands": [
+      "cat",
+      "ls"
+    ],
+    "coach": [
+      {
+        "when": "CYBER\\{",
+        "tip": "That's a flag, not a command. Paste it into the flag box under the terminal.",
+        "error": false
+      }
+    ],
+    "decoys": []
   },
   {
     "id": "copy-dispatch",
@@ -361,7 +583,30 @@
       "Read the reward with cat reward.txt."
     ],
     "why": "Backing up a file before you touch it is a habit that saves careers, especially when you're editing configs on a live system.",
-    "start": "/home/user"
+    "start": "/home/user",
+    "commands": [
+      "mkdir",
+      "cp",
+      "cat"
+    ],
+    "coach": [
+      {
+        "when": "CYBER\\{",
+        "tip": "That's a flag, not a command. Paste it into the flag box under the terminal.",
+        "error": false
+      },
+      {
+        "when": "cp ",
+        "tip": "cp won't create folders for you. Make it first with mkdir backup.",
+        "error": true
+      },
+      {
+        "when": "mv report",
+        "tip": "mv moves the original away. The task wants a copy, so report.txt should stay put. Use cp.",
+        "error": false
+      }
+    ],
+    "decoys": []
   },
   {
     "id": "move-dispatch",
@@ -401,23 +646,46 @@
       "Read the reward with cat reward.txt."
     ],
     "why": "Renaming files is everyday admin work, and knowing the difference between moving and copying avoids lost or duplicated data.",
-    "start": "/home/user"
+    "start": "/home/user",
+    "commands": [
+      "mv",
+      "ls",
+      "cat"
+    ],
+    "coach": [
+      {
+        "when": "CYBER\\{",
+        "tip": "That's a flag, not a command. Paste it into the flag box under the terminal.",
+        "error": false
+      },
+      {
+        "when": "cp incoming",
+        "tip": "cp makes a copy, so incoming.txt still exists. This task needs a rename: use mv (you can rm the copy).",
+        "error": false
+      }
+    ],
+    "decoys": []
   },
   {
     "id": "beginner-relay",
     "title": "Beginner checkpoint: locate the parcel",
     "level": "beginner",
     "concept": "Checkpoint time: no new commands, just everything from chapters 1 to 3 combined. Work methodically: get to the right place, look at everything there (including hidden files), then read what you find.",
-    "brief": "A parcel has been hidden somewhere in /opt/academy/relay/archive. Find it and recover its flag.",
+    "brief": "Checkpoint. A parcel is hidden in /opt/academy/relay/archive. Watch out: it isn't the only parcel on the relay.",
     "files": [
       {
         "path": "/opt/academy/relay/archive/.parcel",
-        "text": "{{FLAG}}\n",
+        "text": "Parcel #4471, delivered to the relay archive: {{FLAG}}\n",
         "mode": 420
       },
       {
         "path": "/opt/academy/relay/archive/readme",
         "text": "The parcel is hidden, not missing.\n",
+        "mode": 420
+      },
+      {
+        "path": "/opt/academy/relay/.parcel",
+        "text": "Parcel #1189, waiting in relay staging: {{DECOY:0}}\n",
         "mode": 420
       }
     ],
@@ -437,60 +705,116 @@
     "pitfall": "Copy only the CYBER{...} flag, not the text around it. Flags from a reset environment no longer count.",
     "transfer": "Could you reach the same parcel with both a relative path and an absolute path?",
     "steps": [
-      "Move into /opt/academy/relay/archive.",
+      "Go to /opt/academy/relay/archive.",
       "List everything there, including hidden files.",
-      "Read the hidden parcel."
+      "Read the hidden parcel in that folder, not anywhere else."
     ],
     "why": "This is how real exploration works: navigate, enumerate, read. You'll repeat this loop on every machine you investigate.",
-    "start": "/home/user"
+    "start": "/home/user",
+    "commands": [
+      "cd",
+      "ls -a",
+      "cat"
+    ],
+    "decoys": [
+      {
+        "hint": "That's the staging parcel from /opt/academy/relay. The task asked for the one inside the archive folder."
+      }
+    ],
+    "coach": [
+      {
+        "when": "CYBER\\{",
+        "tip": "That's a flag, not a command. Paste it into the flag box under the terminal.",
+        "error": false
+      }
+    ]
   },
   {
     "id": "search-log",
     "title": "Search the relay log",
     "level": "intermediate",
-    "concept": "grep selects lines matching a pattern. By default matching is case sensitive. grep -n adds line numbers, while -i ignores case.",
-    "brief": "Find the line containing RECEIPT in /var/log/relay.log and extract its flag.",
+    "concept": "grep prints only the lines that contain your search text. It's the fastest way to find one line in a huge log. Matching is case sensitive unless you add -i, and you can search for a phrase by putting it in quotes.",
+    "brief": "Somewhere in /var/log/relay.log is the receipt that was ACCEPTED. Other receipts were voided. The log was rotated, so relay.log.1 holds last week's entries.",
     "files": [
       {
         "path": "/var/log/relay.log",
-        "text": "boot ready\nstatus ok\nRECEIPT {{FLAG}}\nstatus waiting\n",
+        "text": "boot ready\nstatus ok\nRECEIPT VOID {{DECOY:0}}\nstatus waiting\nreceipt pending (lowercase entries are previews)\nRECEIPT ACCEPTED {{FLAG}}\nstatus ok\n",
+        "mode": 420
+      },
+      {
+        "path": "/var/log/relay.log.1",
+        "text": "boot ready\nRECEIPT ACCEPTED {{DECOY:1}}\nstatus ok\n",
         "mode": 420
       }
     ],
     "solution": [
-      "grep RECEIPT /var/log/relay.log"
+      "grep \"RECEIPT ACCEPTED\" /var/log/relay.log"
     ],
     "hints": [
-      "Search for the marker rather than reading every line.",
-      "The flag is on the matching line."
+      "grep RECEIPT /var/log/relay.log shows more than one receipt.",
+      "Search for the phrase: grep \"RECEIPT ACCEPTED\" /var/log/relay.log"
     ],
     "goal": null,
     "xp": 40,
-    "example": "grep -n ERROR sample.log",
-    "explanation": "Text logs are sequences of records, commonly one per line. grep reduces noise by selecting matching records. -n helps locate a match in the original file; -v reverses selection. This simulator supports literal text and optional start/end anchors, not the full GNU regular-expression language.",
+    "example": "grep ERROR app.log              # lines containing ERROR\ngrep \"disk full\" app.log        # search for a phrase",
+    "explanation": "Logs are written one event per line, so grep turns thousands of lines into the few you care about. Search for the most specific text you know. If you get several matches, read them and refine the search, for example by searching for a longer phrase.",
     "pitfall": "Case matters unless you select -i. The search pattern and filename are separate arguments.",
     "transfer": "How would you display every line except those containing DEBUG?",
     "steps": [
-      "Find the line containing RECEIPT in /var/log/relay.log and extract its flag."
+      "Search the current log for RECEIPT and read every match.",
+      "Narrow the search to the accepted receipt only."
     ],
     "why": "",
-    "start": "/home/user"
+    "start": "/home/user",
+    "commands": [
+      "grep"
+    ],
+    "decoys": [
+      {
+        "hint": "That receipt was VOID. Read the whole line: you need the ACCEPTED one."
+      },
+      {
+        "hint": "That's from relay.log.1, last week's rotated log. The task is about the current /var/log/relay.log."
+      }
+    ],
+    "coach": [
+      {
+        "when": "CYBER\\{",
+        "tip": "That's a flag, not a command. Paste it into the flag box under the terminal.",
+        "error": false
+      },
+      {
+        "when": "grep receipt",
+        "tip": "grep is case sensitive. The log writes RECEIPT in capitals (or use grep -i).",
+        "error": false
+      }
+    ]
   },
   {
     "id": "find-parcel",
     "title": "Locate a filename",
     "level": "intermediate",
-    "concept": "find walks a directory tree. -name matches an entry name, not its contents. Quote wildcard patterns so the shell does not expand them first.",
-    "brief": "Find parcel.txt below /opt/academy and read it.",
+    "concept": "find searches a whole directory tree for files by name, however deep they're buried. find /some/path -name parcel.txt prints every match.",
+    "brief": "A parcel addressed to you is somewhere in the depot under /opt/academy. More than one parcel.txt is in there.",
     "files": [
       {
         "path": "/opt/academy/depot/aisle-7/bin-3/parcel.txt",
-        "text": "{{FLAG}}\n",
+        "text": "Parcel for: user\nContents: {{FLAG}}\n",
+        "mode": 420
+      },
+      {
+        "path": "/opt/academy/depot/aisle-2/bin-1/parcel.txt",
+        "text": "Parcel for: admin\nContents: {{DECOY:0}}\n",
+        "mode": 420
+      },
+      {
+        "path": "/opt/academy/depot/aisle-5/bin-8/parcel.txt.bak",
+        "text": "Old label, parcel already delivered.\n",
         "mode": 420
       },
       {
         "path": "/opt/academy/depot/catalog",
-        "text": "Shipment received.\n",
+        "text": "Shipment received. Parcels are stored by aisle and bin.\n",
         "mode": 420
       }
     ],
@@ -499,41 +823,63 @@
       "cat /opt/academy/depot/aisle-7/bin-3/parcel.txt"
     ],
     "hints": [
-      "Use find with a starting directory and -name.",
-      "Read the returned full path with cat."
+      "find /opt/academy -name parcel.txt",
+      "Check who each parcel is for. Yours says 'for: user'."
     ],
     "goal": null,
     "xp": 40,
-    "example": "find /home/user -name \"*.txt\"",
-    "explanation": "find searches names and metadata in a directory tree; grep searches file contents. Choosing the starting directory controls the search scope. A quoted -name pattern is interpreted by find rather than expanded by the shell before find starts.",
+    "example": "find /home -name \"*.txt\"        # every .txt file below /home\nfind /etc -name hosts           # files named exactly hosts",
+    "explanation": "Clicking through folders one at a time doesn't scale. find walks every folder below the path you give it. When find returns several matches, check each one, because files with the same name can mean very different things.",
     "pitfall": "A filename match does not mean the file contains the desired record. Inspect it after discovery.",
     "transfer": "When would you use find first and grep second?",
     "steps": [
-      "Find parcel.txt below /opt/academy and read it."
+      "Use find to list every parcel.txt below /opt/academy.",
+      "Read them and keep the one addressed to user."
     ],
     "why": "",
-    "start": "/home/user"
+    "start": "/home/user",
+    "commands": [
+      "find",
+      "cat"
+    ],
+    "decoys": [
+      {
+        "hint": "That parcel is addressed to admin. Read the 'Parcel for:' line and find the one for user."
+      }
+    ],
+    "coach": [
+      {
+        "when": "CYBER\\{",
+        "tip": "That's a flag, not a command. Paste it into the flag box under the terminal.",
+        "error": false
+      }
+    ]
   },
   {
     "id": "glob-batches",
     "title": "Inspect a batch with globbing",
     "level": "intermediate",
-    "concept": "An unquoted * expands to matching names within one path component. A question mark matches one character. Dotfiles are not matched unless the pattern explicitly begins with a dot.",
-    "brief": "Read all .txt files inside batches to locate the receipt.",
+    "concept": "A glob is a wildcard pattern the shell expands into matching filenames. *.txt means every name ending in .txt, so cat batches/*.txt reads them all in one go.",
+    "brief": "The batches folder mixes .txt batches with log files and an archive. The receipt is in one of the .txt batches directly inside batches.",
     "files": [
       {
         "path": "/home/user/batches/a.txt",
-        "text": "pending\n",
+        "text": "batch a: pending\n",
         "mode": 420
       },
       {
         "path": "/home/user/batches/b.txt",
-        "text": "{{FLAG}}\n",
+        "text": "batch b: receipt {{FLAG}}\n",
         "mode": 420
       },
       {
         "path": "/home/user/batches/c.log",
-        "text": "ignore this log\n",
+        "text": "log entry, test receipt {{DECOY:0}}\n",
+        "mode": 420
+      },
+      {
+        "path": "/home/user/batches/archive/d.txt",
+        "text": "archived batch: receipt {{DECOY:1}}\n",
         "mode": 420
       }
     ],
@@ -541,31 +887,51 @@
       "cat batches/*.txt"
     ],
     "hints": [
-      "The wildcard should remain unquoted for shell expansion.",
-      "cat can read multiple expanded filenames."
+      "cat batches/*.txt",
+      "Only top-level .txt files count; the archive folder and .log files are distractions."
     ],
     "goal": null,
     "xp": 40,
-    "example": "ls /home/user/*.txt",
-    "explanation": "Globbing happens before a command runs. If three names match, the command receives three arguments. The wildcard is limited to a single directory component in this simulator. A pattern with no matches remains literal, so the command can report that no such file exists.",
+    "example": "ls *.log           # every .log file here\ncat report-?.txt   # report-1.txt, report-2.txt, ...",
+    "explanation": "The shell expands the pattern before the command runs, so cat simply receives a list of files. * matches any characters except /, which means it never reaches into subfolders. ? matches exactly one character.",
     "pitfall": "Quoting the wildcard prevents shell expansion. Dotfiles require an explicit dot in the pattern.",
     "transfer": "What different sets of names do *.txt and ?.txt select?",
     "steps": [
-      "Read all .txt files inside batches to locate the receipt."
+      "Read every .txt file directly inside batches with one glob.",
+      "Ignore logs and anything in subfolders."
     ],
     "why": "",
-    "start": "/home/user"
+    "start": "/home/user",
+    "commands": [
+      "cat",
+      "*"
+    ],
+    "decoys": [
+      {
+        "hint": "That came from c.log, a log file. The task asked for the .txt batches."
+      },
+      {
+        "hint": "That's from the archive subfolder. The task wants the batches directly inside batches (*.txt doesn't go into subfolders)."
+      }
+    ],
+    "coach": [
+      {
+        "when": "CYBER\\{",
+        "tip": "That's a flag, not a command. Paste it into the flag box under the terminal.",
+        "error": false
+      }
+    ]
   },
   {
     "id": "head-tail",
     "title": "Select the last dispatch",
     "level": "intermediate",
-    "concept": "head reads the beginning of input and tail reads the end. -n sets a line count. These commands help inspect large files without flooding the terminal.",
-    "brief": "Read only the last line of dispatches.txt.",
+    "concept": "head shows the first lines of a file and tail shows the last lines. Add -n NUMBER to choose how many.",
+    "brief": "dispatches.txt is a running log. The newest dispatch is always added at the bottom. Don't trust the header.",
     "files": [
       {
         "path": "/home/user/dispatches.txt",
-        "text": "old one\nold two\nold three\n{{FLAG}}\n",
+        "text": "HEADER: dispatch log. Sample entry for training: {{DECOY:0}}\nold one\nold two\nold three\n{{FLAG}}\n",
         "mode": 420
       }
     ],
@@ -573,67 +939,111 @@
       "tail -n 1 dispatches.txt"
     ],
     "hints": [
-      "Use tail for the end of a file.",
-      "Set the count to one with -n 1."
+      "The header line contains a sample flag. It is not the newest dispatch.",
+      "tail -n 1 dispatches.txt"
     ],
     "goal": null,
     "xp": 40,
-    "example": "head -n 3 sample.log\ntail -n 2 sample.log",
-    "explanation": "Reading a small slice helps you understand a file before processing it. head and tail preserve record order within the selected slice. Here -n accepts a nonnegative line count; live tail-follow mode is not part of the simulation.",
+    "example": "head -n 3 app.log     # first three lines\ntail -n 1 app.log     # the very last line",
+    "explanation": "Logs grow at the bottom, so the newest entry is always the last line. tail -n 1 gives you just that. head is handy for a quick peek at a file's format without printing all of it.",
     "pitfall": "tail -n 1 selects one line, not one character.",
     "transfer": "Which command would you use to inspect a file header?",
     "steps": [
-      "Read only the last line of dispatches.txt."
+      "Peek at the top with head to see what kind of file it is.",
+      "Print only the newest (last) line."
     ],
     "why": "",
-    "start": "/home/user"
+    "start": "/home/user",
+    "commands": [
+      "head",
+      "tail"
+    ],
+    "decoys": [
+      {
+        "hint": "That's the sample entry from the header at the top. The newest dispatch is the last line (tail)."
+      }
+    ],
+    "coach": [
+      {
+        "when": "CYBER\\{",
+        "tip": "That's a flag, not a command. Paste it into the flag box under the terminal.",
+        "error": false
+      }
+    ]
   },
   {
     "id": "pipe-filter",
     "title": "Filter the signal",
     "level": "intermediate",
-    "concept": "A pipe sends one command’s standard output to the next command’s standard input. It does not turn that output into filenames.",
-    "brief": "Filter stream.log down to the DELIVER line using a pipeline, then copy the flag.",
+    "concept": "A pipe | sends one command's output into the next command. You can chain filters: grep DELIVER keeps matching lines, and grep -v TEST throws away lines containing TEST.",
+    "brief": "stream.log contains several DELIVER lines, but only one is a live delivery. The others are TEST deliveries. Use a pipeline to isolate the live one.",
     "files": [
       {
         "path": "/home/user/stream.log",
-        "text": "IGNORE decoy\nDELIVER {{FLAG}}\nIGNORE another\n",
+        "text": "IGNORE heartbeat\nDELIVER TEST {{DECOY:0}}\nIGNORE heartbeat\nDELIVER {{FLAG}}\nDELIVER TEST {{DECOY:1}}\n",
         "mode": 420
       }
     ],
     "solution": [
-      "cat stream.log | grep DELIVER"
+      "cat stream.log | grep DELIVER | grep -v TEST"
     ],
     "hints": [
-      "The left command reads; the right command filters.",
-      "Use cat stream.log | grep DELIVER."
+      "cat stream.log | grep DELIVER shows the test lines too.",
+      "cat stream.log | grep DELIVER | grep -v TEST"
     ],
     "goal": null,
     "xp": 40,
-    "example": "cat sample.log | grep READY",
-    "explanation": "Standard input is a data stream consumed by a command. Standard output is the stream it produces. A pipe joins these streams. The right side receives the left side’s output as data, not as command-line arguments, which is why cat sample.log | grep READY needs no filename for grep.",
+    "example": "cat app.log | grep ERROR             # keep errors\ncat app.log | grep ERROR | grep -v debug   # ...but drop debug lines",
+    "explanation": "Each command in a pipeline does one small job. Chaining them lets you narrow output step by step without creating temporary files. Read your output after each step and add a filter only when you need one.",
     "pitfall": "Do not add a filename to the receiving command unless you intend it to read that file instead of the pipe.",
     "transfer": "Why is a pipe different from running two commands separated by a semicolon?",
     "steps": [
-      "Filter stream.log down to the DELIVER line using a pipeline, then copy the flag."
+      "Pipe stream.log into grep to keep DELIVER lines.",
+      "Add a second filter that removes TEST lines."
     ],
     "why": "",
-    "start": "/home/user"
+    "start": "/home/user",
+    "commands": [
+      "|",
+      "grep",
+      "grep -v"
+    ],
+    "decoys": [
+      {
+        "hint": "That was a TEST delivery. Filter those out with grep -v TEST."
+      },
+      {
+        "hint": "That was a TEST delivery. Filter those out with grep -v TEST."
+      }
+    ],
+    "coach": [
+      {
+        "when": "CYBER\\{",
+        "tip": "That's a flag, not a command. Paste it into the flag box under the terminal.",
+        "error": false
+      }
+    ]
   },
   {
     "id": "redirect-report",
     "title": "Write a report",
     "level": "intermediate",
-    "concept": "The > operator writes standard output to a file, replacing its contents. The shell handles redirection before running the command. Be careful when overwriting an existing file.",
-    "brief": "Write exactly relay ready followed by a newline to status.txt.",
-    "files": [],
+    "concept": "> sends a command's output into a file instead of the screen. It creates the file, or completely replaces whatever was in it.",
+    "brief": "status.txt still says the relay is offline. Replace its contents with exactly: relay ready",
+    "files": [
+      {
+        "path": "/home/user/status.txt",
+        "text": "relay offline\n",
+        "mode": 420
+      }
+    ],
     "solution": [
       "echo \"relay ready\" > status.txt",
       "cat reward.txt"
     ],
     "hints": [
-      "echo normally adds a newline.",
-      "Use a redirect after the quoted message."
+      "echo \"relay ready\" > status.txt",
+      "Use >, not >>. >> would keep the old line."
     ],
     "goal": {
       "kind": "text",
@@ -641,22 +1051,41 @@
       "value": "relay ready\n"
     },
     "xp": 40,
-    "example": "echo \"status ok\" > sample.txt",
-    "explanation": "Redirection belongs to the shell. With >, the destination is created or truncated before the command starts. This is why reading and writing the same file in one command can erase the input before it is read. Use a different output path for transformations.",
+    "example": "echo \"all good\" > status.txt     # status.txt now contains: all good",
+    "explanation": "echo prints text, and echo \"text\" > file.txt writes that text into file.txt. The file must end up containing exactly the right text, so watch spelling and capitals. Once it matches, reward.txt appears.",
     "pitfall": "Avoid cat sample.txt > sample.txt. Use a separate temporary destination.",
     "transfer": "Why can > destroy data even when the command itself is only reading?",
     "steps": [
-      "Write exactly relay ready followed by a newline to status.txt."
+      "Check the current contents with cat status.txt.",
+      "Overwrite it with the new status using echo and >.",
+      "Read reward.txt."
     ],
     "why": "",
-    "start": "/home/user"
+    "start": "/home/user",
+    "commands": [
+      "echo",
+      ">"
+    ],
+    "coach": [
+      {
+        "when": "CYBER\\{",
+        "tip": "That's a flag, not a command. Paste it into the flag box under the terminal.",
+        "error": false
+      },
+      {
+        "when": ">>",
+        "tip": ">> adds to the end of the file. To replace the contents, use a single >.",
+        "error": false
+      }
+    ],
+    "decoys": []
   },
   {
     "id": "append-log",
     "title": "Append without erasing",
     "level": "intermediate",
-    "concept": "The >> operator appends output. It preserves existing content, unlike >. A newline separates records in a text log.",
-    "brief": "Append restored as a second line in status.log, keeping the first line.",
+    "concept": ">> adds output to the end of a file and keeps everything already there. A single > would wipe the file first.",
+    "brief": "status.log says offline. Add a second line, restored, without losing the first.",
     "files": [
       {
         "path": "/home/user/status.log",
@@ -669,8 +1098,8 @@
       "cat reward.txt"
     ],
     "hints": [
-      "Use two greater-than signs.",
-      "The resulting lines should be offline and restored."
+      "echo restored >> status.log",
+      "If you used a single >, the first line is gone. Put it back with echo offline > status.log, then append."
     ],
     "goal": {
       "kind": "text",
@@ -678,26 +1107,45 @@
       "value": "offline\nrestored\n"
     },
     "xp": 40,
-    "example": "echo \"next entry\" >> sample.log",
-    "explanation": "Appending makes a log grow without rewriting its earlier records. echo normally adds a newline, so appended records become separate lines. If earlier content lacks a final newline, the next text may run into it; inspect the resulting file when formatting matters.",
+    "example": "echo \"next entry\" >> journal.log    # adds a line at the bottom",
+    "explanation": "Logs and notes grow over time, so you almost always want >> when adding to them. Mixing up > and >> is one of the most common ways people lose data on Linux.",
     "pitfall": "Using > instead of >> replaces the entire previous log.",
     "transfer": "How would the output differ if you appended the same record twice?",
     "steps": [
-      "Append restored as a second line in status.log, keeping the first line."
+      "Read status.log.",
+      "Append the word restored as a new line.",
+      "Check the file has both lines, then read reward.txt."
     ],
     "why": "",
-    "start": "/home/user"
+    "start": "/home/user",
+    "commands": [
+      "echo",
+      ">>"
+    ],
+    "coach": [
+      {
+        "when": "CYBER\\{",
+        "tip": "That's a flag, not a command. Paste it into the flag box under the terminal.",
+        "error": false
+      },
+      {
+        "when": "(^|[^>])>\\s*status\\.log",
+        "tip": "Careful: a single > replaces the whole file. Check status.log. If 'offline' is gone, restore it first.",
+        "error": false
+      }
+    ],
+    "decoys": []
   },
   {
     "id": "unique-receipt",
     "title": "Separate repeated messages",
     "level": "intermediate",
-    "concept": "sort puts lines in order. uniq compares adjacent lines; -u prints only lines that occur once in each adjacent group. Sort first when duplicates may be separated.",
-    "brief": "Find the only nonduplicated line in messages.txt.",
+    "concept": "uniq removes repeated lines, but only when the repeats sit next to each other. sort first to bring duplicates together, then uniq -u keeps only the lines that appear exactly once.",
+    "brief": "messages.txt is full of repeated messages. Exactly one line appears only once, and that's your flag. Some repeats are far apart.",
     "files": [
       {
         "path": "/home/user/messages.txt",
-        "text": "repeat-a\nrepeat-b\n{{FLAG}}\nrepeat-a\nrepeat-b\n",
+        "text": "repeat-a\n{{DECOY:0}}\nrepeat-b\n{{FLAG}}\nrepeat-a\nrepeat-b\n{{DECOY:0}}\n",
         "mode": 420
       }
     ],
@@ -705,63 +1153,104 @@
       "sort messages.txt | uniq -u"
     ],
     "hints": [
-      "First bring identical lines together.",
-      "Pipe sort into uniq -u."
+      "uniq only compares neighbouring lines.",
+      "sort messages.txt | uniq -u"
     ],
     "goal": null,
     "xp": 40,
-    "example": "sort sample.txt | uniq -c",
-    "explanation": "uniq acts on runs of equal adjacent lines. A file can contain duplicates far apart that uniq alone will not combine. Sorting first groups equal lines together. The -c option counts each adjacent group; -u keeps only groups with a single member.",
+    "example": "sort names.txt | uniq -c     # count each name\nsort names.txt | uniq -u     # names that appear only once",
+    "explanation": "This is a classic trap: uniq on an unsorted file misses duplicates that are far apart. sort | uniq is the standard pairing. -u shows lines that appear once, and -c counts how many times each appears.",
     "pitfall": "sort changes order. Do not use it when the original sequence carries meaning you must preserve.",
     "transfer": "Why does uniq without sort sometimes leave repeated values?",
     "steps": [
-      "Find the only nonduplicated line in messages.txt."
+      "Try uniq -u on the file directly and notice something's off.",
+      "Sort first, then keep only the unique lines."
     ],
     "why": "",
-    "start": "/home/user"
+    "start": "/home/user",
+    "commands": [
+      "sort",
+      "uniq",
+      "|"
+    ],
+    "decoys": [
+      {
+        "hint": "That line actually appears twice; the copies just aren't next to each other. Sort first: sort messages.txt | uniq -u"
+      }
+    ],
+    "coach": [
+      {
+        "when": "CYBER\\{",
+        "tip": "That's a flag, not a command. Paste it into the flag box under the terminal.",
+        "error": false
+      }
+    ]
   },
   {
     "id": "cut-field",
     "title": "Extract a manifest field",
     "level": "intermediate",
-    "concept": "cut -d chooses a delimiter and -f chooses a one-based field. This simple delimiter tool is not a general CSV parser with quoted-field support.",
-    "brief": "Extract field 3 of manifest.txt, separated by colons.",
+    "concept": "cut pulls one column out of each line. -d sets the separator and -f picks the field number, so cut -d : -f 3 gives the third colon-separated field.",
+    "brief": "manifest.txt lists shipments as id:status:payload. Extract the payload (field 3) of the shipment whose status is ready.",
     "files": [
       {
         "path": "/home/user/manifest.txt",
-        "text": "shipment:ready:{{FLAG}}\n",
+        "text": "id:status:payload\n1001:hold:{{DECOY:0}}\n1002:ready:{{FLAG}}\n1003:shipped:delivered last week\n",
         "mode": 420
       }
     ],
     "solution": [
-      "cut -d : -f 3 manifest.txt"
+      "grep :ready: manifest.txt | cut -d : -f 3"
     ],
     "hints": [
-      "Count fields starting at one.",
-      "Use colon as the delimiter."
+      "The first line is a header, and one shipment is on hold.",
+      "grep :ready: manifest.txt | cut -d : -f 3"
     ],
     "goal": null,
     "xp": 40,
-    "example": "cut -d : -f 2 sample.txt",
-    "explanation": "Delimited records split a line into fields. cut numbers fields from one, so field two follows the first delimiter. This lab intentionally uses simple records with no escaped delimiters. For a more complex file format, use a parser appropriate to that format.",
+    "example": "cut -d : -f 1 /etc/passwd           # every username\ngrep root /etc/passwd | cut -d : -f 7  # root's shell",
+    "explanation": "Lots of system files are colon-separated (like /etc/passwd). Combine cut with grep to pick a row first and then the column you need. Fields are counted from 1.",
     "pitfall": "If a delimiter appears inside a quoted value, this simple cut command still treats it as a delimiter.",
     "transfer": "What does field 1 mean when there is no delimiter on the line?",
     "steps": [
-      "Extract field 3 of manifest.txt, separated by colons."
+      "Look at the file to see its columns.",
+      "Select the ready row, then cut out field 3."
     ],
     "why": "",
-    "start": "/home/user"
+    "start": "/home/user",
+    "commands": [
+      "cut",
+      "grep",
+      "|"
+    ],
+    "decoys": [
+      {
+        "hint": "That payload belongs to shipment 1001, which is on hold. You need the ready one."
+      }
+    ],
+    "coach": [
+      {
+        "when": "CYBER\\{",
+        "tip": "That's a flag, not a command. Paste it into the flag box under the terminal.",
+        "error": false
+      }
+    ]
   },
   {
     "id": "decode-receipt",
     "title": "Decode the shipment label",
     "level": "intermediate",
-    "concept": "base64 represents bytes with printable characters. Encoding is not encryption: anyone can decode it. -d reverses the encoding.",
-    "brief": "Decode label.b64 to reveal the flag.",
+    "concept": "Base64 turns any data into plain letters and numbers so it can travel safely through text systems. It's an encoding, not encryption: base64 -d turns it straight back.",
+    "brief": "The shipment label in label.b64 is base64-encoded. Decode it. (Ignore old-label.b64: that shipment has been delivered.)",
     "files": [
       {
         "path": "/home/user/label.b64",
         "text": "{{BASE64}}\n",
+        "mode": 420
+      },
+      {
+        "path": "/home/user/old-label.b64",
+        "text": "{{DECOY64:0}}\n",
         "mode": 420
       }
     ],
@@ -769,32 +1258,53 @@
       "base64 -d label.b64"
     ],
     "hints": [
-      "Read the supported syntax with man base64.",
-      "Use its decoding option."
+      "Submitting the encoded text won't work. Decode it first.",
+      "base64 -d label.b64"
     ],
     "goal": null,
     "xp": 40,
-    "example": "echo demo | base64",
-    "explanation": "Base64 is a reversible representation useful for transporting bytes in text channels. Encoded data may include padding characters at the end. Decoding yields the original bytes; do not assume that encoded content is secret or safe merely because it looks unreadable.",
+    "example": "echo aGVsbG8= | base64 -d     # prints: hello\nbase64 -d file.b64            # decode a whole file",
+    "explanation": "Base64 text looks scrambled, often ends in = signs, and shows up constantly in security work (tokens, email attachments, malware). Recognising it and decoding it is a core skill.",
     "pitfall": "Copying only part of an encoded line can cause an invalid-input error.",
     "transfer": "Why should a password not be protected with base64 alone?",
     "steps": [
-      "Decode label.b64 to reveal the flag."
+      "Look at label.b64. Notice it's encoded.",
+      "Decode it with base64 -d."
     ],
     "why": "",
-    "start": "/home/user"
+    "start": "/home/user",
+    "commands": [
+      "base64 -d"
+    ],
+    "decoys": [
+      {
+        "hint": "That's from old-label.b64, a delivered shipment. Decode label.b64 instead."
+      }
+    ],
+    "coach": [
+      {
+        "when": "CYBER\\{",
+        "tip": "That's a flag, not a command. Paste it into the flag box under the terminal.",
+        "error": false
+      }
+    ]
   },
   {
     "id": "restore-permission",
     "title": "Recover read permission",
     "level": "intermediate",
-    "concept": "Permissions describe read, write, and execute rights. u+r adds the owner read bit without replacing other bits. The teaching shell acts as the owner of challenge files.",
-    "brief": "Inspect sealed.txt, restore owner read permission, and read it.",
+    "concept": "Every file has permissions: read (r), write (w) and execute (x). If you can't read a file, chmod u+r gives you (the owner) read permission back.",
+    "brief": "sealed.txt holds your flag, but nobody can read it. Diagnose the permissions, fix them and read the file. The copy is not what it seems.",
     "files": [
       {
         "path": "/home/user/sealed.txt",
         "text": "{{FLAG}}\n",
         "mode": 128
+      },
+      {
+        "path": "/home/user/sealed-copy.txt",
+        "text": "Nice try! This copy was made before the flag was added. Fix sealed.txt's permissions instead.\n",
+        "mode": 420
       }
     ],
     "solution": [
@@ -803,40 +1313,65 @@
       "cat sealed.txt"
     ],
     "hints": [
-      "Permission denied is the intended starting state.",
-      "Use chmod u+r, then cat again."
+      "ls -l sealed.txt shows the owner can write but not read.",
+      "chmod u+r sealed.txt, then cat sealed.txt"
     ],
     "goal": null,
     "xp": 40,
-    "example": "stat sample.txt\nchmod u+r sample.txt",
-    "explanation": "Permission bits are grouped for owner, group, and others. r means read, w means write, and x means execute or traverse. This simulator models access as the owner; it does not provide multi-user operating-system permissions. Symbolic changes such as u+r are useful because they preserve unrelated bits.",
+    "example": "ls -l secret.txt         # --w------- means no read permission\nchmod u+r secret.txt     # give the owner read access",
+    "explanation": "ls -l shows permissions as a string like -rw-r--r--. The first three letters after the dash are the owner's. A dash means that permission is missing. Permission errors are among the most common problems on real systems, and fixing them is a basic admin skill.",
     "pitfall": "File readability and parent-directory traversal are separate requirements.",
     "transfer": "What is preserved when you add u+r rather than replace the mode with an octal value?",
     "steps": [
-      "Inspect sealed.txt, restore owner read permission, and read it."
+      "Try to read sealed.txt and note the error.",
+      "Inspect its permissions, then give yourself read access.",
+      "Read it."
     ],
     "why": "",
-    "start": "/home/user"
+    "start": "/home/user",
+    "commands": [
+      "ls -l",
+      "stat",
+      "chmod"
+    ],
+    "coach": [
+      {
+        "when": "CYBER\\{",
+        "tip": "That's a flag, not a command. Paste it into the flag box under the terminal.",
+        "error": false
+      },
+      {
+        "when": "cat sealed.txt",
+        "tip": "Permission denied means you lack read access. Check with ls -l sealed.txt and fix it with chmod u+r.",
+        "error": true
+      }
+    ],
+    "decoys": []
   },
   {
     "id": "intermediate-relay",
     "title": "Intermediate checkpoint: process a manifest",
     "level": "intermediate",
     "concept": "A pipeline can combine selection, field extraction, and decoding. Inspect each stage separately if you are unsure what data it produces.",
-    "brief": "Find the READY record in /var/log/manifest, extract its colon-separated payload, and decode that payload.",
+    "brief": "Checkpoint. /var/log/manifest holds encoded records as NAME:payload. Decode the payload of the record named exactly READY. Similar records and an old manifest are there to trip you up.",
     "files": [
       {
         "path": "/var/log/manifest",
-        "text": "WAIT:bm90IHlldA==\nREADY:{{BASE64}}\nDONE:ZGVjb3k=\n",
+        "text": "WAIT:bm90IHlldA==\nREADY_TEST:{{DECOY64:0}}\nREADY:{{BASE64}}\nDONE:ZGVjb3k=\n",
+        "mode": 420
+      },
+      {
+        "path": "/var/log/manifest.old",
+        "text": "READY:{{DECOY64:1}}\n",
         "mode": 420
       }
     ],
     "solution": [
-      "grep READY /var/log/manifest | cut -d : -f 2 | base64 -d"
+      "grep READY: /var/log/manifest | cut -d : -f 2 | base64 -d"
     ],
     "hints": [
-      "Start by selecting READY.",
-      "Its second field is base64-encoded."
+      "grep READY matches READY_TEST too. Include the colon: grep READY: /var/log/manifest",
+      "grep READY: /var/log/manifest | cut -d : -f 2 | base64 -d"
     ],
     "goal": null,
     "xp": 40,
@@ -845,21 +1380,48 @@
     "pitfall": "Including the READY: prefix in the base64 decoder input will not produce the intended message.",
     "transfer": "Which intermediate output would you inspect first if decoding failed?",
     "steps": [
-      "Find the READY record in /var/log/manifest, extract its colon-separated payload, and decode that payload."
+      "Find the record named exactly READY (look at what else starts with READY).",
+      "Cut out its payload and decode it, ideally in one pipeline."
     ],
     "why": "",
-    "start": "/home/user"
+    "start": "/home/user",
+    "commands": [
+      "grep",
+      "cut",
+      "base64 -d",
+      "|"
+    ],
+    "decoys": [
+      {
+        "hint": "That came from the READY_TEST record. You need the record named exactly READY."
+      },
+      {
+        "hint": "That's from manifest.old. Use the current /var/log/manifest."
+      }
+    ],
+    "coach": [
+      {
+        "when": "CYBER\\{",
+        "tip": "That's a flag, not a command. Paste it into the flag box under the terminal.",
+        "error": false
+      }
+    ]
   },
   {
     "id": "input-redirection",
     "title": "Read through standard input",
     "level": "advanced",
-    "concept": "The < operator connects a file to a command’s standard input. The command does not need to receive that filename as an argument.",
-    "brief": "Decode the receipt using base64 with input redirection.",
+    "concept": "< feeds a file into a command's standard input, as if you'd typed its contents. base64 -d < file.b64 decodes without passing the filename as an argument.",
+    "brief": "Decode the current receipt by feeding receipt.b64 into base64 with input redirection. An older receipt is lying around too.",
     "files": [
       {
         "path": "/home/user/receipt.b64",
         "text": "{{BASE64}}\n",
+        "mode": 420
+      },
+      {
+        "path": "/home/user/receipt-2023.b64",
+        "text": "{{DECOY64:0}}\n",
         "mode": 420
       }
     ],
@@ -867,41 +1429,57 @@
       "base64 -d < receipt.b64"
     ],
     "hints": [
-      "Use < before the filename.",
-      "The decoding command remains base64 -d."
+      "base64 -d < receipt.b64",
+      "receipt-2023.b64 is expired."
     ],
     "goal": null,
     "xp": 60,
-    "example": "wc -l < sample.log",
-    "explanation": "Input redirection gives a command an already-open input stream. It is useful for tools that naturally read standard input. It differs from passing a filename: the command sees the stream rather than using an operand to choose the source. Here both forms can achieve the same count.",
+    "example": "wc -l < access.log        # count lines read from stdin\nbase64 -d < data.b64      # decode from stdin",
+    "explanation": "Many tools read from standard input when no file is given. < lets you plug any file into them, and it's the mirror image of >. You'll use it with tools that only read stdin, and in scripts.",
     "pitfall": "The arrow points from the file into the command. > points output toward a destination file.",
     "transfer": "Can you explain the data flow of wc -l < sample.log > count.txt?",
     "steps": [
-      "Decode the receipt using base64 with input redirection."
+      "Decode receipt.b64 using < rather than a filename argument."
     ],
     "why": "",
-    "start": "/home/user"
+    "start": "/home/user",
+    "commands": [
+      "<",
+      "base64 -d"
+    ],
+    "decoys": [
+      {
+        "hint": "That's the expired 2023 receipt. Decode receipt.b64."
+      }
+    ],
+    "coach": [
+      {
+        "when": "CYBER\\{",
+        "tip": "That's a flag, not a command. Paste it into the flag box under the terminal.",
+        "error": false
+      }
+    ]
   },
   {
     "id": "tee-evidence",
     "title": "Keep a copy of the evidence",
     "level": "advanced",
-    "concept": "tee copies standard input both to standard output and to a file. It is useful when you want to inspect an intermediate pipeline result and retain it.",
-    "brief": "Filter the OK line from source.log and save exactly that line to evidence.txt.",
+    "concept": "tee writes its input to a file and also passes it on to the screen, so you can save evidence while still seeing it. ^ in a grep pattern means the line must start with that text.",
+    "brief": "Save exactly the line from source.log that starts with OK into evidence.txt, and watch it print as you do. Lines that merely contain OK don't count.",
     "files": [
       {
         "path": "/home/user/source.log",
-        "text": "NO pending\nOK relay restored\nNO retry\n",
+        "text": "NO pending\nNOT OK checksum failed\nOK relay restored\nNO retry\n",
         "mode": 420
       }
     ],
     "solution": [
-      "grep OK source.log | tee evidence.txt",
+      "grep ^OK source.log | tee evidence.txt",
       "cat reward.txt"
     ],
     "hints": [
-      "Pipe the filtered line into tee.",
-      "evidence.txt must contain only OK relay restored and its newline."
+      "grep OK source.log also matches NOT OK.",
+      "grep ^OK source.log | tee evidence.txt"
     ],
     "goal": {
       "kind": "text",
@@ -909,63 +1487,98 @@
       "value": "OK relay restored\n"
     },
     "xp": 60,
-    "example": "cat sample.log | tee copy.log",
-    "explanation": "tee is named after a pipe junction: data continues to the terminal or next pipeline stage and is also written to a file. By default that file is replaced; -a appends. It helps preserve evidence while you inspect it.",
+    "example": "grep ^ERROR app.log | tee errors.txt",
+    "explanation": "When you investigate, keep exact copies of what you found. tee lets you save a pipeline's output without breaking the pipeline. Anchors like ^OK prevent accidental matches such as NOT OK.",
     "pitfall": "tee does not filter the input. Perform selection before tee if you only want selected records saved.",
     "transfer": "Where would you place tee to inspect the output of a middle pipeline stage?",
     "steps": [
-      "Filter the OK line from source.log and save exactly that line to evidence.txt."
+      "Find the line that starts with OK (not lines like NOT OK).",
+      "Save exactly that one line to evidence.txt with tee."
     ],
     "why": "",
-    "start": "/home/user"
+    "start": "/home/user",
+    "commands": [
+      "grep ^",
+      "tee",
+      "|"
+    ],
+    "coach": [
+      {
+        "when": "CYBER\\{",
+        "tip": "That's a flag, not a command. Paste it into the flag box under the terminal.",
+        "error": false
+      }
+    ],
+    "decoys": []
   },
   {
     "id": "compare-dispatches",
     "title": "Spot a changed line",
     "level": "advanced",
-    "concept": "diff compares file content and reports differences. A difference gives it a nonzero exit status even though comparison worked; this is not the same as a runtime failure.",
-    "brief": "Compare before.txt and after.txt and recover the newly added flag.",
+    "concept": "diff compares two files line by line. Lines starting with < come from the first file and lines starting with > from the second.",
+    "brief": "Compare before.txt and after.txt. One line was edited and one line was added at the end. The flag is on the added line, not the edited one.",
     "files": [
       {
         "path": "/home/user/before.txt",
-        "text": "relay\npending\n",
+        "text": "relay\npending\nstandby\n",
         "mode": 420
       },
       {
         "path": "/home/user/after.txt",
-        "text": "relay\n{{FLAG}}\n",
+        "text": "relay\npending review {{DECOY:0}}\nstandby\n{{FLAG}}\n",
         "mode": 420
       }
     ],
     "solution": [
-      "diff before.txt after.txt"
+      "diff before.txt after.txt | tail -n 1"
     ],
     "hints": [
-      "The > marker identifies lines from the second file in this simulator.",
-      "Copy only the CYBER{...} text, without the diff marker."
+      "Edited lines appear as a < > pair.",
+      "diff before.txt after.txt and take the last > line."
     ],
     "goal": null,
     "xp": 60,
-    "example": "diff first.txt second.txt",
-    "explanation": "Comparison is useful when a configuration or report has changed. This lab shows first-file lines with < and second-file lines with >; it does not implement GNU diff’s full patch format. A status of one means differences were found, so conditional commands need to account for that.",
+    "example": "diff old.conf new.conf",
+    "explanation": "diff is how you spot tampering, config drift and changes between versions. A line that was edited shows up as a < and > pair. A line that was only added shows up as a > with no partner.",
     "pitfall": "Do not include the diff marker when copying a recovered value.",
     "transfer": "Why might diff first.txt second.txt && echo identical be useful?",
     "steps": [
-      "Compare before.txt and after.txt and recover the newly added flag."
+      "Run diff and read every change.",
+      "Pick the line that was added, not the one that was edited."
     ],
     "why": "",
-    "start": "/home/user"
+    "start": "/home/user",
+    "commands": [
+      "diff"
+    ],
+    "decoys": [
+      {
+        "hint": "That line was edited (it has a < partner in the diff). The flag is on the newly added line at the end."
+      }
+    ],
+    "coach": [
+      {
+        "when": "CYBER\\{",
+        "tip": "That's a flag, not a command. Paste it into the flag box under the terminal.",
+        "error": false
+      }
+    ]
   },
   {
     "id": "reverse-dispatch",
     "title": "Undo a reversed transmission",
     "level": "advanced",
-    "concept": "rev reverses characters within each line. It does not reverse the order of lines. Combine simple transforms by reasoning about how data was changed.",
-    "brief": "Reverse the characters of reversed.txt to recover the flag.",
+    "concept": "rev reverses the characters on each line. It's a quick way to undo simple text obfuscation.",
+    "brief": "reversed.txt contains a transmission sent backwards. Recover the flag. mirror.txt was a test transmission.",
     "files": [
       {
         "path": "/home/user/reversed.txt",
         "text": "{{REVERSED}}\n",
+        "mode": 420
+      },
+      {
+        "path": "/home/user/mirror.txt",
+        "text": "{{DECOYREV:0}}\n",
         "mode": 420
       }
     ],
@@ -973,31 +1586,51 @@
       "rev reversed.txt"
     ],
     "hints": [
-      "Inspect man rev if needed.",
-      "Pass reversed.txt as the input file."
+      "rev reversed.txt",
+      "Ignore mirror.txt."
     ],
     "goal": null,
     "xp": 60,
-    "example": "echo abc | rev",
-    "explanation": "A transformation may change ordering within records or ordering among records. rev only reverses characters inside each line. If a message was reversed before encoding, undo those operations in reverse order to recover the original data.",
+    "example": "echo olleh | rev     # prints: hello",
+    "explanation": "Attackers and puzzle-makers often hide strings with trivial tricks like reversing them. If text reads like gibberish that ends with {REBYC, try rev.",
     "pitfall": "rev does not reverse the entire file as one character sequence.",
     "transfer": "If a value was reversed and then base64-encoded, which operation should you undo first?",
     "steps": [
-      "Reverse the characters of reversed.txt to recover the flag."
+      "Reverse reversed.txt."
     ],
     "why": "",
-    "start": "/home/user"
+    "start": "/home/user",
+    "commands": [
+      "rev"
+    ],
+    "decoys": [
+      {
+        "hint": "That's from mirror.txt, the test transmission. Reverse reversed.txt."
+      }
+    ],
+    "coach": [
+      {
+        "when": "CYBER\\{",
+        "tip": "That's a flag, not a command. Paste it into the flag box under the terminal.",
+        "error": false
+      }
+    ]
   },
   {
     "id": "environment-route",
     "title": "Store the route",
     "level": "advanced",
-    "concept": "export sets a shell variable; $NAME expands its value in a later command. Single quotes preserve literal dollar signs, whereas double quotes permit expansion.",
-    "brief": "Set DEST to /opt/academy/signal, then use \"$DEST/receipt\" to read the flag.",
+    "concept": "A variable stores a value under a name. export DEST=/some/path sets it, and $DEST is replaced by that value in later commands.",
+    "brief": "Set DEST to /opt/academy/signal, then read the receipt through \"$DEST/receipt\". Careful: a similarly named folder exists.",
     "files": [
       {
         "path": "/opt/academy/signal/receipt",
         "text": "{{FLAG}}\n",
+        "mode": 420
+      },
+      {
+        "path": "/opt/academy/signals/receipt",
+        "text": "{{DECOY:0}}\n",
         "mode": 420
       }
     ],
@@ -1006,31 +1639,58 @@
       "cat \"$DEST/receipt\""
     ],
     "hints": [
-      "Set the variable in one command and use it in the next.",
-      "Double-quote the expanded path."
+      "There is also /opt/academy/signals (plural). Tab completion may pick it.",
+      "export DEST=/opt/academy/signal then cat \"$DEST/receipt\""
     ],
     "goal": null,
     "xp": 60,
-    "example": "export PLACE=/tmp\necho \"$PLACE\"",
-    "explanation": "Variables let you name a reusable value. Referencing $PLACE expands that value in a later command. This teaching shell keeps HOME, USER, and PATH fixed and does not implement full shell scoping or word splitting. Use a separate command after export before using the new variable.",
+    "example": "export LOGS=/var/log\nls \"$LOGS\"",
+    "explanation": "Variables keep long paths and settings in one place. Use double quotes around \"$DEST/file\" so paths with spaces still work. In this lab, set the variable in one command and use it in the next.",
     "pitfall": "Single quotes around $PLACE print its name literally.",
     "transfer": "Why are quotes useful around expanded paths that may contain spaces?",
     "steps": [
-      "Set DEST to /opt/academy/signal, then use \"$DEST/receipt\" to read the flag."
+      "Set the DEST variable to exactly /opt/academy/signal.",
+      "Read the receipt using $DEST."
     ],
     "why": "",
-    "start": "/home/user"
+    "start": "/home/user",
+    "commands": [
+      "export",
+      "$NAME"
+    ],
+    "decoys": [
+      {
+        "hint": "That's from /opt/academy/signals (plural). DEST must be /opt/academy/signal."
+      }
+    ],
+    "coach": [
+      {
+        "when": "CYBER\\{",
+        "tip": "That's a flag, not a command. Paste it into the flag box under the terminal.",
+        "error": false
+      },
+      {
+        "when": "'\\$DEST",
+        "tip": "Single quotes stop $DEST from expanding. Use double quotes.",
+        "error": false
+      }
+    ]
   },
   {
     "id": "directory-permission",
     "title": "Traverse a locked directory",
     "level": "advanced",
-    "concept": "Execute permission on a directory controls traversal. Read permission permits listing names; these are distinct. A readable file cannot be reached through a directory you cannot traverse.",
-    "brief": "Restore owner traversal on vault, then read vault/receipt.",
+    "concept": "For directories, x means permission to enter (traverse) them. Without it you can't reach any file inside, even one you're allowed to read.",
+    "brief": "The vault directory has lost its owner traverse permission. Restore it and read vault/receipt. The backup copy is stale.",
     "files": [
       {
         "path": "/home/user/vault/receipt",
         "text": "{{FLAG}}\n",
+        "mode": 420
+      },
+      {
+        "path": "/home/user/vault-backup/receipt",
+        "text": "{{DECOY:0}}\n",
         "mode": 420
       }
     ],
@@ -1039,8 +1699,8 @@
       "cat vault/receipt"
     ],
     "hints": [
-      "Inspect vault with stat.",
-      "The missing directory bit is x, not r."
+      "ls -l shows vault as drw-------.",
+      "chmod u+x vault then cat vault/receipt"
     ],
     "goal": {
       "kind": "fixture-mode",
@@ -1048,30 +1708,47 @@
       "mode": 384
     },
     "xp": 60,
-    "example": "stat folder\nchmod u+x folder",
-    "explanation": "Directory x allows walking through a path component. Directory r allows listing entry names. On a real system, a directory can allow traversal without allowing a listing. This lab models owner permissions so you can observe the difference without changing your actual system.",
+    "example": "ls -ld vault        # d rw- ... no x for the owner\nchmod u+x vault     # allow entering it",
+    "explanation": "Directory permissions trip up even experienced admins: r lets you list a folder's names, and x lets you go through it. Fixing traversal is often the real answer to a Permission denied error on a file path.",
     "pitfall": "Adding read permission to a file does not fix a missing traversal bit on its parent directory.",
     "transfer": "Why can a readable file still return permission denied?",
     "steps": [
-      "Restore owner traversal on vault, then read vault/receipt."
+      "Work out why vault/receipt can't be read.",
+      "Restore the missing directory permission, then read the receipt."
     ],
     "why": "",
-    "start": "/home/user"
+    "start": "/home/user",
+    "commands": [
+      "ls -l",
+      "chmod u+x"
+    ],
+    "decoys": [
+      {
+        "hint": "That's from vault-backup, which is stale. Fix the vault directory's permissions and read the real receipt."
+      }
+    ],
+    "coach": [
+      {
+        "when": "CYBER\\{",
+        "tip": "That's a flag, not a command. Paste it into the flag box under the terminal.",
+        "error": false
+      }
+    ]
   },
   {
     "id": "conditional-recovery",
     "title": "Recover after a failed check",
     "level": "advanced",
-    "concept": "&& runs the next command only after success. || runs it only after failure. test checks a condition and communicates through its exit status rather than printed text.",
-    "brief": "Use test and || to create restored.txt containing recovered when missing.txt does not exist.",
+    "concept": "&& runs the next command only if the previous one succeeded, and || runs it only if the previous one failed. test -f file succeeds when the file exists.",
+    "brief": "Write one line that creates restored.txt containing recovered, but only if missing.txt does not exist. Use test and ||.",
     "files": [],
     "solution": [
       "test -f missing.txt || echo recovered > restored.txt",
       "cat reward.txt"
     ],
     "hints": [
-      "A missing file makes test return a nonzero status.",
-      "The recovery branch goes after ||."
+      "test -f missing.txt fails because the file is absent.",
+      "test -f missing.txt || echo recovered > restored.txt"
     ],
     "goal": {
       "kind": "text",
@@ -1079,36 +1756,50 @@
       "value": "recovered\n"
     },
     "xp": 60,
-    "example": "test -f sample.txt && echo present",
-    "explanation": "Commands communicate success with zero and other outcomes with nonzero status. && and || make later commands conditional on that status. test often prints nothing; silence is normal. The lab supports a small documented test subset rather than the whole shell expression language.",
+    "example": "test -f config.ini || echo missing\ntest -d logs && echo \"logs exist\"",
+    "explanation": "Conditionals let a single line react to the system, which is the heart of scripting. command1 || command2 reads as \"try this, otherwise do that\".",
     "pitfall": "Do not judge success only by whether output was printed.",
     "transfer": "Which branch executes when test -f missing.txt is false?",
     "steps": [
-      "Use test and || to create restored.txt containing recovered when missing.txt does not exist."
+      "Check what test -f missing.txt returns.",
+      "Chain it with || so the recovery only runs on failure."
     ],
     "why": "",
-    "start": "/home/user"
+    "start": "/home/user",
+    "commands": [
+      "test",
+      "||",
+      "&&"
+    ],
+    "coach": [
+      {
+        "when": "CYBER\\{",
+        "tip": "That's a flag, not a command. Paste it into the flag box under the terminal.",
+        "error": false
+      }
+    ],
+    "decoys": []
   },
   {
     "id": "count-records",
     "title": "Count accepted records",
     "level": "advanced",
-    "concept": "wc -l counts newline characters. A pipeline can filter records first and then count only the accepted set. A final line without a newline changes that count.",
-    "brief": "Count lines containing ACCEPT in traffic.txt and write the count to count.txt.",
+    "concept": "wc -l counts lines. Piping grep into wc -l counts how many lines matched.",
+    "brief": "Count the lines in traffic.txt that begin with ACCEPT and write just that number to count.txt. Some lines contain ACCEPT without starting with it.",
     "files": [
       {
         "path": "/home/user/traffic.txt",
-        "text": "ACCEPT a\nDROP b\nACCEPT c\nACCEPT d\n",
+        "text": "ACCEPT a\nDROP b\nACCEPT c\nNOT ACCEPTED x\nACCEPT d\nDROP e\n",
         "mode": 420
       }
     ],
     "solution": [
-      "grep ACCEPT traffic.txt | wc -l > count.txt",
+      "grep ^ACCEPT traffic.txt | wc -l > count.txt",
       "cat reward.txt"
     ],
     "hints": [
-      "Filter before counting.",
-      "The expected count is three."
+      "grep ACCEPT also matches NOT ACCEPTED.",
+      "grep ^ACCEPT traffic.txt | wc -l > count.txt"
     ],
     "goal": {
       "kind": "trim",
@@ -1116,22 +1807,36 @@
       "value": "3"
     },
     "xp": 60,
-    "example": "grep OK sample.log | wc -l",
-    "explanation": "Counting meaningful records begins with deciding what qualifies as a match. After filtering, wc -l counts newline characters. The lab returns a plain count so it can be stored or used as evidence. Real utilities may add a filename label when given a filename operand.",
+    "example": "grep ^FAIL auth.log | wc -l",
+    "explanation": "Counting matches is everyday analysis: how many failed logins, how many dropped packets. Make sure your filter matches only what you mean, because one wrong match changes the answer.",
     "pitfall": "A file containing text without a final newline may have fewer newline characters than visible text records.",
     "transfer": "Why is filtering before counting different from counting the entire file?",
     "steps": [
-      "Count lines containing ACCEPT in traffic.txt and write the count to count.txt."
+      "Filter to lines that start with ACCEPT.",
+      "Count them and save the number to count.txt."
     ],
     "why": "",
-    "start": "/home/user"
+    "start": "/home/user",
+    "commands": [
+      "grep ^",
+      "wc -l",
+      ">"
+    ],
+    "coach": [
+      {
+        "when": "CYBER\\{",
+        "tip": "That's a flag, not a command. Paste it into the flag box under the terminal.",
+        "error": false
+      }
+    ],
+    "decoys": []
   },
   {
     "id": "normalize-message",
     "title": "Normalize a status stream",
     "level": "advanced",
-    "concept": "tr translates characters from its first set to its second. Unlike a word replacement tool, it maps individual characters. Uppercase and lowercase ranges are supported here.",
-    "brief": "Translate status.txt to lowercase and save it as normalized.txt.",
+    "concept": "tr translates characters: tr A-Z a-z turns every capital letter into lowercase.",
+    "brief": "Convert status.txt to lowercase and save the result as normalized.txt.",
     "files": [
       {
         "path": "/home/user/status.txt",
@@ -1144,8 +1849,8 @@
       "cat reward.txt"
     ],
     "hints": [
-      "tr reads the pipeline, not a filename argument.",
-      "Map A-Z to a-z."
+      "tr only reads standard input.",
+      "cat status.txt | tr A-Z a-z > normalized.txt"
     ],
     "goal": {
       "kind": "text",
@@ -1153,22 +1858,41 @@
       "value": "relay ready\n"
     },
     "xp": 60,
-    "example": "echo MiXeD | tr A-Z a-z",
-    "explanation": "Character translation is a useful normalization step before comparisons or aggregation. tr operates on individual characters, not whole words. The simulator supports literal sets and a few explicit ranges; more elaborate character classes require a fuller environment.",
+    "example": "echo HELLO | tr A-Z a-z     # prints: hello",
+    "explanation": "Normalizing text (same case, same separators) makes data easy to compare and search. tr reads from standard input, so feed it with a pipe or <.",
     "pitfall": "Passing a filename to tr does not make it read that file. Redirect or pipe the contents instead.",
     "transfer": "When would changing case lose information that should be preserved?",
     "steps": [
-      "Translate status.txt to lowercase and save it as normalized.txt."
+      "Feed status.txt into tr and translate uppercase to lowercase.",
+      "Save the output to normalized.txt."
     ],
     "why": "",
-    "start": "/home/user"
+    "start": "/home/user",
+    "commands": [
+      "tr",
+      "|",
+      ">"
+    ],
+    "coach": [
+      {
+        "when": "CYBER\\{",
+        "tip": "That's a flag, not a command. Paste it into the flag box under the terminal.",
+        "error": false
+      },
+      {
+        "when": "tr A-Z a-z status",
+        "tip": "tr doesn't take filenames. Pipe the file in: cat status.txt | tr A-Z a-z",
+        "error": false
+      }
+    ],
+    "decoys": []
   },
   {
     "id": "numeric-order",
     "title": "Order numeric priorities",
     "level": "advanced",
-    "concept": "Lexical sorting compares characters, so 10 can appear before 2. sort -n compares numeric values. head then selects the highest-priority item if smaller numbers mean earlier service.",
-    "brief": "Sort priorities.txt numerically and save the smallest value to first.txt.",
+    "concept": "sort orders lines alphabetically by default, so 10 comes before 2. sort -n sorts by numeric value instead.",
+    "brief": "Find the smallest number in priorities.txt and save just that number to first.txt.",
     "files": [
       {
         "path": "/home/user/priorities.txt",
@@ -1181,8 +1905,8 @@
       "cat reward.txt"
     ],
     "hints": [
-      "Use numeric sorting before taking the first line.",
-      "The smallest value is 2."
+      "Plain sort puts 10 before 2.",
+      "sort -n priorities.txt | head -n 1 > first.txt"
     ],
     "goal": {
       "kind": "text",
@@ -1190,22 +1914,36 @@
       "value": "2\n"
     },
     "xp": 60,
-    "example": "sort -n numbers.txt",
-    "explanation": "Numbers stored as text can be sorted numerically or lexically. Choose based on what the data represents. Numeric sorting is appropriate for counts and priorities, while lexical sorting may be appropriate for identifiers. Once ordered, select a small slice for inspection.",
+    "example": "sort -n sizes.txt | head -n 1    # smallest number",
+    "explanation": "Alphabetical sorting compares character by character, which gives surprising results for numbers. Always use -n for numbers. -r reverses the order.",
     "pitfall": "A value that starts with digits is not always semantically a number; a postal code, for example, is an identifier.",
     "transfer": "Why can lexical ordering put 10 before 2?",
     "steps": [
-      "Sort priorities.txt numerically and save the smallest value to first.txt."
+      "Sort the numbers so the smallest comes first. Check your output.",
+      "Save only the first line to first.txt."
     ],
     "why": "",
-    "start": "/home/user"
+    "start": "/home/user",
+    "commands": [
+      "sort -n",
+      "head",
+      ">"
+    ],
+    "coach": [
+      {
+        "when": "CYBER\\{",
+        "tip": "That's a flag, not a command. Paste it into the flag box under the terminal.",
+        "error": false
+      }
+    ],
+    "decoys": []
   },
   {
     "id": "clean-workspace",
     "title": "Clean the staging folder",
     "level": "advanced",
-    "concept": "rm removes files; rmdir removes an empty directory. In a real shell deletion is not a recycle-bin operation. Inspect exact paths before removing anything.",
-    "brief": "Remove the two temporary files in staging, then remove the empty staging directory. Preserve keep.txt.",
+    "concept": "rm deletes files and rmdir deletes empty directories. A glob like staging/*.tmp deletes just the temp files.",
+    "brief": "Delete the temporary files in staging, then remove the empty staging folder. keep.txt must survive.",
     "files": [
       {
         "path": "/home/user/staging/a.tmp",
@@ -1229,8 +1967,8 @@
       "cat reward.txt"
     ],
     "hints": [
-      "List staging before deleting its contents.",
-      "Use rmdir only when staging is empty."
+      "rm staging/*.tmp",
+      "rmdir staging"
     ],
     "goal": {
       "kind": "cleanup",
@@ -1239,26 +1977,50 @@
       "value": "keep\n"
     },
     "xp": 60,
-    "example": "ls scratch\nrm scratch/example.tmp\nrmdir scratch",
-    "explanation": "Cleanup is a good place to prefer precise commands. Inspect the directory before deleting, remove only the intended entries, then use rmdir as a check that nothing remains. A simulator reset can restore these fixtures, but real Linux deletion often cannot be undone.",
+    "example": "ls build/*.tmp     # check first\nrm build/*.tmp     # then delete",
+    "explanation": "Deleting is permanent: there's no recycle bin. Be precise with globs, check with ls before you delete, and prefer rmdir for folders so you only remove them once they're empty.",
     "pitfall": "A broad wildcard can match more files than intended. Never use deletion commands without understanding the target path.",
     "transfer": "Why is rmdir safer than recursive removal when you expect an empty directory?",
     "steps": [
-      "Remove the two temporary files in staging, then remove the empty staging directory. Preserve keep.txt."
+      "Check what's in staging.",
+      "Delete the .tmp files, then the empty folder. Leave keep.txt alone."
     ],
     "why": "",
-    "start": "/home/user"
+    "start": "/home/user",
+    "commands": [
+      "rm",
+      "rmdir",
+      "*"
+    ],
+    "coach": [
+      {
+        "when": "CYBER\\{",
+        "tip": "That's a flag, not a command. Paste it into the flag box under the terminal.",
+        "error": false
+      },
+      {
+        "when": "rm -r",
+        "tip": "rm -r works here, but rmdir is safer: it refuses to delete a folder that still has files in it.",
+        "error": false
+      }
+    ],
+    "decoys": []
   },
   {
     "id": "advanced-relay",
     "title": "Advanced checkpoint: restore the relay",
     "level": "advanced",
     "concept": "Combine discovery, filtering, decoding, and evidence preservation. Verify each stage rather than guessing a long command. There can be more than one correct sequence of commands.",
-    "brief": "Locate dispatch.dat under /opt/academy, select the RELEASE record, decode its second colon-delimited field, and save the decoded flag in /home/user/final.txt. Submit that flag.",
+    "brief": "Final checkpoint. Several dispatch.dat files exist under /opt/academy. Use the ACTIVE one: select its RELEASE record, decode field 2, and save the decoded flag to /home/user/final.txt.",
     "files": [
       {
         "path": "/opt/academy/sector-9/dispatch.dat",
-        "text": "HOLD:bm90IHlldA==\nRELEASE:{{BASE64}}\n",
+        "text": "STATUS:ACTIVE\nHOLD:bm90IHlldA==\nRELEASE:{{BASE64}}\n",
+        "mode": 420
+      },
+      {
+        "path": "/opt/academy/sector-3/dispatch.dat",
+        "text": "STATUS:RETIRED\nRELEASE:{{DECOY64:0}}\n",
         "mode": 420
       }
     ],
@@ -1267,8 +2029,8 @@
       "grep RELEASE /opt/academy/sector-9/dispatch.dat | cut -d : -f 2 | base64 -d | tee /home/user/final.txt"
     ],
     "hints": [
-      "Use find to locate the data before processing it.",
-      "Filter RELEASE, extract field 2, decode, and tee into final.txt."
+      "Each dispatch.dat starts with a STATUS line.",
+      "grep RELEASE /opt/academy/sector-9/dispatch.dat | cut -d : -f 2 | base64 -d | tee /home/user/final.txt"
     ],
     "goal": {
       "kind": "flag-file",
@@ -1280,9 +2042,29 @@
     "pitfall": "The final flag must also be saved at the requested path before the mission is complete.",
     "transfer": "How would you debug this workflow if you found the file but produced an empty final report?",
     "steps": [
-      "Locate dispatch.dat under /opt/academy, select the RELEASE record, decode its second colon-delimited field, and save the decoded flag in /home/user/final.txt. Submit that flag."
+      "Find every dispatch.dat under /opt/academy and work out which is ACTIVE.",
+      "Decode the RELEASE payload from that file only, and save it to /home/user/final.txt."
     ],
     "why": "",
-    "start": "/home/user"
+    "start": "/home/user",
+    "commands": [
+      "find",
+      "grep",
+      "cut",
+      "base64 -d",
+      "tee"
+    ],
+    "decoys": [
+      {
+        "hint": "That came from sector-3, which is RETIRED. Check each file's STATUS line and use the ACTIVE one."
+      }
+    ],
+    "coach": [
+      {
+        "when": "CYBER\\{",
+        "tip": "That's a flag, not a command. Paste it into the flag box under the terminal.",
+        "error": false
+      }
+    ]
   }
 ]

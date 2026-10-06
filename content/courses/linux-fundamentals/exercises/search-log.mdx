@@ -1,27 +1,31 @@
 ---
 title: "Search the relay log"
-description: "Find the line containing RECEIPT in /var/log/relay.log and extract its flag."
+description: "Somewhere in /var/log/relay.log is the receipt that was ACCEPTED. Other receipts were voided. The log was rotated, so relay.log.1 holds last week's entries."
 type: exercise
 xpReward: 40
 ---
 
 ## Learn
 
-grep selects lines matching a pattern. By default matching is case sensitive. grep -n adds line numbers, while -i ignores case.
+grep prints only the lines that contain your search text. It's the fastest way to find one line in a huge log. Matching is case sensitive unless you add -i, and you can search for a phrase by putting it in quotes.
 
-Text logs are sequences of records, commonly one per line. grep reduces noise by selecting matching records. -n helps locate a match in the original file; -v reverses selection. This simulator supports literal text and optional start/end anchors, not the full GNU regular-expression language.
+Logs are written one event per line, so grep turns thousands of lines into the few you care about. Search for the most specific text you know. If you get several matches, read them and refine the search, for example by searching for a longer phrase.
 
 ## Example
 
 ```sh
-grep -n ERROR sample.log
+grep ERROR app.log              # lines containing ERROR
+grep "disk full" app.log        # search for a phrase
 ```
 
 Example filenames illustrate syntax; inspect your mission files before running them.
 
 ## Your mission
 
-Find the line containing RECEIPT in /var/log/relay.log and extract its flag.
+Somewhere in /var/log/relay.log is the receipt that was ACCEPTED. Other receipts were voided. The log was rotated, so relay.log.1 holds last week's entries.
+
+1. Search the current log for RECEIPT and read every match.
+2. Narrow the search to the accepted receipt only.
 
 ## Common mistake
 

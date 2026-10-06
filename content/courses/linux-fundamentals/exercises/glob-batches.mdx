@@ -1,27 +1,31 @@
 ---
 title: "Inspect a batch with globbing"
-description: "Read all .txt files inside batches to locate the receipt."
+description: "The batches folder mixes .txt batches with log files and an archive. The receipt is in one of the .txt batches directly inside batches."
 type: exercise
 xpReward: 40
 ---
 
 ## Learn
 
-An unquoted * expands to matching names within one path component. A question mark matches one character. Dotfiles are not matched unless the pattern explicitly begins with a dot.
+A glob is a wildcard pattern the shell expands into matching filenames. *.txt means every name ending in .txt, so cat batches/*.txt reads them all in one go.
 
-Globbing happens before a command runs. If three names match, the command receives three arguments. The wildcard is limited to a single directory component in this simulator. A pattern with no matches remains literal, so the command can report that no such file exists.
+The shell expands the pattern before the command runs, so cat simply receives a list of files. * matches any characters except /, which means it never reaches into subfolders. ? matches exactly one character.
 
 ## Example
 
 ```sh
-ls /home/user/*.txt
+ls *.log           # every .log file here
+cat report-?.txt   # report-1.txt, report-2.txt, ...
 ```
 
 Example filenames illustrate syntax; inspect your mission files before running them.
 
 ## Your mission
 
-Read all .txt files inside batches to locate the receipt.
+The batches folder mixes .txt batches with log files and an archive. The receipt is in one of the .txt batches directly inside batches.
+
+1. Read every .txt file directly inside batches with one glob.
+2. Ignore logs and anything in subfolders.
 
 ## Common mistake
 

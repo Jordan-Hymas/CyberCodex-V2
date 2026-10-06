@@ -1,6 +1,6 @@
 ---
 title: "Advanced checkpoint: restore the relay"
-description: "Locate dispatch.dat under /opt/academy, select the RELEASE record, decode its second colon-delimited field, and save the decoded flag in /home/user/final.txt. Submit that flag."
+description: "Final checkpoint. Several dispatch.dat files exist under /opt/academy. Use the ACTIVE one: select its RELEASE record, decode field 2, and save the decoded flag to /home/user/final.txt."
 type: exercise
 xpReward: 60
 ---
@@ -21,7 +21,10 @@ Example filenames illustrate syntax; inspect your mission files before running t
 
 ## Your mission
 
-Locate dispatch.dat under /opt/academy, select the RELEASE record, decode its second colon-delimited field, and save the decoded flag in /home/user/final.txt. Submit that flag.
+Final checkpoint. Several dispatch.dat files exist under /opt/academy. Use the ACTIVE one: select its RELEASE record, decode field 2, and save the decoded flag to /home/user/final.txt.
+
+1. Find every dispatch.dat under /opt/academy and work out which is ACTIVE.
+2. Decode the RELEASE payload from that file only, and save it to /home/user/final.txt.
 
 ## Common mistake
 

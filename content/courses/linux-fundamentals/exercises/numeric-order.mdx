@@ -1,27 +1,30 @@
 ---
 title: "Order numeric priorities"
-description: "Sort priorities.txt numerically and save the smallest value to first.txt."
+description: "Find the smallest number in priorities.txt and save just that number to first.txt."
 type: exercise
 xpReward: 60
 ---
 
 ## Learn
 
-Lexical sorting compares characters, so 10 can appear before 2. sort -n compares numeric values. head then selects the highest-priority item if smaller numbers mean earlier service.
+sort orders lines alphabetically by default, so 10 comes before 2. sort -n sorts by numeric value instead.
 
-Numbers stored as text can be sorted numerically or lexically. Choose based on what the data represents. Numeric sorting is appropriate for counts and priorities, while lexical sorting may be appropriate for identifiers. Once ordered, select a small slice for inspection.
+Alphabetical sorting compares character by character, which gives surprising results for numbers. Always use -n for numbers. -r reverses the order.
 
 ## Example
 
 ```sh
-sort -n numbers.txt
+sort -n sizes.txt | head -n 1    # smallest number
 ```
 
 Example filenames illustrate syntax; inspect your mission files before running them.
 
 ## Your mission
 
-Sort priorities.txt numerically and save the smallest value to first.txt.
+Find the smallest number in priorities.txt and save just that number to first.txt.
+
+1. Sort the numbers so the smallest comes first. Check your output.
+2. Save only the first line to first.txt.
 
 ## Common mistake
 

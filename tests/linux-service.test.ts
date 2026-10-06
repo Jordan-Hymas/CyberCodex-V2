@@ -63,6 +63,18 @@ test('database-backed personal missions: isolation, persistence, resets, progres
  assert.equal(concurrent.filter(r=>r.status==='fulfilled').length,1);
  assert.equal((await prisma.user.findUniqueOrThrow({where:{id:b.id}})).totalXp,missions[0].xp);
  sa=await labAction(a.id,first,{action:'open'}); const resetSolved=await labAction(a.id,first,{action:'reset',version:sa.version}); assert.equal(resetSolved.completed,true);
+ // A decoy flag explains itself and does not complete the mission.
+ const relayId='beginner-relay';
+ const decoyUser = await prisma.user.create({ data: { email: 'decoy@linux.test' } });
+ await prisma.linuxLabSession.createMany({ data: missions.slice(0, missions.findIndex(m=>m.id===relayId)).map(m=>({ userId: decoyUser.id, exerciseId: m.id, state: '{}', flagHash: 'x', solvedAt: new Date() })) });
+ let relay = await labAction(decoyUser.id, relayId, { action: 'open' });
+ const stored = JSON.parse((await prisma.linuxLabSession.findUniqueOrThrow({ where: { userId_exerciseId: { userId: decoyUser.id, exerciseId: relayId } } })).state);
+ assert.equal(stored.decoys.length, 1);
+ relay = await labAction(decoyUser.id, relayId, { action: 'submit', version: relay.version, flag: stored.decoys[0] });
+ assert.equal(relay.completed, false); assert.match(relay.message, /^Decoy flag! .*archive/);
+ await relax(decoyUser.id, relayId);
+ const tipped = await labAction(decoyUser.id, relayId, { action: 'command', version: relay.version, command: stored.flag });
+ assert.match(tipped.tip ?? '', /flag box/);
  await prisma.user.update({where:{id:a.id},data:{subscriptionStatus:'canceled',subscriptionEndsAt:new Date(0)}});
  await assert.rejects(labAction(a.id,missions[12].id,{action:'open'}),(e: unknown)=>e instanceof LabError && e.status===403);
  await prisma.user.delete({where:{id:b.id}}); assert.equal(await prisma.linuxLabSession.count({where:{userId:b.id}}),0);

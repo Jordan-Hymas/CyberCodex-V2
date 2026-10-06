@@ -1,27 +1,30 @@
 ---
 title: "Keep a copy of the evidence"
-description: "Filter the OK line from source.log and save exactly that line to evidence.txt."
+description: "Save exactly the line from source.log that starts with OK into evidence.txt, and watch it print as you do. Lines that merely contain OK don't count."
 type: exercise
 xpReward: 60
 ---
 
 ## Learn
 
-tee copies standard input both to standard output and to a file. It is useful when you want to inspect an intermediate pipeline result and retain it.
+tee writes its input to a file and also passes it on to the screen, so you can save evidence while still seeing it. ^ in a grep pattern means the line must start with that text.
 
-tee is named after a pipe junction: data continues to the terminal or next pipeline stage and is also written to a file. By default that file is replaced; -a appends. It helps preserve evidence while you inspect it.
+When you investigate, keep exact copies of what you found. tee lets you save a pipeline's output without breaking the pipeline. Anchors like ^OK prevent accidental matches such as NOT OK.
 
 ## Example
 
 ```sh
-cat sample.log | tee copy.log
+grep ^ERROR app.log | tee errors.txt
 ```
 
 Example filenames illustrate syntax; inspect your mission files before running them.
 
 ## Your mission
 
-Filter the OK line from source.log and save exactly that line to evidence.txt.
+Save exactly the line from source.log that starts with OK into evidence.txt, and watch it print as you do. Lines that merely contain OK don't count.
+
+1. Find the line that starts with OK (not lines like NOT OK).
+2. Save exactly that one line to evidence.txt with tee.
 
 ## Common mistake
 

@@ -1,27 +1,30 @@
 ---
 title: "Read through standard input"
-description: "Decode the receipt using base64 with input redirection."
+description: "Decode the current receipt by feeding receipt.b64 into base64 with input redirection. An older receipt is lying around too."
 type: exercise
 xpReward: 60
 ---
 
 ## Learn
 
-The &lt; operator connects a file to a command’s standard input. The command does not need to receive that filename as an argument.
+&lt; feeds a file into a command's standard input, as if you'd typed its contents. base64 -d &lt; file.b64 decodes without passing the filename as an argument.
 
-Input redirection gives a command an already-open input stream. It is useful for tools that naturally read standard input. It differs from passing a filename: the command sees the stream rather than using an operand to choose the source. Here both forms can achieve the same count.
+Many tools read from standard input when no file is given. &lt; lets you plug any file into them, and it's the mirror image of &gt;. You'll use it with tools that only read stdin, and in scripts.
 
 ## Example
 
 ```sh
-wc -l < sample.log
+wc -l < access.log        # count lines read from stdin
+base64 -d < data.b64      # decode from stdin
 ```
 
 Example filenames illustrate syntax; inspect your mission files before running them.
 
 ## Your mission
 
-Decode the receipt using base64 with input redirection.
+Decode the current receipt by feeding receipt.b64 into base64 with input redirection. An older receipt is lying around too.
+
+1. Decode receipt.b64 using &lt; rather than a filename argument.
 
 ## Common mistake
 

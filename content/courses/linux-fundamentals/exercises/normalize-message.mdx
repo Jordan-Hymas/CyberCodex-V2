@@ -1,27 +1,30 @@
 ---
 title: "Normalize a status stream"
-description: "Translate status.txt to lowercase and save it as normalized.txt."
+description: "Convert status.txt to lowercase and save the result as normalized.txt."
 type: exercise
 xpReward: 60
 ---
 
 ## Learn
 
-tr translates characters from its first set to its second. Unlike a word replacement tool, it maps individual characters. Uppercase and lowercase ranges are supported here.
+tr translates characters: tr A-Z a-z turns every capital letter into lowercase.
 
-Character translation is a useful normalization step before comparisons or aggregation. tr operates on individual characters, not whole words. The simulator supports literal sets and a few explicit ranges; more elaborate character classes require a fuller environment.
+Normalizing text (same case, same separators) makes data easy to compare and search. tr reads from standard input, so feed it with a pipe or &lt;.
 
 ## Example
 
 ```sh
-echo MiXeD | tr A-Z a-z
+echo HELLO | tr A-Z a-z     # prints: hello
 ```
 
 Example filenames illustrate syntax; inspect your mission files before running them.
 
 ## Your mission
 
-Translate status.txt to lowercase and save it as normalized.txt.
+Convert status.txt to lowercase and save the result as normalized.txt.
+
+1. Feed status.txt into tr and translate uppercase to lowercase.
+2. Save the output to normalized.txt.
 
 ## Common mistake
 

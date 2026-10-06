@@ -1,11 +1,12 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { execute, blankShell, addFile, listDir, readForEdit, saveFile } from '../src/lib/linux/engine';
-import { missions, createChallenge, revealReward, flagMatches, objectiveMet } from '../src/lib/linux/challenges';
+import { missions, createChallenge, revealReward, flagMatches, objectiveMet, decoyIndex, coachTip } from '../src/lib/linux/challenges';
 for (const mission of missions) test(`solve ${mission.level}: ${mission.id}`, () => {
   const challenge = createChallenge(mission); let transcript = '';
   for (const command of mission.solution) { const result = execute(challenge.shell, command); assert.equal(result.error, '', command); transcript += result.output; revealReward(mission, challenge.shell, challenge.flag); }
   assert.ok(transcript.includes(challenge.flag), 'solution must actually expose the flag');
+  for (const decoy of challenge.decoys) assert.ok(!transcript.includes(decoy), 'reference solution must not print a decoy');
   assert.ok(objectiveMet(mission, challenge.shell, challenge.flag));
   assert.ok(flagMatches(challenge.flag, challenge.hash));
 });
@@ -57,4 +58,35 @@ test('nano read/save uses the same rules as the shell', () => {
  execute(s,'chmod 000 a.txt'); assert.throws(()=>readForEdit(s,'a.txt'));
  assert.throws(()=>saveFile(s,'big.txt','x'.repeat(70000)));
  assert.equal(execute(s,'nano a.txt').status,1);
+});
+test('decoys are planted, unique per instance and recognised', () => {
+ for (const m of missions) {
+  const c = createChallenge(m), texts = Object.values(c.shell.files).map(n => n.text).join('\n');
+  assert.ok(!texts.includes('{{'), m.id + ': unresolved placeholder');
+  assert.equal(c.decoys.length, m.decoys.length);
+  c.decoys.forEach((d, i) => {
+   const planted = texts.includes(d) || texts.includes(Buffer.from(d + '\n').toString('base64')) || texts.includes([...d].reverse().join(''));
+   assert.ok(planted, `${m.id}: decoy ${i} never planted`);
+   assert.equal(decoyIndex(d, c.decoys), i); assert.equal(flagMatches(d, c.hash), false);
+  });
+  for (const rule of m.coach) assert.doesNotThrow(() => new RegExp(rule.when), m.id + ': bad coach pattern');
+ }
+});
+test('coaching tips respond to common mistakes', () => {
+ const welcome = missions.find(m => m.id === 'welcome-to-linux')!;
+ assert.match(coachTip(welcome, 'CYBER{abc}', true), /flag box/);
+ assert.match(coachTip(welcome, 'cat dispatch', true), /extension/);
+ assert.equal(coachTip(welcome, 'cat dispatch.txt', false), '');
+ const append = missions.find(m => m.id === 'append-log')!;
+ assert.match(coachTip(append, 'echo restored > status.log', false), /single >/);
+ assert.equal(coachTip(append, 'echo restored >> status.log', false), '');
+});
+test('beginner traps redirect instead of dead-ending', () => {
+ const cd = createChallenge(missions.find(m => m.id === 'cd-command')!);
+ assert.match(execute(cd.shell, 'cat stations/depot/message.txt').output, /cd \.\.\/relay/);
+ const quoted = createChallenge(missions.find(m => m.id === 'quoted-paths')!);
+ const unquoted = execute(quoted.shell, 'cat shift notes.txt').output;
+ assert.match(unquoted, /quotes/); assert.ok(!unquoted.includes(quoted.flag));
+ const pwd = createChallenge(missions.find(m => m.id === 'pwd-command')!);
+ assert.equal(pwd.shell.cwd, '/home/user/field/sector-4');
 });

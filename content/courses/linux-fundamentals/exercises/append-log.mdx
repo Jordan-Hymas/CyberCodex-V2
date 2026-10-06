@@ -1,27 +1,31 @@
 ---
 title: "Append without erasing"
-description: "Append restored as a second line in status.log, keeping the first line."
+description: "status.log says offline. Add a second line, restored, without losing the first."
 type: exercise
 xpReward: 40
 ---
 
 ## Learn
 
-The &gt;&gt; operator appends output. It preserves existing content, unlike &gt;. A newline separates records in a text log.
+&gt;&gt; adds output to the end of a file and keeps everything already there. A single &gt; would wipe the file first.
 
-Appending makes a log grow without rewriting its earlier records. echo normally adds a newline, so appended records become separate lines. If earlier content lacks a final newline, the next text may run into it; inspect the resulting file when formatting matters.
+Logs and notes grow over time, so you almost always want &gt;&gt; when adding to them. Mixing up &gt; and &gt;&gt; is one of the most common ways people lose data on Linux.
 
 ## Example
 
 ```sh
-echo "next entry" >> sample.log
+echo "next entry" >> journal.log    # adds a line at the bottom
 ```
 
 Example filenames illustrate syntax; inspect your mission files before running them.
 
 ## Your mission
 
-Append restored as a second line in status.log, keeping the first line.
+status.log says offline. Add a second line, restored, without losing the first.
+
+1. Read status.log.
+2. Append the word restored as a new line.
+3. Check the file has both lines, then read reward.txt.
 
 ## Common mistake
 

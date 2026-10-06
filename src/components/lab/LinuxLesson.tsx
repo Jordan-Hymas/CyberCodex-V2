@@ -40,11 +40,21 @@ function MissionHeader({ mission, index }: { mission: Mission; index: number }) 
   );
 }
 
-/** Left-column briefing: task first, then the lesson. */
+const tierGuide = {
+  beginner: { label: 'Guided', text: 'The steps tell you exactly what to type.' },
+  intermediate: { label: 'Watch for decoys', text: 'The steps point the way. Fake flags may be planted nearby, so read every result carefully.' },
+  advanced: { label: 'Goal only', text: 'Plan your own commands. Expect traps that only good technique avoids.' },
+} as const;
+
+const sectionTitle = { fontFamily: 'var(--font-ui)', fontSize: '1.1rem', fontWeight: 600 } as const;
+
+/** Left-column briefing: the task first, then a short lesson. Detail is tucked away. */
 function MissionBriefing({ mission, index }: { mission: Mission; index: number }) {
   const chapter = chapterForMission(mission.id);
   const isChapterStart = chapter?.missionIds[0] === mission.id;
   const showSteps = !(mission.steps.length === 1 && mission.steps[0] === mission.brief);
+  const tier = tierGuide[mission.level as keyof typeof tierGuide] ?? tierGuide.beginner;
+  const start = mission.start === '/home/user' ? '~' : mission.start.replace('/home/user', '~');
   return <div className="space-y-6">
     {index === 0 && (
       <Link href={`${COURSE}/orientation`} className="card card-interactive flex-row items-center gap-3 !border-cyber-secondary !p-4">
@@ -55,42 +65,56 @@ function MissionBriefing({ mission, index }: { mission: Mission; index: number }
     )}
 
     {isChapterStart && chapter && (
-      <section className="border-2 border-cyber-ink bg-cyber-dark-tertiary p-4">
-        <p className="pixel-label mb-1 text-cyber-pink">Chapter {chapter.number} briefing</p>
-        <p className="mb-3 text-cyber-text-primary">{chapter.summary}</p>
-        <p className="pixel-label mb-1 text-cyber-text-muted">By the end you&apos;ll be able to</p>
+      <details className="border-2 border-cyber-ink bg-cyber-dark-tertiary p-4" open={index === 0}>
+        <summary className="cursor-pointer"><span className="pixel-label text-cyber-pink">Chapter {chapter.number} briefing</span></summary>
+        <p className="mb-3 mt-2 text-cyber-text-primary">{chapter.summary}</p>
         <ul className="space-y-1 text-sm text-cyber-text-secondary">{chapter.skills.map(skill => <li key={skill}>▸ {skill}</li>)}</ul>
-      </section>
+      </details>
     )}
 
+    {/* The task */}
     <section className="pixel-panel !border-cyber-warning p-5">
-      <p className="pixel-label mb-2 text-cyber-warning">Your mission</p>
-      <p className="mb-3 text-lg leading-relaxed text-cyber-text-primary">{mission.brief}</p>
-      {showSteps && <ol className="space-y-2">{mission.steps.map((step, i) => (
+      <div className="mb-3 flex flex-wrap items-center gap-2">
+        <span className="pixel-label text-cyber-warning">Your mission</span>
+        <span className="ml-auto border border-cyber-border px-1.5 py-0.5 font-label text-[0.65rem] uppercase text-cyber-text-muted" title={tier.text}>{tier.label}</span>
+      </div>
+      <p className="mb-4 text-lg leading-relaxed text-cyber-text-primary">{mission.brief}</p>
+      {showSteps && <ol className="mb-4 space-y-2">{mission.steps.map((step, i) => (
         <li key={step} className="flex gap-3">
           <span className="grid h-6 w-6 shrink-0 place-items-center border-2 border-cyber-ink bg-cyber-warning font-ui text-xs text-cyber-ink">{i + 1}</span>
           <span className="text-cyber-text-secondary">{step}</span>
         </li>
       ))}</ol>}
-      <p className="mt-4 text-sm text-cyber-text-muted">Starting folder: <code>{mission.start === '/home/user' ? '~ (your home)' : mission.start.replace('/home/user', '~')}</code>. Wrong commands never fail a mission, so experiment.</p>
+      <div className="flex flex-wrap items-center gap-2 border-t-2 border-dashed border-cyber-border pt-3 text-sm">
+        <span className="text-cyber-text-muted">Starts in</span>
+        <code>{start}</code>
+        {mission.commands.length > 0 && <>
+          <span className="ml-2 text-cyber-text-muted">Tools</span>
+          {mission.commands.map(c => <code key={c}>{c}</code>)}
+        </>}
+      </div>
+      <p className="mt-3 text-xs text-cyber-text-muted">{tier.text} Wrong commands never fail a mission.</p>
+    </section>
+
+    {/* The lesson, short first */}
+    <section>
+      <h2 className="mb-2 text-cyber-primary" style={sectionTitle}>Learn</h2>
+      <p className="leading-relaxed text-cyber-text-secondary">{mission.concept}</p>
+      <details className="mt-2">
+        <summary className="cursor-pointer font-ui text-sm text-cyber-secondary">More detail</summary>
+        <p className="mt-2 leading-relaxed text-cyber-text-secondary">{mission.explanation}</p>
+      </details>
     </section>
 
     <section>
-      <h2 className="mb-2 text-cyber-primary" style={{ fontFamily: 'var(--font-ui)', fontSize: '1.15rem', fontWeight: 600 }}>Learn</h2>
-      <p className="mb-3 leading-relaxed text-cyber-text-secondary">{mission.concept}</p>
-      <p className="leading-relaxed text-cyber-text-secondary">{mission.explanation}</p>
-    </section>
-
-    {mission.why && <section className="border-l-[6px] border-cyber-accent bg-cyber-dark-secondary px-4 py-3">
-      <p className="pixel-label mb-1 text-cyber-accent">Why it matters</p>
-      <p className="text-cyber-text-secondary">{mission.why}</p>
-    </section>}
-
-    <section>
-      <h2 className="mb-2 text-cyber-primary" style={{ fontFamily: 'var(--font-ui)', fontSize: '1.15rem', fontWeight: 600 }}>Example</h2>
+      <h2 className="mb-2 text-cyber-primary" style={sectionTitle}>Example</h2>
       <pre className="!m-0 border-2 border-cyber-ink bg-cyber-ink p-4 text-sm text-cyber-text-primary"><code>{mission.example}</code></pre>
-      <p className="mt-2 text-xs text-cyber-text-muted">Shows the syntax only. These example files aren&apos;t in your mission, so use the names from your task.</p>
+      <p className="mt-2 text-xs text-cyber-text-muted">Syntax only. These example files aren&apos;t in your mission.</p>
     </section>
+
+    {mission.why && <p className="border-l-[6px] border-cyber-accent bg-cyber-dark-secondary px-4 py-3 text-sm text-cyber-text-secondary">
+      <span className="pixel-label mr-2 text-cyber-accent">Why it matters</span>{mission.why}
+    </p>}
 
     <details className="border-2 border-cyber-ink bg-cyber-dark-secondary p-4">
       <summary className="cursor-pointer font-ui text-cyber-text-primary">Common mistake &amp; check your understanding</summary>

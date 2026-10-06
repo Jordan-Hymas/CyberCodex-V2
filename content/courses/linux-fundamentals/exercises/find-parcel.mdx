@@ -1,27 +1,31 @@
 ---
 title: "Locate a filename"
-description: "Find parcel.txt below /opt/academy and read it."
+description: "A parcel addressed to you is somewhere in the depot under /opt/academy. More than one parcel.txt is in there."
 type: exercise
 xpReward: 40
 ---
 
 ## Learn
 
-find walks a directory tree. -name matches an entry name, not its contents. Quote wildcard patterns so the shell does not expand them first.
+find searches a whole directory tree for files by name, however deep they're buried. find /some/path -name parcel.txt prints every match.
 
-find searches names and metadata in a directory tree; grep searches file contents. Choosing the starting directory controls the search scope. A quoted -name pattern is interpreted by find rather than expanded by the shell before find starts.
+Clicking through folders one at a time doesn't scale. find walks every folder below the path you give it. When find returns several matches, check each one, because files with the same name can mean very different things.
 
 ## Example
 
 ```sh
-find /home/user -name "*.txt"
+find /home -name "*.txt"        # every .txt file below /home
+find /etc -name hosts           # files named exactly hosts
 ```
 
 Example filenames illustrate syntax; inspect your mission files before running them.
 
 ## Your mission
 
-Find parcel.txt below /opt/academy and read it.
+A parcel addressed to you is somewhere in the depot under /opt/academy. More than one parcel.txt is in there.
+
+1. Use find to list every parcel.txt below /opt/academy.
+2. Read them and keep the one addressed to user.
 
 ## Common mistake
 

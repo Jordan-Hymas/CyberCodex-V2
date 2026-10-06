@@ -1,28 +1,31 @@
 ---
 title: "Traverse a locked directory"
-description: "Restore owner traversal on vault, then read vault/receipt."
+description: "The vault directory has lost its owner traverse permission. Restore it and read vault/receipt. The backup copy is stale."
 type: exercise
 xpReward: 60
 ---
 
 ## Learn
 
-Execute permission on a directory controls traversal. Read permission permits listing names; these are distinct. A readable file cannot be reached through a directory you cannot traverse.
+For directories, x means permission to enter (traverse) them. Without it you can't reach any file inside, even one you're allowed to read.
 
-Directory x allows walking through a path component. Directory r allows listing entry names. On a real system, a directory can allow traversal without allowing a listing. This lab models owner permissions so you can observe the difference without changing your actual system.
+Directory permissions trip up even experienced admins: r lets you list a folder's names, and x lets you go through it. Fixing traversal is often the real answer to a Permission denied error on a file path.
 
 ## Example
 
 ```sh
-stat folder
-chmod u+x folder
+ls -ld vault        # d rw- ... no x for the owner
+chmod u+x vault     # allow entering it
 ```
 
 Example filenames illustrate syntax; inspect your mission files before running them.
 
 ## Your mission
 
-Restore owner traversal on vault, then read vault/receipt.
+The vault directory has lost its owner traverse permission. Restore it and read vault/receipt. The backup copy is stale.
+
+1. Work out why vault/receipt can't be read.
+2. Restore the missing directory permission, then read the receipt.
 
 ## Common mistake
 

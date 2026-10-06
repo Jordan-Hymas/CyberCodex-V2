@@ -1,6 +1,6 @@
 ---
 title: "Your place in the tree"
-description: "Confirm where you are, then read the coordinates file stored there."
+description: "You've been dropped into the field somewhere. Work out where you are, then read the coordinates file in that exact spot."
 type: exercise
 xpReward: 25
 ---
@@ -9,7 +9,7 @@ xpReward: 25
 
 pwd (print working directory) shows exactly where you are in the filesystem, as a full path that starts with /.
 
-The Linux filesystem is one big tree. The very top is the root, written as /. Your home directory, /home/user, is a branch of that tree. Whenever you type a filename without a leading /, Linux looks for it in the directory pwd shows. That's why the same command can work in one place and fail in another.
+The Linux filesystem is one big tree. The very top is the root, written as /. Whenever you type a filename without a leading /, Linux looks for it in the directory pwd shows. That's why the same command can read different files depending on where you're standing.
 
 ## Why it matters
 
@@ -26,11 +26,11 @@ Example filenames illustrate syntax; inspect your mission files before running t
 
 ## Your mission
 
-Confirm where you are, then read the coordinates file stored there.
+You've been dropped into the field somewhere. Work out where you are, then read the coordinates file in that exact spot.
 
-1. Run pwd to see your current directory.
-2. Run ls to see what's in it.
-3. Read coordinates.txt with cat.
+1. Run pwd. This mission does NOT start in your home folder.
+2. Run ls to see what's here.
+3. Read coordinates.txt right where you are.
 
 ## Common mistake
 

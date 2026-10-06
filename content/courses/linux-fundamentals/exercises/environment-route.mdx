@@ -1,28 +1,31 @@
 ---
 title: "Store the route"
-description: "Set DEST to /opt/academy/signal, then use \"$DEST/receipt\" to read the flag."
+description: "Set DEST to /opt/academy/signal, then read the receipt through \"$DEST/receipt\". Careful: a similarly named folder exists."
 type: exercise
 xpReward: 60
 ---
 
 ## Learn
 
-`export` sets a shell variable; $NAME expands its value in a later command. Single quotes preserve literal dollar signs, whereas double quotes permit expansion.
+A variable stores a value under a name. export DEST=/some/path sets it, and $DEST is replaced by that value in later commands.
 
-Variables let you name a reusable value. Referencing $PLACE expands that value in a later command. This teaching shell keeps HOME, USER, and PATH fixed and does not implement full shell scoping or word splitting. Use a separate command after export before using the new variable.
+Variables keep long paths and settings in one place. Use double quotes around "$DEST/file" so paths with spaces still work. In this lab, set the variable in one command and use it in the next.
 
 ## Example
 
 ```sh
-export PLACE=/tmp
-echo "$PLACE"
+export LOGS=/var/log
+ls "$LOGS"
 ```
 
 Example filenames illustrate syntax; inspect your mission files before running them.
 
 ## Your mission
 
-Set DEST to /opt/academy/signal, then use "$DEST/receipt" to read the flag.
+Set DEST to /opt/academy/signal, then read the receipt through "$DEST/receipt". Careful: a similarly named folder exists.
+
+1. Set the DEST variable to exactly /opt/academy/signal.
+2. Read the receipt using $DEST.
 
 ## Common mistake
 

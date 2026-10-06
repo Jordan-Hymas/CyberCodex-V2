@@ -1,27 +1,30 @@
 ---
 title: "Spot a changed line"
-description: "Compare before.txt and after.txt and recover the newly added flag."
+description: "Compare before.txt and after.txt. One line was edited and one line was added at the end. The flag is on the added line, not the edited one."
 type: exercise
 xpReward: 60
 ---
 
 ## Learn
 
-diff compares file content and reports differences. A difference gives it a nonzero exit status even though comparison worked; this is not the same as a runtime failure.
+diff compares two files line by line. Lines starting with &lt; come from the first file and lines starting with &gt; from the second.
 
-Comparison is useful when a configuration or report has changed. This lab shows first-file lines with &lt; and second-file lines with &gt;; it does not implement GNU diff’s full patch format. A status of one means differences were found, so conditional commands need to account for that.
+diff is how you spot tampering, config drift and changes between versions. A line that was edited shows up as a &lt; and &gt; pair. A line that was only added shows up as a &gt; with no partner.
 
 ## Example
 
 ```sh
-diff first.txt second.txt
+diff old.conf new.conf
 ```
 
 Example filenames illustrate syntax; inspect your mission files before running them.
 
 ## Your mission
 
-Compare before.txt and after.txt and recover the newly added flag.
+Compare before.txt and after.txt. One line was edited and one line was added at the end. The flag is on the added line, not the edited one.
+
+1. Run diff and read every change.
+2. Pick the line that was added, not the one that was edited.
 
 ## Common mistake
 

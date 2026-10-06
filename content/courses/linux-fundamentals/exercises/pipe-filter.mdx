@@ -1,27 +1,31 @@
 ---
 title: "Filter the signal"
-description: "Filter stream.log down to the DELIVER line using a pipeline, then copy the flag."
+description: "stream.log contains several DELIVER lines, but only one is a live delivery. The others are TEST deliveries. Use a pipeline to isolate the live one."
 type: exercise
 xpReward: 40
 ---
 
 ## Learn
 
-A pipe sends one command’s standard output to the next command’s standard input. It does not turn that output into filenames.
+A pipe | sends one command's output into the next command. You can chain filters: grep DELIVER keeps matching lines, and grep -v TEST throws away lines containing TEST.
 
-Standard input is a data stream consumed by a command. Standard output is the stream it produces. A pipe joins these streams. The right side receives the left side’s output as data, not as command-line arguments, which is why cat sample.log | grep READY needs no filename for grep.
+Each command in a pipeline does one small job. Chaining them lets you narrow output step by step without creating temporary files. Read your output after each step and add a filter only when you need one.
 
 ## Example
 
 ```sh
-cat sample.log | grep READY
+cat app.log | grep ERROR             # keep errors
+cat app.log | grep ERROR | grep -v debug   # ...but drop debug lines
 ```
 
 Example filenames illustrate syntax; inspect your mission files before running them.
 
 ## Your mission
 
-Filter stream.log down to the DELIVER line using a pipeline, then copy the flag.
+stream.log contains several DELIVER lines, but only one is a live delivery. The others are TEST deliveries. Use a pipeline to isolate the live one.
+
+1. Pipe stream.log into grep to keep DELIVER lines.
+2. Add a second filter that removes TEST lines.
 
 ## Common mistake
 

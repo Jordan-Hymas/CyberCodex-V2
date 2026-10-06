@@ -1,27 +1,31 @@
 ---
 title: "Separate repeated messages"
-description: "Find the only nonduplicated line in messages.txt."
+description: "messages.txt is full of repeated messages. Exactly one line appears only once, and that's your flag. Some repeats are far apart."
 type: exercise
 xpReward: 40
 ---
 
 ## Learn
 
-sort puts lines in order. uniq compares adjacent lines; -u prints only lines that occur once in each adjacent group. Sort first when duplicates may be separated.
+uniq removes repeated lines, but only when the repeats sit next to each other. sort first to bring duplicates together, then uniq -u keeps only the lines that appear exactly once.
 
-uniq acts on runs of equal adjacent lines. A file can contain duplicates far apart that uniq alone will not combine. Sorting first groups equal lines together. The -c option counts each adjacent group; -u keeps only groups with a single member.
+This is a classic trap: uniq on an unsorted file misses duplicates that are far apart. sort | uniq is the standard pairing. -u shows lines that appear once, and -c counts how many times each appears.
 
 ## Example
 
 ```sh
-sort sample.txt | uniq -c
+sort names.txt | uniq -c     # count each name
+sort names.txt | uniq -u     # names that appear only once
 ```
 
 Example filenames illustrate syntax; inspect your mission files before running them.
 
 ## Your mission
 
-Find the only nonduplicated line in messages.txt.
+messages.txt is full of repeated messages. Exactly one line appears only once, and that's your flag. Some repeats are far apart.
+
+1. Try uniq -u on the file directly and notice something's off.
+2. Sort first, then keep only the unique lines.
 
 ## Common mistake
 

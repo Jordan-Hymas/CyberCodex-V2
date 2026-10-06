@@ -1,29 +1,31 @@
 ---
 title: "Clean the staging folder"
-description: "Remove the two temporary files in staging, then remove the empty staging directory. Preserve keep.txt."
+description: "Delete the temporary files in staging, then remove the empty staging folder. keep.txt must survive."
 type: exercise
 xpReward: 60
 ---
 
 ## Learn
 
-rm removes files; rmdir removes an empty directory. In a real shell deletion is not a recycle-bin operation. Inspect exact paths before removing anything.
+rm deletes files and rmdir deletes empty directories. A glob like staging/*.tmp deletes just the temp files.
 
-Cleanup is a good place to prefer precise commands. Inspect the directory before deleting, remove only the intended entries, then use rmdir as a check that nothing remains. A simulator reset can restore these fixtures, but real Linux deletion often cannot be undone.
+Deleting is permanent: there's no recycle bin. Be precise with globs, check with ls before you delete, and prefer rmdir for folders so you only remove them once they're empty.
 
 ## Example
 
 ```sh
-ls scratch
-rm scratch/example.tmp
-rmdir scratch
+ls build/*.tmp     # check first
+rm build/*.tmp     # then delete
 ```
 
 Example filenames illustrate syntax; inspect your mission files before running them.
 
 ## Your mission
 
-Remove the two temporary files in staging, then remove the empty staging directory. Preserve keep.txt.
+Delete the temporary files in staging, then remove the empty staging folder. keep.txt must survive.
+
+1. Check what's in staging.
+2. Delete the .tmp files, then the empty folder. Leave keep.txt alone.
 
 ## Common mistake
 

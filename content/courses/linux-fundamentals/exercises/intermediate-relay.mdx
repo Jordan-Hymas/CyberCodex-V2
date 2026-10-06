@@ -1,6 +1,6 @@
 ---
 title: "Intermediate checkpoint: process a manifest"
-description: "Find the READY record in /var/log/manifest, extract its colon-separated payload, and decode that payload."
+description: "Checkpoint. /var/log/manifest holds encoded records as NAME:payload. Decode the payload of the record named exactly READY. Similar records and an old manifest are there to trip you up."
 type: exercise
 xpReward: 40
 ---
@@ -21,7 +21,10 @@ Example filenames illustrate syntax; inspect your mission files before running t
 
 ## Your mission
 
-Find the READY record in /var/log/manifest, extract its colon-separated payload, and decode that payload.
+Checkpoint. /var/log/manifest holds encoded records as NAME:payload. Decode the payload of the record named exactly READY. Similar records and an old manifest are there to trip you up.
+
+1. Find the record named exactly READY (look at what else starts with READY).
+2. Cut out its payload and decode it, ideally in one pipeline.
 
 ## Common mistake
 

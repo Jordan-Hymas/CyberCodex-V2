@@ -1,27 +1,30 @@
 ---
 title: "Count accepted records"
-description: "Count lines containing ACCEPT in traffic.txt and write the count to count.txt."
+description: "Count the lines in traffic.txt that begin with ACCEPT and write just that number to count.txt. Some lines contain ACCEPT without starting with it."
 type: exercise
 xpReward: 60
 ---
 
 ## Learn
 
-wc -l counts newline characters. A pipeline can filter records first and then count only the accepted set. A final line without a newline changes that count.
+wc -l counts lines. Piping grep into wc -l counts how many lines matched.
 
-Counting meaningful records begins with deciding what qualifies as a match. After filtering, wc -l counts newline characters. The lab returns a plain count so it can be stored or used as evidence. Real utilities may add a filename label when given a filename operand.
+Counting matches is everyday analysis: how many failed logins, how many dropped packets. Make sure your filter matches only what you mean, because one wrong match changes the answer.
 
 ## Example
 
 ```sh
-grep OK sample.log | wc -l
+grep ^FAIL auth.log | wc -l
 ```
 
 Example filenames illustrate syntax; inspect your mission files before running them.
 
 ## Your mission
 
-Count lines containing ACCEPT in traffic.txt and write the count to count.txt.
+Count the lines in traffic.txt that begin with ACCEPT and write just that number to count.txt. Some lines contain ACCEPT without starting with it.
+
+1. Filter to lines that start with ACCEPT.
+2. Count them and save the number to count.txt.
 
 ## Common mistake
 

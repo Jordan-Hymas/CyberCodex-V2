@@ -1,27 +1,31 @@
 ---
 title: "Decode the shipment label"
-description: "Decode label.b64 to reveal the flag."
+description: "The shipment label in label.b64 is base64-encoded. Decode it. (Ignore old-label.b64: that shipment has been delivered.)"
 type: exercise
 xpReward: 40
 ---
 
 ## Learn
 
-base64 represents bytes with printable characters. Encoding is not encryption: anyone can decode it. -d reverses the encoding.
+Base64 turns any data into plain letters and numbers so it can travel safely through text systems. It's an encoding, not encryption: base64 -d turns it straight back.
 
-Base64 is a reversible representation useful for transporting bytes in text channels. Encoded data may include padding characters at the end. Decoding yields the original bytes; do not assume that encoded content is secret or safe merely because it looks unreadable.
+Base64 text looks scrambled, often ends in = signs, and shows up constantly in security work (tokens, email attachments, malware). Recognising it and decoding it is a core skill.
 
 ## Example
 
 ```sh
-echo demo | base64
+echo aGVsbG8= | base64 -d     # prints: hello
+base64 -d file.b64            # decode a whole file
 ```
 
 Example filenames illustrate syntax; inspect your mission files before running them.
 
 ## Your mission
 
-Decode label.b64 to reveal the flag.
+The shipment label in label.b64 is base64-encoded. Decode it. (Ignore old-label.b64: that shipment has been delivered.)
+
+1. Look at label.b64. Notice it's encoded.
+2. Decode it with base64 -d.
 
 ## Common mistake
 

@@ -24,6 +24,8 @@ export interface RunResult {
   output?: string;
   error?: string;
   clear?: boolean;
+  /** Coaching hint, shown in yellow after the output */
+  tip?: string;
 }
 
 export interface DirEntry {
@@ -426,6 +428,7 @@ export class ShellSession {
     };
     if (result.output) this.host.write(block(result.output));
     if (result.error) this.host.write(`\x1b[31m${block(result.error)}\x1b[0m`);
+    if (result.tip) this.host.write(`\x1b[33mTip: ${block(result.tip)}\x1b[0m`);
   }
 
   private async openNano(args: string[]) {

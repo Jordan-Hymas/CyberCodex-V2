@@ -1,28 +1,32 @@
 ---
 title: "Recover read permission"
-description: "Inspect sealed.txt, restore owner read permission, and read it."
+description: "sealed.txt holds your flag, but nobody can read it. Diagnose the permissions, fix them and read the file. The copy is not what it seems."
 type: exercise
 xpReward: 40
 ---
 
 ## Learn
 
-Permissions describe read, write, and execute rights. u+r adds the owner read bit without replacing other bits. The teaching shell acts as the owner of challenge files.
+Every file has permissions: read (r), write (w) and execute (x). If you can't read a file, chmod u+r gives you (the owner) read permission back.
 
-Permission bits are grouped for owner, group, and others. r means read, w means write, and x means execute or traverse. This simulator models access as the owner; it does not provide multi-user operating-system permissions. Symbolic changes such as u+r are useful because they preserve unrelated bits.
+ls -l shows permissions as a string like -rw-r--r--. The first three letters after the dash are the owner's. A dash means that permission is missing. Permission errors are among the most common problems on real systems, and fixing them is a basic admin skill.
 
 ## Example
 
 ```sh
-stat sample.txt
-chmod u+r sample.txt
+ls -l secret.txt         # --w------- means no read permission
+chmod u+r secret.txt     # give the owner read access
 ```
 
 Example filenames illustrate syntax; inspect your mission files before running them.
 
 ## Your mission
 
-Inspect sealed.txt, restore owner read permission, and read it.
+sealed.txt holds your flag, but nobody can read it. Diagnose the permissions, fix them and read the file. The copy is not what it seems.
+
+1. Try to read sealed.txt and note the error.
+2. Inspect its permissions, then give yourself read access.
+3. Read it.
 
 ## Common mistake
 

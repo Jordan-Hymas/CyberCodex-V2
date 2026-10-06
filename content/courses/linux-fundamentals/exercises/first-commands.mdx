@@ -1,13 +1,13 @@
 ---
 title: "Know your operator"
-description: "Find out who you are, then collect the dispatch addressed to you."
+description: "Dispatches are sorted by username. Find out who you are, then read the dispatch addressed to you."
 type: exercise
 xpReward: 25
 ---
 
 ## Learn
 
-Linux always knows which user is running each command. whoami prints your username, and id adds your numeric user ID (UID) and the groups you belong to.
+Linux always knows which user is running each command. whoami prints your username, and id adds your numeric user ID (UID) and your groups.
 
 Your username is the human-friendly name. The UID is the number Linux actually uses to decide what you may read or change. Groups give extra access to shared files. This lab has one practice user, user, so nothing you do here touches your real computer or anyone else's environment.
 
@@ -26,11 +26,11 @@ Example filenames illustrate syntax; inspect your mission files before running t
 
 ## Your mission
 
-Find out who you are, then collect the dispatch addressed to you.
+Dispatches are sorted by username. Find out who you are, then read the dispatch addressed to you.
 
-1. Run whoami and note the username.
-2. Run id to see your UID and groups.
-3. Read your dispatch with cat /home/user/operator.txt.
+1. Run whoami to find your username.
+2. Run ls dispatches to see who has mail.
+3. Read the file named after your username: cat dispatches/&lt;your username&gt;.txt
 
 ## Common mistake
 

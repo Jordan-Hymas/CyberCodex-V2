@@ -5,7 +5,7 @@ import { ShellSession, type DirEntry, type ReadResult, type ShellBackend } from 
 import { enableCopyOnSelect, keepCtrlKeys, xtermOptions } from './xtermTheme';
 import { CopyToast, useCopyToast } from './CopyToast';
 
-export type TerminalReply = { output?: string; error?: string; cwd: string; clear?: boolean };
+export type TerminalReply = { output?: string; error?: string; cwd: string; clear?: boolean; tip?: string };
 
 export interface LinuxTerminalProps {
   cwd: string;

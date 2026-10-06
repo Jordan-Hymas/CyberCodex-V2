@@ -10,7 +10,7 @@ import { MissionWorkspace } from './MissionWorkspace';
 const LinuxTerminal = dynamic(() => import('./LinuxTerminal').then(m => m.LinuxTerminal), { ssr: false, loading: () => <p className="p-4 font-ui text-cyber-text-muted">Booting terminal…</p> });
 
 type Snapshot = {
-  version: number; cwd: string; completed: boolean; attempts: number; output?: string; error?: string; clear?: boolean; message?: string;
+  version: number; cwd: string; completed: boolean; attempts: number; output?: string; error?: string; clear?: boolean; message?: string; tip?: string;
   awarded?: number; commands?: string[]; entries?: { name: string; dir: boolean }[]; file?: { path: string; text: string; isNew: boolean };
   progress?: { totalXp: number; level: number; levelXp: number };
 };
