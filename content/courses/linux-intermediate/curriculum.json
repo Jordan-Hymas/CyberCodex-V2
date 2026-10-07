@@ -1,0 +1,183 @@
+{
+  "metadata": {
+    "courseId": "linux-intermediate",
+    "slug": "linux-intermediate",
+    "title": "Intermediate Linux",
+    "description": "Level up from reading to wrangling. Search huge logs, chain tools with pipes, redirect streams, decode data and fix permissions. Chapter 1 is free.",
+    "category": "Operating Systems",
+    "difficulty": "Intermediate",
+    "icon": "/media/icons/linux.gif"
+  },
+  "progress": {
+    "exercisesCompleted": 0,
+    "totalExercises": 12,
+    "projectsCompleted": 0,
+    "totalProjects": 0,
+    "xpEarned": 0,
+    "totalXp": 480,
+    "badgesEarned": 0,
+    "totalBadges": 0
+  },
+  "chapters": [
+    {
+      "id": "1",
+      "number": 1,
+      "title": "Intermediate: search and selection",
+      "description": "Real systems have thousands of files and huge logs. Learn to find the one line or file that matters.",
+      "summary": "Real systems have thousands of files and huge logs. Learn to find the one line or file that matters.",
+      "skills": [
+        "Search text with grep",
+        "Locate files with find",
+        "Match many files at once with wildcards (globs)",
+        "Show just the start or end of a file with head and tail"
+      ],
+      "isLocked": false,
+      "isPremium": false,
+      "exercises": [
+        {
+          "id": "search-log",
+          "title": "Search the relay log",
+          "description": "Find the line containing RECEIPT in /var/log/relay.log and extract its flag.",
+          "type": "exercise",
+          "isLocked": false,
+          "isCompleted": false,
+          "xpReward": 40
+        },
+        {
+          "id": "find-parcel",
+          "title": "Locate a filename",
+          "description": "Find parcel.txt below /opt/academy and read it.",
+          "type": "exercise",
+          "isLocked": false,
+          "isCompleted": false,
+          "xpReward": 40
+        },
+        {
+          "id": "glob-batches",
+          "title": "Inspect a batch with globbing",
+          "description": "Read all .txt files inside batches to locate the receipt.",
+          "type": "exercise",
+          "isLocked": false,
+          "isCompleted": false,
+          "xpReward": 40
+        },
+        {
+          "id": "head-tail",
+          "title": "Select the last dispatch",
+          "description": "Read only the last line of dispatches.txt.",
+          "type": "exercise",
+          "isLocked": false,
+          "isCompleted": false,
+          "xpReward": 40
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "number": 2,
+      "title": "Intermediate: streams and reports",
+      "description": "Connect commands together. Pipes and redirection are what make the shell powerful: small tools chained into exactly the output you want.",
+      "summary": "Connect commands together. Pipes and redirection are what make the shell powerful: small tools chained into exactly the output you want.",
+      "skills": [
+        "Send one command's output into another with |",
+        "Write output to files with > and append with >>",
+        "Count and filter duplicates with sort and uniq"
+      ],
+      "isLocked": true,
+      "isPremium": true,
+      "exercises": [
+        {
+          "id": "pipe-filter",
+          "title": "Filter the signal",
+          "description": "Filter stream.log down to the DELIVER line using a pipeline, then copy the flag.",
+          "type": "exercise",
+          "isLocked": false,
+          "isCompleted": false,
+          "xpReward": 40
+        },
+        {
+          "id": "redirect-report",
+          "title": "Write a report",
+          "description": "Write exactly relay ready followed by a newline to status.txt.",
+          "type": "exercise",
+          "isLocked": false,
+          "isCompleted": false,
+          "xpReward": 40
+        },
+        {
+          "id": "append-log",
+          "title": "Append without erasing",
+          "description": "Append restored as a second line in status.log, keeping the first line.",
+          "type": "exercise",
+          "isLocked": false,
+          "isCompleted": false,
+          "xpReward": 40
+        },
+        {
+          "id": "unique-receipt",
+          "title": "Separate repeated messages",
+          "description": "Find the only nonduplicated line in messages.txt.",
+          "type": "exercise",
+          "isLocked": false,
+          "isCompleted": false,
+          "xpReward": 40
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "number": 3,
+      "title": "Intermediate: data and permissions",
+      "description": "Pull data apart and deal with locked files. Security work constantly involves extracting fields, decoding data and fixing permissions.",
+      "summary": "Pull data apart and deal with locked files. Security work constantly involves extracting fields, decoding data and fixing permissions.",
+      "skills": [
+        "Extract columns with cut",
+        "Decode base64 data",
+        "Read and change permissions with stat and chmod",
+        "Solve the intermediate checkpoint"
+      ],
+      "isLocked": true,
+      "isPremium": true,
+      "exercises": [
+        {
+          "id": "cut-field",
+          "title": "Extract a manifest field",
+          "description": "Extract field 3 of manifest.txt, separated by colons.",
+          "type": "exercise",
+          "isLocked": false,
+          "isCompleted": false,
+          "xpReward": 40
+        },
+        {
+          "id": "decode-receipt",
+          "title": "Decode the shipment label",
+          "description": "Decode label.b64 to reveal the flag.",
+          "type": "exercise",
+          "isLocked": false,
+          "isCompleted": false,
+          "xpReward": 40
+        },
+        {
+          "id": "restore-permission",
+          "title": "Recover read permission",
+          "description": "Inspect sealed.txt, restore owner read permission, and read it.",
+          "type": "exercise",
+          "isLocked": false,
+          "isCompleted": false,
+          "xpReward": 40
+        },
+        {
+          "id": "intermediate-relay",
+          "title": "Intermediate checkpoint: process a manifest",
+          "description": "Find the READY record in /var/log/manifest, extract its colon-separated payload, and decode that payload.",
+          "type": "exercise",
+          "isLocked": false,
+          "isCompleted": false,
+          "xpReward": 40
+        }
+      ]
+    }
+  ],
+  "badges": [],
+  "cheatSheets": []
+}

@@ -7,22 +7,54 @@ xpReward: 25
 
 ## Learn
 
-The shell splits what you type into separate words at spaces. To use a filename that contains a space, wrap it in quotes so it stays one argument.
+### The shell splits on spaces
 
-Without quotes, cat shift notes.txt asks for two files: shift and notes.txt. Quotes keep the whole name together, and the shell removes them before cat sees the name. Double quotes and single quotes both work for this. Single quotes are completely literal, which matters once you meet variables.
+Before running anything, the shell breaks your line into words wherever there's a space. That's how it knows where the command ends and each argument begins. It works well until a filename itself contains a space.
+
+`cat my report.txt` reaches `cat` as two separate arguments, `my` and `report.txt`, so `cat` goes looking for two files that don't exist.
+
+```sh
+ls
+cat my report.txt   # cat looked for a file called my
+```
+
+### Quotes keep words together
+
+Wrap the name in quotes and the shell treats everything inside as a single argument. It removes the quotes before passing the name on, so `cat` simply receives `my report.txt`.
+
+```sh
+cat "my report.txt"
+cat 'my report.txt'   # single quotes work too
+```
+
+### Three ways to protect a space
+
+- Double quotes: `"my report.txt"`.
+- Single quotes: `'my report.txt'`. They're completely literal, which starts to matter when you meet variables in a later chapter.
+- A backslash before the space: `my\ report.txt`. The backslash tells the shell to treat the next character as ordinary text.
+
+```sh
+cat my\ report.txt
+```
+
+### Why this matters
+
+Files from Windows and Mac users often have spaces in their names. Quoting mistakes are one of the most common reasons commands and scripts fail, and in the worst case they make a command act on the wrong files. When in doubt, quote.
+
+## Command cheat sheet
+
+- `cat "NAME WITH SPACES"`: Read a file whose name contains spaces.
+- `cat 'NAME WITH SPACES'`: The same, with literal single quotes.
+- `cat NAME\ WITH\ SPACES`: The same, escaping each space with a backslash.
+
+## New words
+
+- **Quoting**: wrapping text in quotes so the shell keeps it as one argument.
+- **Escaping**: putting `\` before a character so the shell treats it as ordinary text.
 
 ## Why it matters
 
 Real systems are full of awkward filenames, especially anything copied from Windows or macOS. Quoting correctly prevents some nasty mistakes.
-
-## Example
-
-```sh
-cat "my report.txt"      # one file whose name has a space
-cat my report.txt        # two files: my and report.txt
-```
-
-Example filenames illustrate syntax; inspect your mission files before running them.
 
 ## Your mission
 

@@ -1,0 +1,64 @@
+---
+title: "Filter the signal"
+description: "stream.log contains several DELIVER lines, but only one is a live delivery. The others are TEST deliveries. Use a pipeline to isolate the live one."
+type: exercise
+xpReward: 40
+---
+
+## Learn
+
+### Output and input
+
+Most commands print their results as text, called their output. Many commands can also take text in, called their input, instead of reading a file. `grep`, `head`, `sort` and friends all work on input when you don't give them a filename.
+
+### The pipe: |
+
+The `|` symbol (the pipe, usually Shift + backslash on the keyboard) connects two commands: the output of the left one becomes the input of the right one. Nothing appears on screen in between; only the last command's output is printed.
+
+```sh
+cat app.log | grep ERROR
+cat app.log | head -n 2
+```
+
+### Chaining filters
+
+Pipes chain as far as you like. Each command does one small job, and together they narrow the data step by step. Here we keep the ERROR lines, then throw away the ones that also mention DEBUG with `grep -v` (invert: keep lines that don't match).
+
+```sh
+cat app.log | grep ERROR | grep -v DEBUG
+```
+
+### Build pipelines one step at a time
+
+Professionals rarely type a long pipeline in one go. Run the first command and look at its output. Add one `|` stage, run it again, look again. If something comes out empty, the last stage you added is the problem.
+
+This Unix idea, small tools that each do one thing and connect through pipes, is why the command line is so powerful.
+
+## Command cheat sheet
+
+- `A | B`: Send A's output into B's input.
+- `... | grep TEXT`: Keep lines containing TEXT.
+- `... | grep -v TEXT`: Drop lines containing TEXT.
+
+## New words
+
+- **Output**: the text a command produces.
+- **Input**: the text a command reads, from a file, a pipe or the keyboard.
+- **Pipeline**: commands joined with `|`.
+
+## Your mission
+
+stream.log contains several DELIVER lines, but only one is a live delivery. The others are TEST deliveries. Use a pipeline to isolate the live one.
+
+1. Pipe stream.log into grep to keep DELIVER lines.
+2. Add a second filter that removes TEST lines.
+
+## Common mistake
+
+Do not add a filename to the receiving command unless you intend it to read that file instead of the pipe.
+
+## Check your understanding
+
+Why is a pipe different from running two commands separated by a semicolon?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

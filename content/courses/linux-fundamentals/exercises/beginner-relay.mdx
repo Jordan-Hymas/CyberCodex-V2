@@ -7,22 +7,49 @@ xpReward: 25
 
 ## Learn
 
-Checkpoint time: no new commands, just everything from chapters 1 to 3 combined. Work methodically: get to the right place, look at everything there (including hidden files), then read what you find.
+### Checkpoint: no new commands
 
-Investigations go faster when you split them into steps. First, where am I and where do I need to be? Second, what's here, including hidden entries? Third, which file is the one I want? Read the output carefully and separate the flag from the prompt and the other text.
+This mission combines everything from chapters 1 to 3. Nothing new to learn, just a chance to prove you can put it together without step-by-step instructions.
+
+### A method that always works
+
+When you're looking for something on an unfamiliar machine, work in the same four steps every time:
+
+- Where am I? `pwd`.
+- Get to the right place: `cd` with an absolute path (or read from where you are with one).
+- Look at everything, hidden entries included: `ls -a`.
+- Read what you found: `cat`, then read the output carefully.
+
+```sh
+pwd
+cd /srv/depot
+ls   # looks like only a manifest...
+ls -a   # ...but -a reveals the hidden crate
+cat .crate
+```
+
+### Decoys
+
+From here on, some missions plant decoy flags: strings that look exactly like real flags but sit in the wrong place. Submitting one won't fail the mission, but it won't count either, and you'll get a hint about why. Read the text around a flag and make sure it came from the location the mission asked for.
+
+### Everything so far
+
+- `cat FILE`: read a file.
+- `whoami`, `id`: who you are.
+- `pwd`: where you are.
+- `ls`, `ls -a`, `ls -l`: what's here, including hidden entries and details.
+- `cd DIR`, `cd ..`, `cd`, `cd -`: move around.
+- Absolute paths start with `/`; relative paths start where you are. `.` is here and `..` is up one level.
+- `man`, `help`: look things up.
+- Quotes for names with spaces; `mkdir`, `cp` and `mv` to make, copy and move.
+
+## Command cheat sheet
+
+- `pwd → cd → ls -a → cat`: The four-step search: where am I, get there, look at everything, read it.
 
 ## Why it matters
 
 This is how real exploration works: navigate, enumerate, read. You'll repeat this loop on every machine you investigate.
-
-## Example
-
-```sh
-cd /some/place     # go there
-ls -a              # look at everything, hidden files included
-```
-
-Example filenames illustrate syntax; inspect your mission files before running them.
 
 ## Your mission
 

@@ -7,22 +7,63 @@ xpReward: 25
 
 ## Learn
 
-Linux always knows which user is running each command. whoami prints your username, and id adds your numeric user ID (UID) and your groups.
+### Linux is built for many users
 
-Your username is the human-friendly name. The UID is the number Linux actually uses to decide what you may read or change. Groups give extra access to shared files. This lab has one practice user, user, so nothing you do here touches your real computer or anyone else's environment.
+From the start, Linux was designed for many people sharing one machine. Every person (and many background services) gets their own user account, with their own home directory and their own files. Linux keeps track of which account runs every single command and uses that to decide what it's allowed to touch.
+
+One account is special: `root`, the administrator, who can do anything. Security work revolves around this. Defenders keep normal users away from things they shouldn't touch; attackers try to become `root`.
+
+### Who am I? whoami
+
+When you land on an unfamiliar machine, the first question is always: which account am I using? `whoami` answers it by printing your username. It takes no arguments.
+
+```sh
+whoami
+```
+
+### The numbers behind the names: id
+
+Names are for humans. Internally, Linux identifies every user by a number called the UID (user ID), and every group by a GID (group ID). `id` prints all of them at once.
+
+- `uid=1000(user)`: your user ID is 1000 and its name is `user`. Normal accounts usually start at 1000.
+- `gid=1000(user)`: your main group. A group is a named set of users who can be given shared access to files.
+- `groups=...`: every group you belong to. More groups usually means more access.
+- The UID of `root` is always 0. Seeing `uid=0` means you have full control of the machine.
+
+```sh
+id
+```
+
+### Looking inside a folder
+
+This mission keeps its files in a folder. Two commands are enough to reach them. `ls` lists what's inside a directory: with no argument it lists where you are, and you can give it a folder name to look inside that folder instead. (Chapter 1 ends with a full mission on `ls`.)
+
+To read a file inside a folder, join the folder name and the filename with a `/`. `letters/user.txt` means the file `user.txt` inside the folder `letters`.
+
+```sh
+ls   # what's in my home directory?
+ls letters   # what's inside the letters folder?
+cat letters/user.txt
+```
+
+## Command cheat sheet
+
+- `whoami`: Print your username.
+- `id`: Print your user ID (UID), group ID (GID) and all your groups.
+- `ls`: List what's in the current directory.
+- `ls FOLDER`: List what's inside FOLDER.
+- `cat FOLDER/FILE`: Read FILE inside FOLDER.
+
+## New words
+
+- **User account**: an identity on the machine, with its own files and permissions.
+- **root**: the administrator account. It can do anything, and its UID is 0.
+- **UID / GID**: the numbers Linux uses internally for a user and a group.
+- **Group**: a named set of users that can share access to files.
 
 ## Why it matters
 
 On any system you break into or defend, the first question is "who am I running as?". Your user decides what you can access.
-
-## Example
-
-```sh
-whoami      # prints your username
-id          # prints your UID, GID and groups
-```
-
-Example filenames illustrate syntax; inspect your mission files before running them.
 
 ## Your mission
 

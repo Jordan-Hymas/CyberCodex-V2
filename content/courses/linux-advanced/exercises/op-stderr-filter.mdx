@@ -1,0 +1,60 @@
+---
+title: "Filter the error stream"
+description: "flood prints 1,500 status lines on standard error and one of them holds the flag. Get its standard error into grep and pull out the line containing CYBER."
+type: exercise
+xpReward: 60
+---
+
+## Learn
+
+### Pipes carry stdout only
+
+`|` connects the left command's standard output to the right command's input. Standard error is not part of it: it goes straight to your screen, untouched. So if the line you want is on standard error, `| grep` never sees it.
+
+```sh
+netscan | grep status   # grep found nothing, and the status line still went straight to the screen
+```
+
+### 2&gt;&1: point stderr where stdout points
+
+`2&gt;&1` means: make stream 2 go wherever stream 1 is going right now. In `cmd 2&gt;&1 | grep`, stream 1 is already the pipe, so both streams flow into `grep`.
+
+```sh
+netscan 2>&1 | grep status
+```
+
+### Order matters
+
+- Redirections are applied left to right.
+- `cmd &gt; file 2&gt;&1` sends both streams into the file: stdout goes to the file first, then stderr follows it.
+- `cmd 2&gt;&1 &gt; file` sends stderr to the screen, because at the moment `2&gt;&1` was applied, stdout still pointed at the screen.
+
+```sh
+netscan > all.txt 2>&1
+cat all.txt
+```
+
+## Command cheat sheet
+
+- `COMMAND 2>&1 | grep TEXT`: Search both output streams.
+- `COMMAND > FILE 2>&1`: Save both streams in one file.
+
+## Why it matters
+
+Compilers, scanners and services often report the important part on standard error. Merging the streams lets you search, count or save everything a tool said.
+
+## Your mission
+
+flood prints 1,500 status lines on standard error and one of them holds the flag. Get its standard error into grep and pull out the line containing CYBER.
+
+1. Run flood 2&gt;&1 | grep CYBER
+
+## Common mistake
+
+flood | grep CYBER still floods your screen: grep only receives standard output, and the flood is on standard error.
+
+## Check your understanding
+
+What is the difference between cmd &gt; out.txt 2&gt;&1 and cmd 2&gt;&1 &gt; out.txt?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

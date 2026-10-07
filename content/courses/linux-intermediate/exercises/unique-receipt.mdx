@@ -1,0 +1,65 @@
+---
+title: "Separate repeated messages"
+description: "messages.txt is full of repeated messages. Exactly one line appears only once, and that's your flag. Some repeats are far apart."
+type: exercise
+xpReward: 40
+---
+
+## Learn
+
+### sort puts lines in order
+
+`sort` reads lines and prints them in alphabetical order. It doesn't change the file; it prints a sorted version. Add `-r` to reverse the order.
+
+```sh
+cat visitors.txt
+sort visitors.txt
+```
+
+### uniq removes repeats, but only neighbours
+
+`uniq` collapses repeated lines into one, but it only notices repeats that sit right next to each other. On an unsorted file it misses repeats that are far apart. That's why `uniq` is almost always used after `sort`: sorting brings identical lines together first.
+
+```sh
+uniq visitors.txt   # unsorted: the repeats aren't adjacent, so nothing collapses
+sort visitors.txt | uniq
+```
+
+### Counting and singling out
+
+- `uniq -c` puts a count in front of each line: how many times it appeared.
+- `uniq -u` shows only lines that appeared exactly once.
+- `sort -u` sorts and removes duplicates in one step.
+
+```sh
+sort visitors.txt | uniq -c
+sort visitors.txt | uniq -u   # only carol visited once
+```
+
+### Where this is used
+
+Counting repeats is everyday analysis: which IP address tried to log in most, which error happens most, which user appears only once in a list. `sort | uniq -c` is one of the most-typed pipelines in security work.
+
+## Command cheat sheet
+
+- `sort FILE`: Print the lines in alphabetical order.
+- `sort FILE | uniq`: Remove duplicate lines.
+- `sort FILE | uniq -c`: Count how many times each line appears.
+- `sort FILE | uniq -u`: Show lines that appear exactly once.
+
+## Your mission
+
+messages.txt is full of repeated messages. Exactly one line appears only once, and that's your flag. Some repeats are far apart.
+
+1. Try uniq -u on the file directly and notice something's off.
+2. Sort first, then keep only the unique lines.
+
+## Common mistake
+
+sort changes order. Do not use it when the original sequence carries meaning you must preserve.
+
+## Check your understanding
+
+Why does uniq without sort sometimes leave repeated values?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

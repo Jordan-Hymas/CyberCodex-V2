@@ -1,0 +1,55 @@
+---
+title: "Two pipes, three programs"
+description: "codes prints 20 launch codes, but only into a pipe, never to your screen. verify wants exactly the first 7. Connect codes to verify with head in between."
+type: exercise
+xpReward: 50
+---
+
+## Learn
+
+### Pipelines of any length
+
+You can chain as many commands as you like with `|`. Each stage reads what the previous stage produced and passes its own output on. Read a pipeline from left to right, one stage at a time.
+
+```sh
+cat hits.log | sort | uniq -c   # how many hits per address
+cat hits.log | sort | uniq -c | sort -n -r | head -n 1   # the busiest address
+```
+
+### head in the middle
+
+`head -n N` is useful mid-pipeline: it lets only the first N lines through to the next stage.
+
+```sh
+cat hits.log | head -n 3 | sort
+```
+
+### Programs know where their output goes
+
+A program can tell whether its output goes to a terminal or into a pipe. Some refuse to print sensitive data onto a screen and will only send it into a pipe. This mission's code generator is one of them.
+
+## Command cheat sheet
+
+- `A | B | C`: A's output into B, B's output into C.
+- `... | head -n N | ...`: Let only the first N lines continue.
+
+## Why it matters
+
+Real work is pipelines: one tool produces, another trims, a third consumes. Building them a stage at a time is a core habit.
+
+## Your mission
+
+codes prints 20 launch codes, but only into a pipe, never to your screen. verify wants exactly the first 7. Connect codes to verify with head in between.
+
+1. Pipe codes into head -n 7.
+2. Pipe that into verify.
+
+## Common mistake
+
+codes | verify sends all 20 codes, and verify rejects anything but the first 7.
+
+## Check your understanding
+
+How would you pass the last 7 codes instead?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

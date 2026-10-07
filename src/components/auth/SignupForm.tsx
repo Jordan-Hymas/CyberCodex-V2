@@ -5,7 +5,11 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Button, Input, PasswordStrengthMeter } from "@/components/ui";
 
-export function SignupForm() {
+import { OAuthButtons } from "./OAuthButtons";
+import { safeAuthRedirect, type OAuthProviderId } from "@/lib/auth/oauth";
+
+export function SignupForm({ providers, callbackUrl }: { providers: OAuthProviderId[]; callbackUrl?: string }) {
+  const redirectTo = safeAuthRedirect(callbackUrl);
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -52,7 +56,7 @@ export function SignupForm() {
       }
 
       // Redirect to dashboard
-      router.push("/dashboard");
+      router.push(redirectTo);
       router.refresh();
     } catch (err) {
       setError("An error occurred. Please try again.");
@@ -68,6 +72,7 @@ export function SignupForm() {
         </div>
       )}
 
+      <OAuthButtons providers={providers} callbackUrl={redirectTo} disabled={isLoading} />
       <form onSubmit={handleSubmit} className="space-y-6">
         <Input
           label="Full Name"

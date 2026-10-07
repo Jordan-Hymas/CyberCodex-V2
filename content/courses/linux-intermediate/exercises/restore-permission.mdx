@@ -1,0 +1,78 @@
+---
+title: "Recover read permission"
+description: "sealed.txt holds your flag, but nobody can read it. Diagnose the permissions, fix them and read the file. The copy is not what it seems."
+type: exercise
+xpReward: 40
+---
+
+## Learn
+
+### Every file has permissions
+
+Linux decides who may do what to each file using three permissions:
+
+- `r` (read): see what's inside.
+- `w` (write): change it.
+- `x` (execute): run it as a program.
+
+### Three sets of three
+
+Each permission is set separately for three audiences: the owner of the file (`u`, for user), the file's group (`g`), and everybody else (`o`, for others). `ls -l` shows them as nine characters after the file type, like `rw-r--r--`: owner `rw-`, group `r--`, others `r--`. A dash means that permission is missing.
+
+```sh
+ls -l   # diary.txt: -w------- (the owner can write but not read)
+cat diary.txt
+```
+
+### Changing permissions with chmod
+
+`chmod` (change mode) adds or removes permissions. The short form is WHO, then `+` or `-`, then WHAT. `u+r` adds read for the owner, `g-w` removes write from the group, `o-r` removes read from everyone else, and `a` means all three at once.
+
+```sh
+chmod u+r diary.txt
+ls -l diary.txt
+cat diary.txt
+```
+
+### Inspecting with stat
+
+`stat` prints details about one file, including its mode as a number (more on numeric modes later). Here 644 means `rw-r--r--`.
+
+```sh
+stat plan.txt
+```
+
+### Why permissions matter
+
+Permissions are the main way Linux keeps users apart: they stop one person reading another's mail or a web server changing system files. "Permission denied" is one of the most common errors you'll see, and checking `ls -l` is always the first step.
+
+## Command cheat sheet
+
+- `ls -l FILE`: Show a file's permissions.
+- `chmod u+r FILE`: Give the owner read permission.
+- `chmod g-w FILE`: Take write permission away from the group.
+- `stat FILE`: Show details including the numeric mode.
+
+## New words
+
+- **Permission**: a right to read, write or execute a file.
+- **Owner**: the user a file belongs to.
+- **Mode**: a file's full set of permissions.
+
+## Your mission
+
+sealed.txt holds your flag, but nobody can read it. Diagnose the permissions, fix them and read the file. The copy is not what it seems.
+
+1. Try to read sealed.txt and note the error.
+2. Inspect its permissions, then give yourself read access.
+3. Read it.
+
+## Common mistake
+
+File readability and parent-directory traversal are separate requirements.
+
+## Check your understanding
+
+What is preserved when you add u+r rather than replace the mode with an octal value?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

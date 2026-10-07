@@ -7,22 +7,62 @@ xpReward: 25
 
 ## Learn
 
-pwd (print working directory) shows exactly where you are in the filesystem, as a full path that starts with /.
+### The filesystem is a tree
 
-The Linux filesystem is one big tree. The very top is the root, written as /. Whenever you type a filename without a leading /, Linux looks for it in the directory pwd shows. That's why the same command can read different files depending on where you're standing.
+All files on a Linux machine sit in one big tree of directories. The very top of the tree is called the root directory and is written as a single `/`. Every other directory hangs somewhere below it. (Don't confuse the root directory `/` with the `root` user. Same word, different things.)
+
+There's only one tree. Unlike Windows, there's no `C:` or `D:` drive: extra disks are attached somewhere inside the same tree.
+
+```sh
+ls /   # the top level of the tree
+```
+
+### The standard directories
+
+Most Linux systems use the same layout, so once you know it you can find your way around any machine:
+
+- `/home`: users' personal directories. Yours is `/home/user`.
+- `/etc`: system settings, mostly plain text files you can read.
+- `/var`: data that changes while the system runs. Logs are in `/var/log`.
+- `/tmp`: temporary files that anyone can create and that may be wiped.
+- `/opt`: optional, add-on software. Missions often hide things in `/opt/academy`.
+
+### Paths: the address of a file
+
+You describe where something is in the tree with a path: the directories to walk through from the top, separated by `/`. `/home/user/projects/alpha/plan.txt` reads as: start at the root `/`, go into `home`, then `user`, then `projects`, then `alpha`, and there is `plan.txt`.
+
+### Where am I? pwd
+
+Your shell is always standing in one directory, called the working directory (or current directory). `pwd` (print working directory) prints its full path.
+
+This matters because when you type a name without a leading `/`, like `cat plan.txt`, Linux looks for it in your working directory. Two directories can each contain a `plan.txt`; which one you read depends on where you're standing. The prompt shows your location too, with `~` standing for `/home/user`.
+
+```sh
+pwd
+ls
+cat plan.txt   # the plan.txt in the directory pwd showed
+```
+
+### You won't always start at home
+
+Missions don't always begin in your home directory, and real incidents certainly don't. When you're dropped somewhere unfamiliar, run `pwd` first, then `ls` to see what's around you, before you read anything.
+
+## Command cheat sheet
+
+- `pwd`: Print the full path of the directory you're in.
+- `ls`: List the files in the directory you're in.
+- `ls /`: List the top level of the filesystem.
+- `cat FILE`: Read FILE from the directory you're in.
+
+## New words
+
+- **Root directory**: the top of the filesystem tree, written `/`.
+- **Path**: the address of a file or directory, such as `/home/user/notes.txt`.
+- **Working directory**: the directory your shell is currently in. `pwd` prints it.
 
 ## Why it matters
 
 When a command says "No such file", checking pwd is the first thing to do. Most of the time you're simply in the wrong place.
-
-## Example
-
-```sh
-pwd         # prints something like /home/user
-ls          # lists what's in that directory
-```
-
-Example filenames illustrate syntax; inspect your mission files before running them.
 
 ## Your mission
 

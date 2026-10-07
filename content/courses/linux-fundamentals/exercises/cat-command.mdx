@@ -7,21 +7,50 @@ xpReward: 25
 
 ## Learn
 
-An absolute path starts with / and points to the same place no matter where you are. You can read a file anywhere by giving cat its absolute path, without moving.
+### Two kinds of path
 
-So far you've used relative paths, which start from your current directory. Absolute paths start from the root /. They're handy in instructions and scripts because they always work, whatever directory the terminal happens to be in.
+There are two ways to write a path, and the difference is the first character.
+
+- An absolute path starts with `/`. It's the full address from the root of the tree, so it points at the same file no matter where you are. Example: `/etc/hostname`.
+- A relative path doesn't start with `/`. It's read starting from your working directory, so the same relative path can point at different files depending on where you stand. Example: `notes.txt` or `etc/hostname`.
+
+### Reading a file without moving
+
+You don't need to `cd` somewhere to read a file there. Give `cat` an absolute path and it reads the file from anywhere. Here we stay in the home directory the whole time.
+
+```sh
+pwd
+cat /etc/hostname   # the system's name for this machine
+cd /tmp
+cat /etc/hostname   # same file from a different place
+```
+
+### One missing slash changes everything
+
+`/etc/hostname` and `etc/hostname` look almost the same, but the second is relative. From your home directory it means `/home/user/etc/hostname`, a completely different file. If a mission hands you an absolute path, type the leading `/`.
+
+```sh
+cd
+cat etc/hostname   # relative: this is /home/user/etc/hostname
+```
+
+### When to use which
+
+Absolute paths are best in instructions, notes and scripts, because they work whoever runs them and wherever they are. Relative paths are shorter when you're already close to the file. Professionals use both all day.
+
+## Command cheat sheet
+
+- `cat /ABSOLUTE/PATH`: Read a file from anywhere.
+- `cat RELATIVE/PATH`: Read a file starting from the current directory.
+
+## New words
+
+- **Absolute path**: a path starting with `/`. It means the same thing everywhere.
+- **Relative path**: a path without a leading `/`, read from your working directory.
 
 ## Why it matters
 
 Logs and config files live in fixed places like /var/log and /etc. Reading them by absolute path is something you'll do constantly.
-
-## Example
-
-```sh
-cat /etc/hostname      # read a file by its absolute path
-```
-
-Example filenames illustrate syntax; inspect your mission files before running them.
 
 ## Your mission
 

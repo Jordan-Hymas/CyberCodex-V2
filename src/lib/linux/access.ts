@@ -1,12 +1,18 @@
-import { missions, type Mission } from './challenges';
+import { missionsForCourse, courseOf, type Mission } from './challenges';
 import { isDevAdmin } from '@/lib/auth/dev-admin';
 export type Learner = { email?: string | null; subscriptionTier: string; subscriptionStatus: string | null; subscriptionEndsAt: Date | null };
 export function hasLinuxPro(user: Learner, now = new Date()) {
   return user.subscriptionTier === 'pro' && (user.subscriptionStatus === 'active' || user.subscriptionStatus === 'canceled' && !!user.subscriptionEndsAt && user.subscriptionEndsAt > now);
 }
-export function prerequisite(m: Mission) { const i = missions.findIndex(item => item.id === m.id); return i > 0 ? missions[i - 1].id : undefined; }
+/** The mission immediately before this one *within the same course* (undefined for a course's first mission). */
+export function prerequisite(m: Mission) {
+  const course = missionsForCourse(courseOf(m));
+  const i = course.findIndex(item => item.id === m.id);
+  return i > 0 ? course[i - 1].id : undefined;
+}
 export function accessError(m: Mission, user: Learner, completed: string[]) {
-  if (m.level !== 'beginner' && !hasLinuxPro(user)) return 'Intermediate and advanced Linux missions require an active paid subscription.';
+  // `paid` is set per mission in missions.json: free beginner course, free first intermediate chapter, everything else Elite.
+  if (m.paid && !hasLinuxPro(user)) return 'This Linux mission is part of CyberCodex Elite. Upgrade to unlock it.';
   // TEMPORARY: dev admin with pro toggled on can open any mission out of order
   if (isDevAdmin(user.email) && hasLinuxPro(user)) return null;
   const previous = prerequisite(m);

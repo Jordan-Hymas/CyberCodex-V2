@@ -1,0 +1,53 @@
+---
+title: "Intercept a pipe with tee"
+description: "emitter | receiver fails, and emitter only explains why into the pipe. Put tee between them to save what emitter sends, read that copy, then run the pipeline again correctly."
+type: exercise
+xpReward: 60
+---
+
+## Learn
+
+### Pipelines hide what's in between
+
+When `A | B` goes wrong, you only see B's complaint. What did A actually send? The data passed through the pipe and vanished. You need a way to look inside without breaking the pipeline.
+
+### tee as a tap
+
+`tee FILE` copies everything flowing through it into FILE and passes it on unchanged. Put it between two commands and you get a recording of exactly what crossed the pipe.
+
+```sh
+cat raw.txt | tee middle.txt | grep a | wc -l
+cat middle.txt   # what flowed between cat and grep
+```
+
+### Debug, then fix
+
+- Insert `tee FILE` between the two commands.
+- Run the pipeline and read FILE: that's what the first command really sent.
+- Change the first command based on what you learned, and run the pipeline again without `tee`.
+
+## Command cheat sheet
+
+- `A | tee FILE | B`: Record what A sends to B, without changing it.
+
+## Why it matters
+
+Debugging data flows is half of practical shell work, and tee is also how you watch a long command while keeping its output as evidence.
+
+## Your mission
+
+emitter | receiver fails, and emitter only explains why into the pipe. Put tee between them to save what emitter sends, read that copy, then run the pipeline again correctly.
+
+1. Insert tee between emitter and receiver.
+2. Read the saved copy.
+3. Run emitter with the option it asked for, piped into receiver.
+
+## Common mistake
+
+emitter | tee /tmp/sent.txt on its own shows you the message, but receiver never gets anything. tee goes between the two commands, not in place of receiver.
+
+## Check your understanding
+
+How would you watch a long scan's output on screen while also saving it to a file?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

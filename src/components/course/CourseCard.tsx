@@ -27,14 +27,15 @@ export interface CourseCardProps {
 export function CourseCard({ course, className, priority }: CourseCardProps) {
   const category = courseCategories.find((c) => c.id === course.category);
   const difficulty = difficultyLevels[course.difficulty];
+  const bannerSrc = course.banner ?? category?.iconGif;
 
   return (
     <Link href={`/courses/${course.slug}`} className={cn("card group !p-0 h-full", className)}>
       {/* Banner art */}
       <div className="relative h-40 overflow-hidden border-b-[3px] border-cyber-ink bg-cyber-dark-tertiary">
-        {category?.iconGif ? (
+        {bannerSrc ? (
           <Image
-            src={category.iconGif}
+            src={bannerSrc}
             alt=""
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 400px"

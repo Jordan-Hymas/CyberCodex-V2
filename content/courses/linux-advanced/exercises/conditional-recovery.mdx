@@ -1,0 +1,78 @@
+---
+title: "Recover after a failed check"
+description: "Write one line that creates restored.txt containing recovered, but only if missing.txt does not exist. Use test and ||."
+type: exercise
+xpReward: 60
+---
+
+## Learn
+
+### Every command succeeds or fails
+
+When a command finishes, it reports an exit status: `0` means success and anything else means failure. The shell keeps the last one in the special variable `$?`. You don't usually see it, but the shell can act on it.
+
+```sh
+cat config.ini
+echo $?   # 0: cat succeeded
+cat missing.ini
+echo $?   # 1: cat failed
+```
+
+### test checks a condition
+
+`test` checks something and prints nothing. It just succeeds or fails. `test -f FILE` succeeds if FILE exists and is a file; `-d` checks for a directory; `-e` for anything at that path.
+
+```sh
+test -f config.ini
+echo $?
+test -f nope.ini
+echo $?
+```
+
+### && and ||
+
+- `A && B`: run B only if A succeeded. Read it as: A, and then B.
+- `A || B`: run B only if A failed. Read it as: A, or else B.
+
+```sh
+test -f config.ini && echo "config found"
+test -f nope.ini || echo "nope.ini is missing"
+test -f nope.ini && echo "never printed"
+```
+
+### Reacting in one line
+
+Combine a check with an action and a redirection, and one line can fix things only when needed. This is the heart of scripting: let the system's state decide what happens.
+
+```sh
+test -f backup.ini || echo mode=safe > backup.ini   # creates backup.ini only because it was missing
+cat backup.ini
+```
+
+## Command cheat sheet
+
+- `test -f FILE`: Succeed if FILE exists (`-d` for a directory).
+- `A && B`: Run B only if A succeeded.
+- `A || B`: Run B only if A failed.
+- `echo $?`: Print the last command's exit status.
+
+## New words
+
+- **Exit status**: a number a command returns when it finishes. 0 means success.
+
+## Your mission
+
+Write one line that creates restored.txt containing recovered, but only if missing.txt does not exist. Use test and ||.
+
+1. Check what test -f missing.txt returns.
+2. Chain it with || so the recovery only runs on failure.
+
+## Common mistake
+
+Do not judge success only by whether output was printed.
+
+## Check your understanding
+
+Which branch executes when test -f missing.txt is false?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

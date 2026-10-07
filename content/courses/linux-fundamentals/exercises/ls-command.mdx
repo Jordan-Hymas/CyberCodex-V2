@@ -7,23 +7,66 @@ xpReward: 25
 
 ## Learn
 
-ls lists the files in a directory. Files whose names start with a dot (like .config) are hidden from a normal listing. ls -a shows everything, and ls -l shows details like permissions and size.
+### Listing a directory
 
-Options such as -a and -l change how a command behaves. Hidden files are just a naming convention to reduce clutter, not a security feature: anyone who knows the name, and has permission, can read them. Remember that filenames are case sensitive, so Notes.txt and notes.txt are different files.
+`ls` (list) shows the names of the files and directories inside a directory. With no argument it lists your working directory; give it a path to list somewhere else. It's how you look around before doing anything.
+
+```sh
+ls
+ls photos
+```
+
+### Options change how a command behaves
+
+Most commands accept options (also called flags): arguments that start with a dash and switch a feature on. `ls -a` means: list, and include everything. `ls -l` means: list in the long format, with details.
+
+You can combine single-letter options behind one dash: `ls -la` is the same as `ls -l -a`. Options usually go before any filenames.
+
+### Hidden files
+
+By convention, any file or directory whose name starts with a dot (`.settings`, `.cache`) is hidden from a normal `ls`. Programs keep their settings in dotfiles so they don't clutter your listing. `ls -a` shows them.
+
+Hidden is not the same as secret. It's only a naming habit: anyone who knows the name, or runs `ls -a`, can see it. That's also why attackers sometimes hide their tools in dotfiles, and why investigators always look with `-a`.
+
+```sh
+ls   # no .settings here
+ls -a   # now the dotfile shows
+```
+
+### The long listing
+
+`ls -l` prints one line per entry with extra columns. In this lab they are:
+
+- The type and permissions, like `-rw-r--r--`. The first character is `d` for a directory or `-` for a file. The rest says who may read (r), write (w) or run (x) it, covered in a later chapter.
+- The owner: which user the file belongs to.
+- The size in bytes.
+- The name.
+
+```sh
+ls -l
+ls -la   # both options at once
+```
+
+### On a full Linux system
+
+Real `ls -l` output has a few more columns (the group, a date, a link count), and `ls -a` also lists two special entries, `.` and `..`, which you'll meet in chapter 2. The ideas are the same.
+
+## Command cheat sheet
+
+- `ls`: List the current directory.
+- `ls PATH`: List another directory.
+- `ls -a`: Include hidden entries (names starting with `.`).
+- `ls -l`: Long format: type, permissions, owner, size, name.
+- `ls -la`: Long format, hidden entries included.
+
+## New words
+
+- **Option (flag)**: an argument starting with `-` that changes how a command behaves.
+- **Dotfile**: a file whose name starts with `.`, hidden from a plain `ls`.
 
 ## Why it matters
 
 Attackers and admins both stash things in dotfiles. Always use ls -a when you're exploring a system.
-
-## Example
-
-```sh
-ls          # normal listing
-ls -a       # include hidden files (names starting with .)
-ls -l       # long listing with permissions and sizes
-```
-
-Example filenames illustrate syntax; inspect your mission files before running them.
 
 ## Your mission
 

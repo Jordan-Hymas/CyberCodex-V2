@@ -38,6 +38,7 @@ function welcomeText(intro?: MissionIntro) {
 interface LinuxLabProps {
   exerciseId: string;
   userId: string;
+  courseSlug: string;
   nextId?: string;
   hints: string[];
   header: ReactNode;
@@ -53,13 +54,13 @@ export function LinuxLab({ exerciseId, userId, ...rest }: LinuxLabProps) {
   if (status !== 'loading') settled.current = session?.user?.id ?? null;
   // Switching accounts unmounts the old console and drops pending requests/state.
   const notice = settled.current === undefined ? <p className="p-6 font-ui text-cyber-text-muted">Checking your account…</p>
-    : settled.current !== userId ? <p className="p-6">Your account changed. <a href={`/courses/linux-fundamentals/${exerciseId}`} className="underline">Reopen this mission</a> to load the correct environment.</p>
+    : settled.current !== userId ? <p className="p-6">Your account changed. <a href={`/courses/${rest.courseSlug}/${exerciseId}`} className="underline">Reopen this mission</a> to load the correct environment.</p>
     : null;
   if (notice) return <MissionWorkspace header={rest.header} left={rest.briefing} right={notice} />;
   return <PersonalLab key={`${userId}:${exerciseId}`} exerciseId={exerciseId} {...rest} />;
 }
 
-function PersonalLab({ exerciseId, nextId, hints, header, briefing }: Omit<LinuxLabProps, 'userId'>) {
+function PersonalLab({ exerciseId, courseSlug, nextId, hints, header, briefing }: Omit<LinuxLabProps, 'userId'>) {
   const { update: refreshSession } = useSession();
   const router = useRouter();
   const [snapshot, setSnapshot] = useState<Snapshot | null>(null), [error, setError] = useState(''), [busy, setBusy] = useState(false);
@@ -122,7 +123,7 @@ function PersonalLab({ exerciseId, nextId, hints, header, briefing }: Omit<Linux
   };
 
   const reset = () => void request('reset').then(() => { setGeneration(g => g + 1); setFlag(''); setConfirmReset(false); setCelebration(null); }).catch(() => {});
-  const nextHref = nextId ? `/courses/linux-fundamentals/${nextId}` : '/courses/linux-fundamentals';
+  const nextHref = nextId ? `/courses/${courseSlug}/${nextId}` : `/courses/${courseSlug}`;
 
   const left = <>
     {briefing}

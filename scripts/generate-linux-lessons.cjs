@@ -2,7 +2,13 @@
 const fs = require('node:fs'), path = require('node:path');
 const root = path.resolve(__dirname, '..');
 const missions = require('../src/lib/linux/missions.json');
-const dir = path.join(root, 'content/courses/linux-fundamentals/exercises');
+const coursesRoot = path.join(root, 'content/courses');
+// Rewrite all three Linux courses' exercise folders from scratch so stale files can't linger.
+for (const slug of ['linux-fundamentals', 'linux-intermediate', 'linux-advanced']) {
+  const dir = path.join(coursesRoot, slug, 'exercises');
+  fs.rmSync(dir, { recursive: true, force: true });
+  fs.mkdirSync(dir, { recursive: true });
+}
 // Escape characters MDX treats as JSX/expressions in prose
 const prose = (t) =>
   t
@@ -21,19 +27,17 @@ for (const m of missions) {
     '',
     '## Learn',
     '',
-    prose(m.concept),
-    '',
-    prose(m.explanation),
-    '',
+    ...(m.lesson ? m.lesson.sections.flatMap((section) => [
+      `### ${prose(section.heading)}`,
+      '',
+      ...(section.text ?? []).flatMap((t) => [prose(t), '']),
+      ...(section.points ?? []).map((t) => `- ${prose(t)}`),
+      ...(section.points ? [''] : []),
+      ...(section.demo ? ['```sh', ...section.demo.map((d) => d.cmd + (d.note ? `   # ${d.note}` : '')), '```', ''] : []),
+    ]) : [prose(m.concept), '', prose(m.explanation), '', '```sh', m.example, '```', '']),
+    ...(m.lesson?.commands ? ['## Command cheat sheet', '', ...m.lesson.commands.map((c) => `- \`${c.syntax}\`: ${prose(c.does)}`), ''] : []),
+    ...(m.lesson?.terms ? ['## New words', '', ...m.lesson.terms.map((t) => `- **${prose(t.term)}**: ${prose(t.means)}`), ''] : []),
     ...(m.why ? ['## Why it matters', '', prose(m.why), ''] : []),
-    '## Example',
-    '',
-    '```sh',
-    m.example,
-    '```',
-    '',
-    'Example filenames illustrate syntax; inspect your mission files before running them.',
-    '',
     '## Your mission',
     '',
     prose(m.brief),
@@ -51,6 +55,7 @@ for (const m of missions) {
     'Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.',
     '',
   ];
+  const dir = path.join(coursesRoot, m.course, 'exercises');
   fs.writeFileSync(path.join(dir, m.id + '.mdx'), lines.join('\n'));
 }
 console.log(`Wrote ${missions.length} lesson files.`);

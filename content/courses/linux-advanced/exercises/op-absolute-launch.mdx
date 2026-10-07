@@ -1,0 +1,73 @@
+---
+title: "A locked flag and an absolute launch"
+description: "Run the beacon program in /opt/relay/bin by its absolute path to get the flag."
+type: exercise
+xpReward: 50
+---
+
+## Learn
+
+### A new rule: the flag belongs to root
+
+Until now every flag sat in a file you could read. From here on, the flag lives in `/flag`, it belongs to the `root` user, and only root may read it. `cat /flag` is refused.
+
+So how do you get it? Each mission installs a program that runs with root's power. It will read the flag for you, but only if you run it the way the lesson teaches. This is exactly how hacking practice platforms work, and it mirrors real life: many privileged programs only behave when used correctly.
+
+### Reading ownership in ls -l
+
+`ls -l` shows who owns a file and who may use it. In this example a payroll file belongs to root and has the mode `r--------`: the owner (root) may read it, and nobody else may do anything.
+
+```sh
+ls -l /srv/payroll.csv   # owner: root. Permissions for everyone else: none
+cat /srv/payroll.csv
+```
+
+### Programs are files too
+
+A program is just a file whose execute permission (`x`) is set. To run one, type its path where a command name would go. An absolute path, starting at `/`, works from anywhere.
+
+```sh
+/opt/tools/bin/scanner   # this practice program reports how it was started
+cd /tmp
+/opt/tools/bin/scanner   # the same absolute path works from any directory
+```
+
+### Why a bare name isn't enough
+
+Typing just `scanner` doesn't work, even though the file exists. When you type a bare name, the shell only looks in a short list of system directories called the PATH (such as `/usr/bin`). `/opt/tools/bin` isn't one of them, so the shell never finds it. The PATH gets its own lesson soon; for now, an absolute path always works.
+
+```sh
+scanner
+```
+
+## Command cheat sheet
+
+- `ls -l FILE`: See a file's owner and permissions.
+- `/full/path/to/program`: Run a program by its absolute path.
+
+## New words
+
+- **Executable**: a file with `x` permission that can be run as a program.
+- **PATH**: the list of directories the shell searches when you type a bare command name.
+
+## Why it matters
+
+Running a tool by its full path guarantees which file actually executes. That matters when a program is not on your PATH, and when someone may have planted a look-alike that is.
+
+## Your mission
+
+Run the beacon program in /opt/relay/bin by its absolute path to get the flag.
+
+1. Run ls -l /flag and note the owner and the permissions.
+2. Try cat /flag to see the refusal for yourself.
+3. Start /opt/relay/bin/beacon by its absolute path.
+
+## Common mistake
+
+Typing beacon on its own fails. A bare name is only looked up in the system's command directories (the PATH), and /opt/relay/bin is not one of them.
+
+## Check your understanding
+
+Would /opt/relay/bin/beacon still work after you run cd /tmp? Why?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

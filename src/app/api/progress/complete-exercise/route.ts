@@ -125,7 +125,7 @@ export async function POST(request: NextRequest) {
 
     // Parse and validate request body
     const body = await request.json();
-    if (body.courseId === "linux-fundamentals") {
+    if (typeof body.courseId === "string" && body.courseId.startsWith("linux-")) {
       return NextResponse.json({ error: "Complete Linux missions by submitting your personal flag." }, { status: 403 });
     }
     const validatedData = completeExerciseSchema.parse(body);

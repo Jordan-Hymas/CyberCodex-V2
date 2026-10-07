@@ -7,22 +7,54 @@ xpReward: 25
 
 ## Learn
 
-A relative path can climb up with .. before going back down. ../store/receipt.txt means "go up one level, enter store, then find receipt.txt".
+### . and ..
 
-This mission starts you inside /home/user/work. The . in a path means "here" and .. means "the parent directory", and they can appear anywhere in a path. If a path confuses you, resolve it one piece at a time: start at pwd, then apply each part in order.
+Every directory contains two special names you can use in any path. `.` (one dot) means this directory. `..` (two dots) means the parent directory, one level up.
+
+So `./todo.txt` is just `todo.txt` written explicitly, and `../shared` means: go up one level, then into `shared`. You can stack them: `../..` is two levels up.
+
+### Climbing up, then down
+
+Here we're standing in `/home/user/work` and want a file in `/home/user/shared`. They're neighbours: both sit inside `/home/user`. So we go up one level and then down into `shared`, all in one path, without changing directory.
+
+```sh
+pwd
+ls ..   # what's one level up?
+cat ../shared/list.txt
+cat ./todo.txt   # same as cat todo.txt
+```
+
+### Resolve a path one piece at a time
+
+If a path looks confusing, work it out step by step. Start from where you are (what `pwd` prints) and apply each piece in order. For `../shared/list.txt` from `/home/user/work`:
+
+- Start: `/home/user/work`
+- `..` goes up: `/home/user`
+- `shared` goes in: `/home/user/shared`
+- `list.txt` is the file: `/home/user/shared/list.txt`
+
+### Same-named files in different places
+
+Two directories can each hold a file with the same name, and a relative path picks one based on where you start. When a name exists in more than one place, check which one your path actually reaches. That's exactly the trap this mission sets.
+
+```sh
+cat ../../user/shared/list.txt   # a longer route to the same file: up twice, then back down
+```
+
+## Command cheat sheet
+
+- `cat ../DIR/FILE`: Read FILE in a sibling directory.
+- `ls ..`: List the parent directory.
+- `cat ./FILE`: Read FILE in this directory (same as `cat FILE`).
+
+## New words
+
+- **. (dot)**: this directory.
+- **.. (dot dot)**: the parent directory, one level up.
 
 ## Why it matters
 
 Relative paths keep commands short and portable. You'll see ../ in scripts, configs and exploits all the time.
-
-## Example
-
-```sh
-cat ../notes.txt          # a file one level above you
-cat ./notes.txt           # a file right here (same as notes.txt)
-```
-
-Example filenames illustrate syntax; inspect your mission files before running them.
 
 ## Your mission
 

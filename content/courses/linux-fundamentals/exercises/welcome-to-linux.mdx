@@ -7,21 +7,88 @@ xpReward: 25
 
 ## Learn
 
-This is a terminal: you type a command, press Enter, and Linux prints the result. Your first command is cat, which prints the contents of a text file to the screen. Reading a file with cat never changes it.
+### What Linux is
 
-Every command starts with its name, followed by any arguments, separated by spaces. Here, cat is the command and the filename is its argument. The text before the $ (user@cybercodex:~) is the prompt. It shows who you are and where you are, and you don't type it. The ~ means your home directory, which is where every mission starts unless it says otherwise.
+Linux is an operating system: the core software that runs a computer, the same job Windows and macOS do on a laptop. It runs most of the world's web servers, nearly all cloud machines and supercomputers, every Android phone, and countless routers, cameras and other devices.
+
+In cybersecurity you will spend a lot of time on Linux machines, and often they have no desktop or mouse at all. You control them by typing. That's what this course teaches, one small mission at a time.
+
+### The terminal and the shell
+
+The panel on the right is a terminal: a window where you type instead of clicking. Inside it runs a program called the shell. The shell reads what you type, runs it when you press Enter, prints the result, and then waits for the next instruction.
+
+Every instruction is called a command. Typing a command and pressing Enter is how you do everything in Linux: read files, move around, search, change settings.
+
+### Reading the prompt
+
+Before each command the shell prints a prompt to show it's ready. Yours looks like `user@cybercodex:~$`. Every part means something:
+
+- `user` is your username: who you are logged in as.
+- `cybercodex` is the hostname: the name of the machine you're on. Useful when you're connected to several machines at once.
+- `~` is where you are right now. `~` is short for your home directory, your personal folder. You'll see this change as you move around.
+- `$` means the shell is ready for a command from a normal user. Administrators (the `root` user) see `#` instead.
+- You never type the prompt. Type only what comes after the `$`.
+
+```sh
+whoami   # prints the username shown at the start of the prompt
+```
+
+### Commands and arguments
+
+A command line is split into words at the spaces. The first word is the command: the program you want to run. Every word after it is an argument: extra information you hand to that program, such as which file to work on.
+
+`echo` is the simplest command there is. It prints its arguments back to you. Try it in your own terminal too.
+
+```sh
+echo hello
+echo Hello there, operator   # three arguments, printed with single spaces between them
+```
+
+### In Linux, almost everything is a file
+
+This is the most important idea in Linux. Your documents are files, but so are the system's settings, its logs, the programs themselves, and even hardware like disks and keyboards, which appear as special files. Files are organised into directories, which is Linux's word for folders.
+
+Because nearly everything is a file, the most basic skill on any Linux machine is reading files. Learn to read files and you can inspect almost anything: how a server is configured, what happened in a log, what a note says.
+
+### Reading a file with cat
+
+`cat` prints everything inside a file onto your screen. You give it the filename as its argument: `cat notes.txt`. The name comes from concatenate, meaning join together: give it several files and it prints them one after another.
+
+`cat` only reads. It never changes, moves or deletes the file, so you can run it as often as you like. If you mistype the name, Linux tells you the file doesn't exist. Names must match exactly, including the extension (`.txt`) and capital letters.
+
+```sh
+cat notes.txt
+cat notes.txt todo.txt   # two files, printed back to back
+cat note.txt   # one letter off: no such file
+```
+
+### Capturing flags
+
+Each mission hides a flag in your environment: a string that looks like `CYBER&#123;3f9a...&#125;`. Completing the task is how you uncover it. When you see it, highlight the whole thing with your mouse (that copies it), paste it into the flag box under the terminal, and submit.
+
+Your flags are unique to you and to this mission, so a flag copied from someone else won't work.
+
+## Command cheat sheet
+
+- `cat FILE`: Print everything inside FILE. Read-only: the file is never changed.
+- `cat FILE1 FILE2`: Print several files, one after another.
+- `echo TEXT`: Print TEXT back to the screen.
+- `whoami`: Print the username you're logged in as.
+
+## New words
+
+- **Operating system**: the core software that runs a computer (Linux, Windows, macOS).
+- **Terminal**: the window you type commands into.
+- **Shell**: the program inside the terminal that reads your commands and runs them.
+- **Command**: an instruction you type, such as `cat`.
+- **Argument**: extra information typed after a command, separated by spaces, such as a filename.
+- **Prompt**: the text the shell prints when it's ready, like `user@cybercodex:~$`.
+- **Directory**: a folder. It holds files and other directories.
+- **Home directory**: your personal directory, written `~`. Missions start there unless they say otherwise.
 
 ## Why it matters
 
 Security work starts with reading: config files, logs, notes left on a system. cat is the quickest way to look inside a file.
-
-## Example
-
-```sh
-cat notes.txt      # prints everything inside notes.txt
-```
-
-Example filenames illustrate syntax; inspect your mission files before running them.
 
 ## Your mission
 

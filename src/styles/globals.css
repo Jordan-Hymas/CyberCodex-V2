@@ -707,3 +707,21 @@
 @media (prefers-reduced-motion: reduce) {
   .pixel-confetti { display: none; }
 }
+
+/* Long-form reading in Linux mission lessons: larger text, calmer inline code, steady rhythm. */
+@layer components {
+  .lesson-prose {
+    font-size: 1.0625rem;
+    line-height: 1.75;
+    color: color-mix(in srgb, var(--color-cyber-text-primary) 90%, transparent);
+  }
+  .lesson-prose p { max-width: 80ch; }
+  .lesson-prose p + p { margin-top: 1rem; }
+  .lesson-prose :not(pre) > code {
+    font-size: 0.9em;
+    color: #ece7ff;
+    background-color: color-mix(in srgb, var(--color-cyber-accent) 16%, transparent);
+    border: 1px solid color-mix(in srgb, var(--color-cyber-accent) 35%, transparent);
+    padding: 0.05em 0.35em;
+  }
+}

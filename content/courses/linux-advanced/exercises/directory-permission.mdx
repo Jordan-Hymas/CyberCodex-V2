@@ -1,0 +1,64 @@
+---
+title: "Traverse a locked directory"
+description: "The vault directory has lost its owner traverse permission. Restore it and read vault/receipt. The backup copy is stale."
+type: exercise
+xpReward: 60
+---
+
+## Learn
+
+### Permissions mean something different on directories
+
+A directory is a list of names. Its three permissions control that list:
+
+- `r` on a directory: you may list the names inside it (`ls`).
+- `w`: you may create, rename and delete entries inside it.
+- `x`: you may enter it and pass through it, to reach anything inside. This is often called traverse permission.
+
+### No x, no entry
+
+Without `x` on a directory you can't `cd` into it and you can't reach any file inside, even a file whose own permissions say you may read it. Every directory along a path needs `x` for you to get through.
+
+```sh
+ls -l   # drw------- : read and write, but no x
+cat locked/note.txt
+cd locked
+```
+
+### Restoring traverse permission
+
+```sh
+chmod u+x locked
+ls -l
+cat locked/note.txt
+```
+
+### Diagnosing permission denied
+
+When reading a file fails with "permission denied", the file itself might be fine. Check the directories above it too. A missing `x` on a parent directory is one of the most common causes, and it confuses experienced administrators as well.
+
+## Command cheat sheet
+
+- `chmod u+x DIR`: Let the owner enter DIR.
+- `ls -l`: Directories show `d` first, then their permissions.
+
+## New words
+
+- **Traverse**: pass through a directory to reach what's inside. Needs `x`.
+
+## Your mission
+
+The vault directory has lost its owner traverse permission. Restore it and read vault/receipt. The backup copy is stale.
+
+1. Work out why vault/receipt can't be read.
+2. Restore the missing directory permission, then read the receipt.
+
+## Common mistake
+
+Adding read permission to a file does not fix a missing traversal bit on its parent directory.
+
+## Check your understanding
+
+Why can a readable file still return permission denied?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

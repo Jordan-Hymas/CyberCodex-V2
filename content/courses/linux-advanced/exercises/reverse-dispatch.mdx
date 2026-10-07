@@ -1,0 +1,54 @@
+---
+title: "Undo a reversed transmission"
+description: "reversed.txt contains a transmission sent backwards. Recover the flag. mirror.txt was a test transmission."
+type: exercise
+xpReward: 60
+---
+
+## Learn
+
+### rev reverses each line
+
+`rev` prints each line of its input backwards, character by character. Line order stays the same; only the characters within each line are flipped.
+
+```sh
+echo hello | rev
+rev clue.txt
+```
+
+### Spotting simple obfuscation
+
+Hiding text by reversing it, encoding it in base64 or swapping characters isn't real protection, but it's common in puzzles, malware and quick-and-dirty scripts. Learn to recognise the signs. A reversed flag starts with `&#125;` and ends with `&#123;REBYC`, which is `CYBER&#123;` backwards.
+
+```sh
+echo "}olleh{REBYC" | rev
+```
+
+### Combining tools
+
+Obfuscation is often layered. Undo it one layer at a time and check the result after each step, just like building a pipeline.
+
+## Command cheat sheet
+
+- `rev FILE`: Reverse the characters on each line of FILE.
+- `... | rev`: Reverse piped text.
+
+## New words
+
+- **Obfuscation**: making something hard to read without truly protecting it.
+
+## Your mission
+
+reversed.txt contains a transmission sent backwards. Recover the flag. mirror.txt was a test transmission.
+
+1. Reverse reversed.txt.
+
+## Common mistake
+
+rev does not reverse the entire file as one character sequence.
+
+## Check your understanding
+
+If a value was reversed and then base64-encoded, which operation should you undo first?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

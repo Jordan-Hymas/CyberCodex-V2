@@ -5,9 +5,9 @@ const root = path.resolve(__dirname, '..');
 const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'cyber-linux-tests-'));
 try {
   fs.symlinkSync(path.join(root, 'node_modules'), path.join(temp, 'node_modules'), 'dir');
-  const files = { engine: 'src/lib/linux/engine.ts', challenges: 'src/lib/linux/challenges.ts', access: 'src/lib/linux/access.ts', service: 'src/lib/linux/service.ts', prisma: 'src/lib/db/prisma.ts', 'engine.test': 'tests/linux-engine.test.ts', 'service.test': 'tests/linux-service.test.ts' };
+  const files = { engine: 'src/lib/linux/engine.ts', programs: 'src/lib/linux/programs.ts', challenges: 'src/lib/linux/challenges.ts', 'dev-admin': 'src/lib/auth/dev-admin.ts', access: 'src/lib/linux/access.ts', service: 'src/lib/linux/service.ts', prisma: 'src/lib/db/prisma.ts', 'engine.test': 'tests/linux-engine.test.ts', 'service.test': 'tests/linux-service.test.ts' };
   for (const [name, file] of Object.entries(files)) {
-    let source = fs.readFileSync(path.join(root, file), 'utf8').replaceAll('@/lib/db/prisma', './prisma').replaceAll('../src/lib/linux/', './');
+    let source = fs.readFileSync(path.join(root, file), 'utf8').replaceAll('@/lib/db/prisma', './prisma').replaceAll('@/lib/auth/dev-admin', './dev-admin').replaceAll('../src/lib/linux/', './');
     const output = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, esModuleInterop: true } }).outputText;
     fs.writeFileSync(path.join(temp, name + '.js'), output);
   }

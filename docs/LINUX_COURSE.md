@@ -2,9 +2,29 @@
 
 Implemented October 5, 2026 in CyberCodex-V2. This document covers the Linux work only; concurrent UI, legacy terminal, and developer-login edits belong to other ongoing work.
 
+## Course structure (three courses)
+
+As of the split, the 53 missions are delivered as **three catalog courses**, by difficulty, so learners progress beginner → intermediate → advanced:
+
+- **linux-fundamentals** — "Linux Fundamentals" (Beginner): the 12 `beginner`-level missions, chapters 1–3. Entirely free.
+- **linux-intermediate** — "Intermediate Linux": the 12 `intermediate`-level missions, chapters 1–3 (renumbered). Chapter 1 is free; chapters 2–3 are Elite.
+- **linux-advanced** — "Advanced Linux": the 12 `advanced`-level missions plus the 17 `operator` missions = 29, chapters 1–7. Fully Elite.
+
+How it is wired:
+
+- Each mission in `missions.json` carries `course` (its catalog slug) and `paid` (whether it needs Elite). `challenges.ts` exposes `linuxCourses`, `isLinuxCourse`, `courseOf` and `missionsForCourse`.
+- Access (`access.ts`): `paid` drives the subscription gate; `prerequisite` is now **per course**, so each course's first mission opens freely and every later mission needs the previous one *in the same course*.
+- Progress (`service.ts`): `UserExercise`/`CourseProgress` are recorded under `courseOf(mission)`, and course totals count only that course's missions. `LinuxLabSession` stays keyed by `(userId, exerciseId)` — global — so a learner's environment and flag for a mission are unchanged by the split.
+- Each course has its own `content/courses/<slug>/` (`curriculum.json` + `exercises/`) and a `<slug>.mdx` catalog file with its own `banner`. Chapter `summary`/`skills` live in each `curriculum.json`; `chapters.ts` stitches the three together. `generate-linux-lessons.cjs` writes each mission's MDX into its course's folder, and `check-linux-content.cjs` validates all three.
+- The generic `complete-exercise` route rejects any `courseId` starting with `linux-`, so Linux completions only happen through flag submission.
+
+To re-slice the courses, change each mission's `course`/`paid` fields in `missions.json`, update the three `curriculum.json` files to match (chapter membership, numbering, `isPremium`, totals), then run `node scripts/generate-linux-lessons.cjs` and `npm run test:linux`.
+
 ## Shipped course
 
-36 original missions in nine chapters: 12 beginner/free, 12 intermediate/paid, and 12 advanced/paid. Each mission includes concept explanation, syntax example, task, hints, a common mistake, and an understanding question. Three checkpoints combine skills. All missions have lesson files and solvable fixtures.
+53 original missions (split across three courses, see above) in thirteen chapters total: 12 beginner/free, 12 intermediate/paid, 12 advanced/paid and 17 operator/paid. Each mission includes concept explanation, syntax example, task, hints, a common mistake, and an understanding question. Four checkpoints combine skills. All missions have lesson files and solvable fixtures.
+
+The Operator tier (chapters 10–13, added October 6, 2026) follows pwn.college's model: `/flag` is owned by root and unreadable, and a mission program releases it only when the learner uses the technique being taught (path, working directory, arguments, streams, exported variables). Research behind it is in `docs/research/pwn-college-linux-luminarium.md`.
 
 The learner signs in, opens a mission, uses a personal saved terminal, retrieves a `CYBER{...}` flag, and submits it. The server checks that flag against that learner's current instance. Some tasks additionally require an exact filesystem outcome. Correct completion unlocks the next mission and awards XP once. Incorrect commands remain exploratory and do not fail the lesson.
 
@@ -14,7 +34,8 @@ The learning sequence draws inspiration from small, cumulative challenges in [pw
 
 - `src/lib/linux/missions.json`: canonical mission definitions, author reference solutions, fixtures, hints, explanations, XP and optional outcome checks. Server-side data; never import this into a client component.
 - `src/lib/linux/engine.ts`: bounded, deterministic teaching shell. It never launches an OS process, reads a host file, or accesses the network.
-- `src/lib/linux/challenges.ts`: random instance flags, SHA-256 comparison, fixture construction, and filesystem objectives.
+- `src/lib/linux/challenges.ts`: random instance flags, SHA-256 comparison, fixture construction (including per-instance secrets), filesystem objectives, and `runCommand` (shell + watcher + reward check).
+- `src/lib/linux/programs.ts`: built-in challenge programs, after-command watchers and fixture generators for the Operator tier. Server-side TypeScript only; learner text is never executed.
 - `src/lib/linux/access.ts`: prerequisite and paid-access rules.
 - `src/lib/linux/service.ts`: authenticated-user database operations inside transactions; versioned state and progress awards.
 - `src/app/api/linux/[exerciseId]/route.ts`: validated POST actions: open, command, submit, reset. No caller-supplied user ID or filesystem state.
@@ -51,9 +72,11 @@ File operations: `cat`, `mkdir`, `touch`, `cp`, `mv`, `rm`, `rmdir`, `chmod`.
 
 Text and streams: `echo`, `printf`, `head`, `tail`, `wc`, `grep`, `sort`, `uniq`, `cut`, `tr`, `base64`, `rev`, `nl`, `tee`, `diff`.
 
-Environment and inspection: `whoami`, `id`, `uname`, `env`, `export`, `unset`, `history`, `help`, `man`, `clear`, `true`, `false`, `test`.
+Environment and inspection: `whoami`, `id`, `uname`, `env`, `export`, `unset`, `read`, `history`, `help`, `man`, `clear`, `true`, `false`, `test`.
 
-Shell syntax: single/double quotes, escapes, variables, bounded `*`/`?` filename expansion, pipes, input/output/append redirection, semicolon sequences, `&&`, and `||`. Use `man COMMAND` for each command's supported options.
+Shell syntax: single/double quotes, escapes, variables, `NAME=value` assignments (alone, or in front of one command), exported versus local variables, bounded `*`/`?` filename expansion, pipes, input/output/append redirection, `2>`, `2>>`, `2>&1`, `>&2`, `/dev/null`, semicolon sequences, `&&`, and `||`. Use `man COMMAND` for each command's supported options; `man NAME` also shows a mission's page at `/usr/share/man/NAME`.
+
+Programs: a path (`/opt/x/run`, `./run`) runs a mission program; a bare name runs a builtin, then a program in `/usr/local/bin`, `/usr/bin` or `/bin`. The current directory is never searched. Only nodes with a `program` id execute; anything else is "cannot execute".
 
 Limits: 2,048 command characters; 256 tokens; 512 filesystem entries; 64 KiB per file; 512 KB persisted environment; 100 history entries; 64 KiB output per command. Requests are versioned and commands/submissions have short per-instance cooldowns. This is not a substitute for deployment-wide rate limiting and capacity planning.
 
@@ -62,12 +85,12 @@ Limits: 2,048 command characters; 256 tokens; 512 filesystem entries; 64 KiB per
 This is **not a full Linux VM, container, or Bash implementation**. “Advanced” means composition of this supported command-line subset, not complete Linux administration.
 
 - No host filesystem/process/network access, real process jobs, package manager, services, kernel tools, or arbitrary script execution.
-- One simulated owner; owner read/write/traverse bits are modeled. No real user switching, ACLs, symlinks, or full Unix metadata semantics.
+- Two owners: the learner, and `root` for fixture nodes marked `owner: "root"`. The learner gets owner bits on their own nodes and "other" bits on root's, and cannot chmod, move or remove root's nodes. No user switching, groups, ACLs, symlinks, or full Unix metadata semantics.
 - `grep` supports literal matching and optional start/end anchors, with `-F` for literal anchors. Full user-controlled regex execution is intentionally excluded.
 - `find` supports name/type selection, not `-exec` or every predicate; glob patterns allow at most four wildcard characters.
 - `diff` presents changed lines but not a complete GNU diff patch format.
 - `printf`, `tr`, `test`, option parsing, and text utilities implement their documented educational subset.
-- Set variables in one input before using them in the next; full Bash expansion/scoping and subshell pipeline semantics are not modeled.
+- Set variables in one input before using them in the next: `$VAR` and `$?` expand when Enter is pressed, before any part of the line runs. `read` in a pipeline leaves the variable unset (as in bash) and says why; other subshell semantics are not modeled.
 - No command substitution, background execution, heredocs, Bash control structures, or full POSIX shell grammar.
 - The terminal front end (`src/lib/terminal/shell.ts`, shared with the practice terminal) provides cursor editing, history, Ctrl+A/E/U/K/W/C/L, Tab completion of commands and paths (server `complete` action, honoring directory read/traverse bits), and a nano-style editor (`src/lib/terminal/nano.ts`) that loads with the read-only `read` action and saves through the versioned `save` action using the same permission and 64 KiB limits as redirection. Multiline paste stays one editable line rather than auto-executing.
 
@@ -92,9 +115,31 @@ Each learner gets one `LinuxLabSession` row per mission, but only environments i
 - `start`: the directory the mission begins in. `steps`, `commands` and `why` feed the briefing panel. The terminal opens with a mission intro (goal, start directory and its visible entries).
 - Beginner missions use signposts rather than decoys until the checkpoint; intermediate missions plant decoys in near misses; advanced missions rely on traps that only correct technique avoids.
 
+### Operator-tier fixtures
+
+- `owner: "root"` makes a node root's. `/flag` (`{{FLAG}}`, mode 256 = 0400) is the standard locked flag.
+- `program: "id"` or `"id:arg"` makes a file executable as the program `id` in `programs.ts` (give it mode 493 = 0755). Programs receive an `Invocation` and return output, error and exit status; they may read root files and change the shell.
+- `dir: true` creates a directory node (e.g. `/var/lib/relay`, root, mode 448 = 0700, for per-instance secrets).
+- `generate: "id"` fills a file from a generator in `programs.ts` (long man pages, code lists).
+- `{{RAND:name[:hex|num|word]}}` and `{{PICK:name:a|b|c}}` work in paths and text. Reusing a name repeats its value. Values are stored server-side as `secrets` in the lab state. Reference solutions may use the same placeholders; tests fill them per instance.
+- `watch: "id"` runs a watcher from `programs.ts` after every command (the equivalent of a shell's PROMPT_COMMAND), appending its output.
+- Programs report mistakes on standard error, so operator reference solutions are allowed stderr output; tests still require that they reveal the flag and no decoy.
+
+## Lesson pages
+
+The left column of a mission (`LinuxLesson.tsx` + `LessonContent.tsx`) is written for someone who has never used a terminal and shows everything, nothing collapsed: goal, an "In this lesson" contents list, numbered lesson sections, a command cheat sheet, new words, why it matters, then the task steps, the common mistake and a reflection question.
+
+Each mission's `lesson` in `missions.json`:
+
+- `sections`: `{ heading, text?: string[], points?: string[], demo?: [{ cmd, note?, fails? }] }`. Wrap commands and paths in backticks inside text.
+- `files` / `cwd`: a throwaway practice filesystem for the examples (never the mission's own files or flag). `program` may only be one of the harmless `demo-*` programs in `programs.ts`.
+- `commands` (`{ syntax, does }`) and `terms` (`{ term, means }`).
+
+Example output is not written by hand: the page runs each `demo` command through the engine when it renders, so learners see exactly what their terminal will print. `npm run test:linux` runs every example and fails on unsupported commands, unless the step is marked `fails: true` to show a mistake on purpose. Reading styles live in `.lesson-prose` in `src/styles/globals.css`.
+
 ## Extending lessons
 
-1. Add a stable mission ID, level, explanation, example, task, hints, pitfall, and understanding question.
+1. Add a stable mission ID, level, explanation, example, task, hints, pitfall, understanding question, and a `lesson` (see above).
 2. Add synthetic fixture files. `{{FLAG}}`, `{{BASE64}}`, and `{{REVERSED}}` become that instance's flag representation on the server.
 3. For state-changing tasks, define an outcome predicate and a reference solution. Rewards for those tasks appear in `/home/user/reward.txt` when the predicate is met.
 4. Add the matching curriculum entry and MDX. Keep ordering, XP, and free/paid chapter flags consistent.

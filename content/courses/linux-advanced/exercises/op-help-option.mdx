@@ -1,0 +1,57 @@
+---
+title: "Ask the program for help"
+description: "Run codegen --help. Find the option that prints the release key, then pass that key to codegen -k."
+type: exercise
+xpReward: 50
+---
+
+## Learn
+
+### Programs that explain themselves
+
+Most command-line programs print a summary of their options when you pass `--help` (often also `-h`). It's the quickest documentation there is, and it works even for in-house tools that never got a manual page.
+
+```sh
+backup --help
+```
+
+### Reading help output
+
+- The first line, `usage:`, shows the overall shape of the command.
+- Each option row shows the short form, the long form, and a placeholder if it takes a value: `-d, --dest DIR`.
+- Short and long forms do the same thing. `-d /tmp` equals `--dest /tmp`.
+
+```sh
+backup -d /tmp
+```
+
+### One option, one value
+
+When an option takes a value, whatever comes next is used as that value, even if it looks like another option. `backup -d -q` would try to back up into a directory named `-q`. Run options that do separate things as separate commands, or make sure each value follows its own option.
+
+## Command cheat sheet
+
+- `PROGRAM --help`: Show a program's options.
+- `-x / --long`: Short and long spellings of the same option.
+
+## Why it matters
+
+When you land on an unfamiliar machine, --help is often the quickest documentation available, especially for in-house tools that never got a manual page.
+
+## Your mission
+
+Run codegen --help. Find the option that prints the release key, then pass that key to codegen -k.
+
+1. Run codegen --help and read the options.
+2. Use the option that prints the key.
+3. Run codegen -k with that key.
+
+## Common mistake
+
+codegen -k -s does not work: -s is taken as the value of -k. Run the two options as separate commands.
+
+## Check your understanding
+
+What would you try if a program printed nothing useful for --help?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

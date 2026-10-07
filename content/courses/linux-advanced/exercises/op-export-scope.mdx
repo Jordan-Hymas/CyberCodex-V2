@@ -1,0 +1,80 @@
+---
+title: "Local or exported?"
+description: "Run clearance with OPERATOR set to relay and exported, and CALLSIGN set to night but not exported."
+type: exercise
+xpReward: 60
+---
+
+## Learn
+
+### Shell variables stay in the shell
+
+`NAME=value` creates a variable inside your shell. Programs you start don't see it. They start with their own copy of the environment, and a plain shell variable isn't part of the environment.
+
+This is on purpose. Your shell might hold passwords, tokens or other private values, and they shouldn't leak into every program you run.
+
+```sh
+PROJECT=atlas
+echo $PROJECT   # the shell knows it
+showenv   # the program didn't receive it
+```
+
+### `export` shares a variable
+
+`export NAME` marks a variable for export, and from then on every program you start receives it. `export NAME=value` sets and exports in one step. `env` lists everything that's exported.
+
+```sh
+export REGION=eu-west
+showenv
+env   # REGION is listed, PROJECT is not
+```
+
+### For one command only
+
+Writing `NAME=value` in front of a command passes the variable to that single command, without keeping it in your shell afterwards.
+
+```sh
+MODE=test showenv
+echo "[$MODE]"   # the shell didn't keep it
+```
+
+### Rules of thumb
+
+- No spaces around `=`. `NAME = value` runs a command called NAME.
+- Quote values with spaces: `NAME="two words"`.
+- `unset NAME` removes a variable completely.
+
+## Command cheat sheet
+
+- `NAME=value`: Set a shell-only variable.
+- `export NAME=value`: Set a variable and pass it to programs.
+- `NAME=value COMMAND`: Pass a variable to one command only.
+- `env`: List exported variables.
+- `unset NAME`: Remove a variable.
+
+## New words
+
+- **Shell variable**: a variable that exists only inside your shell.
+- **Environment variable**: an exported variable that programs you start receive.
+
+## Why it matters
+
+Secrets and configuration travel in environment variables. Knowing what gets exported, and to whom, is how you avoid leaking tokens to every program you launch, and how attackers find the ones that leaked.
+
+## Your mission
+
+Run clearance with OPERATOR set to relay and exported, and CALLSIGN set to night but not exported.
+
+1. Export OPERATOR=relay.
+2. Set CALLSIGN=night without exporting it.
+3. Run clearance.
+
+## Common mistake
+
+Spaces break assignments: CALLSIGN = night tries to run a command called CALLSIGN. If you exported CALLSIGN by mistake, unset CALLSIGN and set it again.
+
+## Check your understanding
+
+You set API_KEY=abc123 without exporting it. Can a script you run read it?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

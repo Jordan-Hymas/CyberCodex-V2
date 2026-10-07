@@ -1,0 +1,405 @@
+{
+  "metadata": {
+    "courseId": "linux-advanced",
+    "slug": "linux-advanced",
+    "title": "Advanced Linux",
+    "description": "The deep end. Compose professional pipelines, script with conditionals, then crack the Operator tier where the flag belongs to root and only the right technique sets it free.",
+    "category": "Operating Systems",
+    "difficulty": "Advanced",
+    "icon": "/media/icons/linux.gif"
+  },
+  "progress": {
+    "exercisesCompleted": 0,
+    "totalExercises": 29,
+    "projectsCompleted": 0,
+    "totalProjects": 0,
+    "xpEarned": 0,
+    "totalXp": 1685,
+    "badgesEarned": 0,
+    "totalBadges": 0
+  },
+  "chapters": [
+    {
+      "id": "1",
+      "number": 1,
+      "title": "Advanced: composition and evidence",
+      "description": "Compose tools like a professional: feed files in as input, keep copies of evidence while you work, and spot what changed between versions.",
+      "summary": "Compose tools like a professional: feed files in as input, keep copies of evidence while you work, and spot what changed between versions.",
+      "skills": [
+        "Use input redirection with <",
+        "Save output while viewing it with tee",
+        "Compare files with diff",
+        "Transform text with rev"
+      ],
+      "isLocked": true,
+      "isPremium": true,
+      "exercises": [
+        {
+          "id": "input-redirection",
+          "title": "Read through standard input",
+          "description": "Decode the receipt using base64 with input redirection.",
+          "type": "exercise",
+          "isLocked": false,
+          "isCompleted": false,
+          "xpReward": 60
+        },
+        {
+          "id": "tee-evidence",
+          "title": "Keep a copy of the evidence",
+          "description": "Filter the OK line from source.log and save exactly that line to evidence.txt.",
+          "type": "exercise",
+          "isLocked": false,
+          "isCompleted": false,
+          "xpReward": 60
+        },
+        {
+          "id": "compare-dispatches",
+          "title": "Spot a changed line",
+          "description": "Compare before.txt and after.txt and recover the newly added flag.",
+          "type": "exercise",
+          "isLocked": false,
+          "isCompleted": false,
+          "xpReward": 60
+        },
+        {
+          "id": "reverse-dispatch",
+          "title": "Undo a reversed transmission",
+          "description": "Reverse the characters of reversed.txt to recover the flag.",
+          "type": "exercise",
+          "isLocked": false,
+          "isCompleted": false,
+          "xpReward": 60
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "number": 2,
+      "title": "Advanced: variables and recovery",
+      "description": "Make the shell remember things and recover from problems. Variables, directory permissions and conditional commands appear in every real script.",
+      "summary": "Make the shell remember things and recover from problems. Variables, directory permissions and conditional commands appear in every real script.",
+      "skills": [
+        "Set and use variables with export and $NAME",
+        "Understand directory permissions",
+        "Run commands conditionally with && and ||",
+        "Count records with wc"
+      ],
+      "isLocked": true,
+      "isPremium": true,
+      "exercises": [
+        {
+          "id": "environment-route",
+          "title": "Store the route",
+          "description": "Set DEST to /opt/academy/signal, then use \"$DEST/receipt\" to read the flag.",
+          "type": "exercise",
+          "isLocked": false,
+          "isCompleted": false,
+          "xpReward": 60
+        },
+        {
+          "id": "directory-permission",
+          "title": "Traverse a locked directory",
+          "description": "Restore owner traversal on vault, then read vault/receipt.",
+          "type": "exercise",
+          "isLocked": false,
+          "isCompleted": false,
+          "xpReward": 60
+        },
+        {
+          "id": "conditional-recovery",
+          "title": "Recover after a failed check",
+          "description": "Use test and || to create restored.txt containing recovered when missing.txt does not exist.",
+          "type": "exercise",
+          "isLocked": false,
+          "isCompleted": false,
+          "xpReward": 60
+        },
+        {
+          "id": "count-records",
+          "title": "Count accepted records",
+          "description": "Count lines containing ACCEPT in traffic.txt and write the count to count.txt.",
+          "type": "exercise",
+          "isLocked": false,
+          "isCompleted": false,
+          "xpReward": 60
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "number": 3,
+      "title": "Advanced: automation checkpoints",
+      "description": "Put it all together. These checkpoints chain several skills into one task, the way real investigations and automation work.",
+      "summary": "Put it all together. These checkpoints chain several skills into one task, the way real investigations and automation work.",
+      "skills": [
+        "Normalize text with tr",
+        "Sort numbers correctly with sort -n",
+        "Clean up a workspace safely",
+        "Complete the final advanced relay"
+      ],
+      "isLocked": true,
+      "isPremium": true,
+      "exercises": [
+        {
+          "id": "normalize-message",
+          "title": "Normalize a status stream",
+          "description": "Translate status.txt to lowercase and save it as normalized.txt.",
+          "type": "exercise",
+          "isLocked": false,
+          "isCompleted": false,
+          "xpReward": 60
+        },
+        {
+          "id": "numeric-order",
+          "title": "Order numeric priorities",
+          "description": "Sort priorities.txt numerically and save the smallest value to first.txt.",
+          "type": "exercise",
+          "isLocked": false,
+          "isCompleted": false,
+          "xpReward": 60
+        },
+        {
+          "id": "clean-workspace",
+          "title": "Clean the staging folder",
+          "description": "Remove the two temporary files in staging, then remove the empty staging directory. Preserve keep.txt.",
+          "type": "exercise",
+          "isLocked": false,
+          "isCompleted": false,
+          "xpReward": 60
+        },
+        {
+          "id": "advanced-relay",
+          "title": "Advanced checkpoint: restore the relay",
+          "description": "Locate dispatch.dat under /opt/academy, select the RELEASE record, decode its second colon-delimited field, and save the decoded flag in /home/user/final.txt. Submit that flag.",
+          "type": "exercise",
+          "isLocked": false,
+          "isCompleted": false,
+          "xpReward": 60
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "number": 4,
+      "title": "Operator: running programs",
+      "description": "Flags now belong to root. Learn how Linux finds and starts programs, so you can make them hand the flag over.",
+      "summary": "The flag now belongs to root, so you cannot simply read it. Mission programs run with root privileges and hand it over only when you start them correctly, which means understanding how Linux finds and runs programs.",
+      "skills": [
+        "Read ownership in ls -l and see why /flag is off limits",
+        "Run programs by absolute path",
+        "Run programs in the current directory with ./ (and know why the dot is needed)",
+        "Find renamed and hidden executables"
+      ],
+      "isLocked": true,
+      "isPremium": true,
+      "exercises": [
+        {
+          "id": "op-absolute-launch",
+          "title": "A locked flag and an absolute launch",
+          "description": "Run the beacon program in /opt/relay/bin by its absolute path to get the flag.",
+          "type": "exercise",
+          "isLocked": false,
+          "isCompleted": false,
+          "xpReward": 50
+        },
+        {
+          "id": "op-dot-slash",
+          "title": "Run it from right here",
+          "description": "Go to /opt/relay/bin and start the uplink program there with a relative path that begins with ./",
+          "type": "exercise",
+          "isLocked": false,
+          "isCompleted": false,
+          "xpReward": 50
+        },
+        {
+          "id": "op-launch-site",
+          "title": "Launch from the right place",
+          "description": "Run /opt/relay/bin/ignite. It names the directory it must be launched from. Go there with cd and run it again by its absolute path.",
+          "type": "exercise",
+          "isLocked": false,
+          "isCompleted": false,
+          "xpReward": 50
+        },
+        {
+          "id": "op-hidden-launcher",
+          "title": "Checkpoint: find the live launcher",
+          "description": "One launcher in /opt/relay/bin is live and hidden. List everything in that directory, dotfiles included, and run the live launcher by its full path. Ignore the retired one.",
+          "type": "exercise",
+          "isLocked": false,
+          "isCompleted": false,
+          "xpReward": 75
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "number": 5,
+      "title": "Operator: arguments and documentation",
+      "description": "Make programs do what you want: options with values, --help, manual pages and exit statuses.",
+      "summary": "Programs do what their arguments tell them. Learn to find the right options from a README, from --help and from a manual page, and to read the exit status every command leaves behind.",
+      "skills": [
+        "Pass options that take their own values",
+        "Read built-in help with --help",
+        "Search long manual pages with man | grep",
+        "Read exit statuses with $?"
+      ],
+      "isLocked": true,
+      "isPremium": true,
+      "exercises": [
+        {
+          "id": "op-argument-value",
+          "title": "An option with a value",
+          "description": "Read /opt/vault/README, then use the vault command to read /flag for you.",
+          "type": "exercise",
+          "isLocked": false,
+          "isCompleted": false,
+          "xpReward": 50
+        },
+        {
+          "id": "op-help-option",
+          "title": "Ask the program for help",
+          "description": "Run codegen --help. Find the option that prints the release key, then pass that key to codegen -k.",
+          "type": "exercise",
+          "isLocked": false,
+          "isCompleted": false,
+          "xpReward": 50
+        },
+        {
+          "id": "op-manual-search",
+          "title": "Search the manual",
+          "description": "The signal program has about 150 options. Its manual (man signal) says which one releases the flag. Find that option and run signal with it.",
+          "type": "exercise",
+          "isLocked": false,
+          "isCompleted": false,
+          "xpReward": 50
+        },
+        {
+          "id": "op-exit-status",
+          "title": "Read the exit status",
+          "description": "Run probe. It fails on purpose with an exit status. Read the status with echo $? straight away, then run report with that number.",
+          "type": "exercise",
+          "isLocked": false,
+          "isCompleted": false,
+          "xpReward": 50
+        }
+      ]
+    },
+    {
+      "id": "6",
+      "number": 6,
+      "title": "Operator: streams and redirection",
+      "description": "Standard output, standard error and the file descriptors behind them. Capture, split, append and filter.",
+      "summary": "Every program has a standard output and a standard error. Capture them, split them, append instead of overwrite, and filter output that would otherwise flood your screen.",
+      "skills": [
+        "Redirect standard output to a file",
+        "Redirect standard error with 2>",
+        "Append safely with >>",
+        "Merge streams with 2>&1 before a pipe"
+      ],
+      "isLocked": true,
+      "isPremium": true,
+      "exercises": [
+        {
+          "id": "op-capture-stdout",
+          "title": "Capture standard output",
+          "description": "Run transmit with its standard output redirected to capture.log, then read capture.log.",
+          "type": "exercise",
+          "isLocked": false,
+          "isCompleted": false,
+          "xpReward": 50
+        },
+        {
+          "id": "op-split-streams",
+          "title": "Split the streams",
+          "description": "Run relay so its standard output goes to data.log and its standard error goes to notes.log. Then read both files: the flag is in one of them.",
+          "type": "exercise",
+          "isLocked": false,
+          "isCompleted": false,
+          "xpReward": 50
+        },
+        {
+          "id": "op-append-halves",
+          "title": "Append, don't overwrite",
+          "description": "assemble writes the first half of the flag straight into /home/user/assembled.txt, then prints the second half. Redirect its output into that same file so the two halves join up.",
+          "type": "exercise",
+          "isLocked": false,
+          "isCompleted": false,
+          "xpReward": 50
+        },
+        {
+          "id": "op-stderr-filter",
+          "title": "Filter the error stream",
+          "description": "flood prints 1,500 status lines on standard error and one of them holds the flag. Get its standard error into grep and pull out the line containing CYBER.",
+          "type": "exercise",
+          "isLocked": false,
+          "isCompleted": false,
+          "xpReward": 60
+        }
+      ]
+    },
+    {
+      "id": "7",
+      "number": 7,
+      "title": "Operator: pipelines and variables",
+      "description": "Multi-stage pipelines, intercepting them with tee, exported versus local variables, read, and the final Operator checkpoint.",
+      "summary": "Build multi-stage pipelines, debug them with tee, control which variables programs can see, and finish with the Operator checkpoint.",
+      "skills": [
+        "Chain three programs with two pipes",
+        "Intercept a pipeline with tee",
+        "Tell local variables from exported ones",
+        "Read values into variables with read NAME < FILE"
+      ],
+      "isLocked": true,
+      "isPremium": true,
+      "exercises": [
+        {
+          "id": "op-pipe-chain",
+          "title": "Two pipes, three programs",
+          "description": "codes prints 20 launch codes, but only into a pipe, never to your screen. verify wants exactly the first 7. Connect codes to verify with head in between.",
+          "type": "exercise",
+          "isLocked": false,
+          "isCompleted": false,
+          "xpReward": 50
+        },
+        {
+          "id": "op-tee-intercept",
+          "title": "Intercept a pipe with tee",
+          "description": "emitter | receiver fails, and emitter only explains why into the pipe. Put tee between them to save what emitter sends, read that copy, then run the pipeline again correctly.",
+          "type": "exercise",
+          "isLocked": false,
+          "isCompleted": false,
+          "xpReward": 60
+        },
+        {
+          "id": "op-export-scope",
+          "title": "Local or exported?",
+          "description": "Run clearance with OPERATOR set to relay and exported, and CALLSIGN set to night but not exported.",
+          "type": "exercise",
+          "isLocked": false,
+          "isCompleted": false,
+          "xpReward": 60
+        },
+        {
+          "id": "op-read-variable",
+          "title": "Read straight into a variable",
+          "description": "/opt/relay/rotating.key changes after every command you run. Load the current key into the KEY variable in a single command.",
+          "type": "exercise",
+          "isLocked": false,
+          "isCompleted": false,
+          "xpReward": 60
+        },
+        {
+          "id": "op-final-uplink",
+          "title": "Operator checkpoint: the hidden uplink",
+          "description": "A hidden uplink program sits somewhere under /var/spool. Run it from /tmp on the ACTIVE channel listed in /opt/relay/channels.txt. It only talks into a pipe, and its payload comes out reversed.",
+          "type": "exercise",
+          "isLocked": false,
+          "isCompleted": false,
+          "xpReward": 100
+        }
+      ]
+    }
+  ],
+  "badges": [],
+  "cheatSheets": []
+}

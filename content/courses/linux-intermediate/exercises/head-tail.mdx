@@ -1,0 +1,56 @@
+---
+title: "Select the last dispatch"
+description: "dispatches.txt is a running log. The newest dispatch is always added at the bottom. Don't trust the header."
+type: exercise
+xpReward: 40
+---
+
+## Learn
+
+### Just the start, just the end
+
+Often you don't need a whole file. `head` prints the first lines and `tail` prints the last lines. Both show 10 lines unless you say otherwise.
+
+```sh
+head events.log   # the first 10 lines
+```
+
+### Choosing how many: -n
+
+`-n NUMBER` sets how many lines you get. `tail -n 1` gives only the very last line, `head -n 3` the first three.
+
+```sh
+head -n 3 events.log
+tail -n 2 events.log
+tail -n 1 events.log
+```
+
+### Why tail matters for logs
+
+Programs add new log entries at the bottom, so the newest events are always at the end of a log. `tail` is how you see what just happened. The top of a file, on the other hand, often holds headers, column names or sample lines, which is what `head` is good for: a quick look at a file's format before you process it.
+
+On a full Linux system, `tail -f` keeps the file open and prints new lines as they're written, which is how admins watch a log live.
+
+## Command cheat sheet
+
+- `head FILE`: First 10 lines.
+- `head -n N FILE`: First N lines.
+- `tail FILE`: Last 10 lines.
+- `tail -n N FILE`: Last N lines. `tail -n 1` is the newest log entry.
+
+## Your mission
+
+dispatches.txt is a running log. The newest dispatch is always added at the bottom. Don't trust the header.
+
+1. Peek at the top with head to see what kind of file it is.
+2. Print only the newest (last) line.
+
+## Common mistake
+
+tail -n 1 selects one line, not one character.
+
+## Check your understanding
+
+Which command would you use to inspect a file header?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

@@ -1,0 +1,58 @@
+---
+title: "Search the manual"
+description: "The signal program has about 150 options. Its manual (man signal) says which one releases the flag. Find that option and run signal with it."
+type: exercise
+xpReward: 50
+---
+
+## Learn
+
+### Manual pages are text
+
+`man NAME` shows the manual page for NAME. On a full system it opens in a scrolling viewer; here it prints straight to the terminal. Either way it's just text, which means everything you know about pipes and grep applies.
+
+```sh
+man radio
+```
+
+### Search instead of scrolling
+
+Real manuals run to hundreds of lines. When you know roughly what you're after, pipe the manual into `grep` and let it find the line. Add `-i` if you're not sure about capitals.
+
+```sh
+man radio | grep noise
+man radio | grep -i antenna
+```
+
+### In a real manual viewer
+
+- Arrow keys and Page Up/Down scroll.
+- `/word` searches forward; `n` jumps to the next match and `N` to the previous one.
+- `q` quits.
+- Manuals live under `/usr/share/man`, but you ask for them by name (`man ls`), not by path.
+
+## Command cheat sheet
+
+- `man NAME`: Show the manual page for NAME.
+- `man NAME | grep WORD`: Find the lines of the manual that mention WORD.
+
+## Why it matters
+
+Real tools have hundreds of options. Searching the manual for a keyword is how experienced people find the one they need in seconds.
+
+## Your mission
+
+The signal program has about 150 options. Its manual (man signal) says which one releases the flag. Find that option and run signal with it.
+
+1. Search man signal for the word flag.
+2. Run signal with the option you found.
+
+## Common mistake
+
+Option names are random for each learner. Copy the exact option from your own manual, both dashes included.
+
+## Check your understanding
+
+How would you list every option in the manual that mentions the antenna?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

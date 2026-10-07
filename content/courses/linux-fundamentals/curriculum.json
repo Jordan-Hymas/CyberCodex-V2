@@ -3,18 +3,18 @@
     "courseId": "linux-fundamentals",
     "slug": "linux-fundamentals",
     "title": "Linux Fundamentals",
-    "description": "36 original flag missions: beginner, intermediate and advanced command-line practice in a personal Linux simulation.",
+    "description": "Start from zero. Read files, move around the filesystem, and capture your first flags in your own private Linux terminal.",
     "category": "Operating Systems",
     "difficulty": "Beginner",
     "icon": "/media/icons/linux.gif"
   },
   "progress": {
     "exercisesCompleted": 0,
-    "totalExercises": 36,
+    "totalExercises": 12,
     "projectsCompleted": 0,
     "totalProjects": 0,
     "xpEarned": 0,
-    "totalXp": 1500,
+    "totalXp": 300,
     "badgesEarned": 0,
     "totalBadges": 0
   },
@@ -24,6 +24,13 @@
       "number": 1,
       "title": "Beginner: first steps",
       "description": "Get comfortable typing commands. You will read files, ask the system who you are, and work out where you are standing in the filesystem.",
+      "summary": "Get comfortable typing commands. You will read files, ask the system who you are, and work out where you are standing in the filesystem.",
+      "skills": [
+        "Run a command and read its output",
+        "Read files with cat",
+        "Check your identity with whoami and id",
+        "Find your location with pwd and list files with ls (including hidden ones)"
+      ],
       "isLocked": false,
       "isPremium": false,
       "exercises": [
@@ -70,6 +77,13 @@
       "number": 2,
       "title": "Beginner: paths and discovery",
       "description": "Move around the filesystem with confidence. Paths are how every Linux tool finds things, so this chapter makes absolute and relative paths second nature.",
+      "summary": "Move around the filesystem with confidence. Paths are how every Linux tool finds things, so this chapter makes absolute and relative paths second nature.",
+      "skills": [
+        "Change directories with cd (and jump back with cd -)",
+        "Read files anywhere using absolute paths",
+        "Use the built-in manual with man and help",
+        "Navigate with relative paths like ../"
+      ],
       "isLocked": false,
       "isPremium": false,
       "exercises": [
@@ -116,6 +130,12 @@
       "number": 3,
       "title": "Beginner: files and checkpoint",
       "description": "Change things, not just read them. You will handle awkward filenames, copy and rename files, then prove it all in the beginner checkpoint.",
+      "summary": "Change things, not just read them. You will handle awkward filenames, copy and rename files, then prove it all in the beginner checkpoint.",
+      "skills": [
+        "Quote filenames that contain spaces",
+        "Copy files with cp and rename them with mv",
+        "Combine everything to solve a multi-step checkpoint"
+      ],
       "isLocked": false,
       "isPremium": false,
       "exercises": [
@@ -154,282 +174,6 @@
           "isLocked": false,
           "isCompleted": false,
           "xpReward": 25
-        }
-      ]
-    },
-    {
-      "id": "4",
-      "number": 4,
-      "title": "Intermediate: search and selection",
-      "description": "Real systems have thousands of files and huge logs. Learn to find the one line or file that matters.",
-      "isLocked": false,
-      "isPremium": true,
-      "exercises": [
-        {
-          "id": "search-log",
-          "title": "Search the relay log",
-          "description": "Find the line containing RECEIPT in /var/log/relay.log and extract its flag.",
-          "type": "exercise",
-          "isLocked": false,
-          "isCompleted": false,
-          "xpReward": 40
-        },
-        {
-          "id": "find-parcel",
-          "title": "Locate a filename",
-          "description": "Find parcel.txt below /opt/academy and read it.",
-          "type": "exercise",
-          "isLocked": false,
-          "isCompleted": false,
-          "xpReward": 40
-        },
-        {
-          "id": "glob-batches",
-          "title": "Inspect a batch with globbing",
-          "description": "Read all .txt files inside batches to locate the receipt.",
-          "type": "exercise",
-          "isLocked": false,
-          "isCompleted": false,
-          "xpReward": 40
-        },
-        {
-          "id": "head-tail",
-          "title": "Select the last dispatch",
-          "description": "Read only the last line of dispatches.txt.",
-          "type": "exercise",
-          "isLocked": false,
-          "isCompleted": false,
-          "xpReward": 40
-        }
-      ]
-    },
-    {
-      "id": "5",
-      "number": 5,
-      "title": "Intermediate: streams and reports",
-      "description": "Connect commands together. Pipes and redirection are what make the shell powerful: small tools chained into exactly the output you want.",
-      "isLocked": false,
-      "isPremium": true,
-      "exercises": [
-        {
-          "id": "pipe-filter",
-          "title": "Filter the signal",
-          "description": "Filter stream.log down to the DELIVER line using a pipeline, then copy the flag.",
-          "type": "exercise",
-          "isLocked": false,
-          "isCompleted": false,
-          "xpReward": 40
-        },
-        {
-          "id": "redirect-report",
-          "title": "Write a report",
-          "description": "Write exactly relay ready followed by a newline to status.txt.",
-          "type": "exercise",
-          "isLocked": false,
-          "isCompleted": false,
-          "xpReward": 40
-        },
-        {
-          "id": "append-log",
-          "title": "Append without erasing",
-          "description": "Append restored as a second line in status.log, keeping the first line.",
-          "type": "exercise",
-          "isLocked": false,
-          "isCompleted": false,
-          "xpReward": 40
-        },
-        {
-          "id": "unique-receipt",
-          "title": "Separate repeated messages",
-          "description": "Find the only nonduplicated line in messages.txt.",
-          "type": "exercise",
-          "isLocked": false,
-          "isCompleted": false,
-          "xpReward": 40
-        }
-      ]
-    },
-    {
-      "id": "6",
-      "number": 6,
-      "title": "Intermediate: data and permissions",
-      "description": "Pull data apart and deal with locked files. Security work constantly involves extracting fields, decoding data and fixing permissions.",
-      "isLocked": false,
-      "isPremium": true,
-      "exercises": [
-        {
-          "id": "cut-field",
-          "title": "Extract a manifest field",
-          "description": "Extract field 3 of manifest.txt, separated by colons.",
-          "type": "exercise",
-          "isLocked": false,
-          "isCompleted": false,
-          "xpReward": 40
-        },
-        {
-          "id": "decode-receipt",
-          "title": "Decode the shipment label",
-          "description": "Decode label.b64 to reveal the flag.",
-          "type": "exercise",
-          "isLocked": false,
-          "isCompleted": false,
-          "xpReward": 40
-        },
-        {
-          "id": "restore-permission",
-          "title": "Recover read permission",
-          "description": "Inspect sealed.txt, restore owner read permission, and read it.",
-          "type": "exercise",
-          "isLocked": false,
-          "isCompleted": false,
-          "xpReward": 40
-        },
-        {
-          "id": "intermediate-relay",
-          "title": "Intermediate checkpoint: process a manifest",
-          "description": "Find the READY record in /var/log/manifest, extract its colon-separated payload, and decode that payload.",
-          "type": "exercise",
-          "isLocked": false,
-          "isCompleted": false,
-          "xpReward": 40
-        }
-      ]
-    },
-    {
-      "id": "7",
-      "number": 7,
-      "title": "Advanced: composition and evidence",
-      "description": "Compose tools like a professional: feed files in as input, keep copies of evidence while you work, and spot what changed between versions.",
-      "isLocked": false,
-      "isPremium": true,
-      "exercises": [
-        {
-          "id": "input-redirection",
-          "title": "Read through standard input",
-          "description": "Decode the receipt using base64 with input redirection.",
-          "type": "exercise",
-          "isLocked": false,
-          "isCompleted": false,
-          "xpReward": 60
-        },
-        {
-          "id": "tee-evidence",
-          "title": "Keep a copy of the evidence",
-          "description": "Filter the OK line from source.log and save exactly that line to evidence.txt.",
-          "type": "exercise",
-          "isLocked": false,
-          "isCompleted": false,
-          "xpReward": 60
-        },
-        {
-          "id": "compare-dispatches",
-          "title": "Spot a changed line",
-          "description": "Compare before.txt and after.txt and recover the newly added flag.",
-          "type": "exercise",
-          "isLocked": false,
-          "isCompleted": false,
-          "xpReward": 60
-        },
-        {
-          "id": "reverse-dispatch",
-          "title": "Undo a reversed transmission",
-          "description": "Reverse the characters of reversed.txt to recover the flag.",
-          "type": "exercise",
-          "isLocked": false,
-          "isCompleted": false,
-          "xpReward": 60
-        }
-      ]
-    },
-    {
-      "id": "8",
-      "number": 8,
-      "title": "Advanced: variables and recovery",
-      "description": "Make the shell remember things and recover from problems. Variables, directory permissions and conditional commands appear in every real script.",
-      "isLocked": false,
-      "isPremium": true,
-      "exercises": [
-        {
-          "id": "environment-route",
-          "title": "Store the route",
-          "description": "Set DEST to /opt/academy/signal, then use \"$DEST/receipt\" to read the flag.",
-          "type": "exercise",
-          "isLocked": false,
-          "isCompleted": false,
-          "xpReward": 60
-        },
-        {
-          "id": "directory-permission",
-          "title": "Traverse a locked directory",
-          "description": "Restore owner traversal on vault, then read vault/receipt.",
-          "type": "exercise",
-          "isLocked": false,
-          "isCompleted": false,
-          "xpReward": 60
-        },
-        {
-          "id": "conditional-recovery",
-          "title": "Recover after a failed check",
-          "description": "Use test and || to create restored.txt containing recovered when missing.txt does not exist.",
-          "type": "exercise",
-          "isLocked": false,
-          "isCompleted": false,
-          "xpReward": 60
-        },
-        {
-          "id": "count-records",
-          "title": "Count accepted records",
-          "description": "Count lines containing ACCEPT in traffic.txt and write the count to count.txt.",
-          "type": "exercise",
-          "isLocked": false,
-          "isCompleted": false,
-          "xpReward": 60
-        }
-      ]
-    },
-    {
-      "id": "9",
-      "number": 9,
-      "title": "Advanced: automation checkpoints",
-      "description": "Put it all together. These checkpoints chain several skills into one task, the way real investigations and automation work.",
-      "isLocked": false,
-      "isPremium": true,
-      "exercises": [
-        {
-          "id": "normalize-message",
-          "title": "Normalize a status stream",
-          "description": "Translate status.txt to lowercase and save it as normalized.txt.",
-          "type": "exercise",
-          "isLocked": false,
-          "isCompleted": false,
-          "xpReward": 60
-        },
-        {
-          "id": "numeric-order",
-          "title": "Order numeric priorities",
-          "description": "Sort priorities.txt numerically and save the smallest value to first.txt.",
-          "type": "exercise",
-          "isLocked": false,
-          "isCompleted": false,
-          "xpReward": 60
-        },
-        {
-          "id": "clean-workspace",
-          "title": "Clean the staging folder",
-          "description": "Remove the two temporary files in staging, then remove the empty staging directory. Preserve keep.txt.",
-          "type": "exercise",
-          "isLocked": false,
-          "isCompleted": false,
-          "xpReward": 60
-        },
-        {
-          "id": "advanced-relay",
-          "title": "Advanced checkpoint: restore the relay",
-          "description": "Locate dispatch.dat under /opt/academy, select the RELEASE record, decode its second colon-delimited field, and save the decoded flag in /home/user/final.txt. Submit that flag.",
-          "type": "exercise",
-          "isLocked": false,
-          "isCompleted": false,
-          "xpReward": 60
         }
       ]
     }

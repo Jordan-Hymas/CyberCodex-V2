@@ -1,0 +1,62 @@
+---
+title: "Capture standard output"
+description: "Run transmit with its standard output redirected to capture.log, then read capture.log."
+type: exercise
+xpReward: 50
+---
+
+## Learn
+
+### Two ways out: stdout and stderr
+
+A program has two separate output channels. Standard output (stdout) carries its results. Standard error (stderr) carries messages for the human: progress, warnings, errors. In a terminal both appear on your screen, so they look the same. They aren't.
+
+```sh
+netscan   # one line came out of each stream
+```
+
+### &gt; only captures stdout
+
+`&gt;` redirects standard output into a file. Standard error keeps going to your screen. That's by design: the results go into the file, while the program can still tell you how it's doing.
+
+```sh
+netscan > results.txt   # only the status message is left on screen
+cat results.txt   # the result went into the file
+```
+
+### Under the hood: file descriptors
+
+Each stream has a number, called a file descriptor: 0 is standard input, 1 is standard output, 2 is standard error. `&gt;` is shorthand for `1&gt;`: redirect descriptor 1.
+
+## Command cheat sheet
+
+- `COMMAND > FILE`: Save standard output in FILE. Errors still show on screen.
+- `COMMAND 1> FILE`: The same thing, written out in full.
+
+## New words
+
+- **Standard output (stdout)**: stream 1: a program's results.
+- **Standard error (stderr)**: stream 2: a program's messages and errors.
+- **File descriptor**: the number of a stream: 0 input, 1 output, 2 error.
+
+## Why it matters
+
+Saving tool output is how you keep evidence and how you hand results to the next tool. Knowing which stream is which explains why errors still splash across your screen.
+
+## Your mission
+
+Run transmit with its standard output redirected to capture.log, then read capture.log.
+
+1. Run transmit once with no redirection and read what it asks for.
+2. Run it again with standard output redirected to capture.log.
+3. Read capture.log.
+
+## Common mistake
+
+Redirecting to any other filename is not enough: the ground station only reads a file called capture.log.
+
+## Check your understanding
+
+Where would transmit's messages go if you ran transmit &gt; capture.log 2&gt; /dev/null?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

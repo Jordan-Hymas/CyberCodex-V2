@@ -1,0 +1,58 @@
+---
+title: "Append, don't overwrite"
+description: "assemble writes the first half of the flag straight into /home/user/assembled.txt, then prints the second half. Redirect its output into that same file so the two halves join up."
+type: exercise
+xpReward: 50
+---
+
+## Learn
+
+### &gt; truncates before the command runs
+
+Here's a detail that catches people out: the shell empties the target file for `&gt;` before the command even starts. Whatever was in the file is gone the moment you press Enter, even if the command then fails or prints nothing.
+
+```sh
+cat audit.log
+ls /nope > audit.log   # the command failed...
+cat audit.log   # ...but the file was already emptied
+```
+
+### &gt;&gt; appends
+
+`&gt;&gt;` opens the file for appending: existing content stays, and new output goes after it. If the file doesn't exist yet, `&gt;&gt;` creates it.
+
+```sh
+echo "10:00 check one" >> audit.log
+echo "10:05 check two" >> audit.log
+cat audit.log
+```
+
+### When a program and the shell both write
+
+This mission's program writes part of its result straight into the file itself and prints the rest. With `&gt;&gt;` both parts end up together. With `&gt;` the shell's write lands on top of the program's. Picking the right operator is the whole mission.
+
+## Command cheat sheet
+
+- `COMMAND >> FILE`: Append output to FILE.
+- `COMMAND > FILE`: Empty FILE first, then write the output.
+
+## Why it matters
+
+One wrong character between &gt; and &gt;&gt; is the difference between adding a line to an audit log and wiping it.
+
+## Your mission
+
+assemble writes the first half of the flag straight into /home/user/assembled.txt, then prints the second half. Redirect its output into that same file so the two halves join up.
+
+1. Run assemble with its output appended to /home/user/assembled.txt.
+2. Read the file.
+
+## Common mistake
+
+With a single &gt;, the second half lands on top of the first and you are left with half a flag.
+
+## Check your understanding
+
+You used &gt; by mistake on an important log. What did you lose, and at what moment?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

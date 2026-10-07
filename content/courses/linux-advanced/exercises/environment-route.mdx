@@ -1,0 +1,77 @@
+---
+title: "Store the route"
+description: "Set DEST to /opt/academy/signal, then read the receipt through \"$DEST/receipt\". Careful: a similarly named folder exists."
+type: exercise
+xpReward: 60
+---
+
+## Learn
+
+### Variables store values
+
+A variable is a name that holds a value. Set one with `NAME=value`, with no spaces around the `=`. Use it by writing `$NAME`: before running your command, the shell replaces `$NAME` with its value. That replacement is called expansion.
+
+```sh
+CITY=Lisbon
+echo I am in $CITY
+```
+
+### Paths in variables
+
+Variables save typing and mistakes: put a long path in one place and reuse it. Wrap the expansion in double quotes, like `"$DIR/file"`, so it still works if the value contains spaces.
+
+```sh
+DIR=/srv/reports
+ls "$DIR"
+cat "$DIR/q3.txt"
+```
+
+### `export` and the environment
+
+`export NAME=value` sets a variable and also exports it, which makes it part of the environment that programs you start receive. `env` lists the exported ones. Some, like `HOME` and `USER`, are set for you. The difference between exported and plain variables gets its own mission in the Operator tier.
+
+```sh
+export DEST=/srv/reports
+env   # DEST is listed; CITY and DIR are not exported
+```
+
+### Quotes and variables
+
+- Double quotes allow expansion: `"$DEST"` becomes the value.
+- Single quotes are literal: `'$DEST'` stays exactly `$DEST`.
+- A variable that was never set expands to nothing, so a typo in the name silently gives an empty value.
+- In this lab, set a variable in one command and use it in the next: everything on one line is expanded before any of it runs.
+
+```sh
+echo '$DEST' "$DEST"
+echo "[$DSET]"   # typo in the name: empty
+```
+
+## Command cheat sheet
+
+- `NAME=value`: Set a variable (no spaces around =).
+- `export NAME=value`: Set and export a variable.
+- `echo "$NAME"`: Print a variable's value.
+- `env`: List exported variables.
+
+## New words
+
+- **Variable**: a name that stores a value, used as `$NAME`.
+- **Environment**: the exported variables every program you start receives.
+
+## Your mission
+
+Set DEST to /opt/academy/signal, then read the receipt through "$DEST/receipt". Careful: a similarly named folder exists.
+
+1. Set the DEST variable to exactly /opt/academy/signal.
+2. Read the receipt using $DEST.
+
+## Common mistake
+
+Single quotes around $PLACE print its name literally.
+
+## Check your understanding
+
+Why are quotes useful around expanded paths that may contain spaces?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

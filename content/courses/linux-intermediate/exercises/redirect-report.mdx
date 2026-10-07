@@ -1,0 +1,67 @@
+---
+title: "Write a report"
+description: "status.txt still says the relay is offline. Replace its contents with exactly: relay ready"
+type: exercise
+xpReward: 40
+---
+
+## Learn
+
+### Saving output with &gt;
+
+Normally a command's output goes to your screen. `&gt;` sends it into a file instead: `echo hello &gt; greeting.txt` writes `hello` into `greeting.txt` and prints nothing.
+
+If the file doesn't exist, `&gt;` creates it. If it does exist, `&gt;` replaces everything that was in it. There's no warning and no undo.
+
+```sh
+echo hello > greeting.txt   # nothing printed: it went into the file
+cat greeting.txt
+```
+
+### Replacing a file's contents
+
+```sh
+cat status.txt
+echo "all systems go" > status.txt
+cat status.txt   # the old line is gone
+```
+
+### Any command's output
+
+`&gt;` works with every command, not just `echo`. Save a search result, a listing, or the end of a pipeline, then read or share the file later.
+
+```sh
+ls > listing.txt
+cat listing.txt
+```
+
+### Exact contents
+
+Some missions check that a file contains exactly the right text. `echo` adds a newline at the end, which is normal and expected. Watch spelling, capitals and extra spaces, and quote text that contains spaces.
+
+## Command cheat sheet
+
+- `COMMAND > FILE`: Write the output into FILE, replacing what was there.
+- `echo "TEXT" > FILE`: Make FILE contain exactly TEXT.
+
+## New words
+
+- **Redirection**: sending a command's output somewhere other than the screen, such as a file.
+
+## Your mission
+
+status.txt still says the relay is offline. Replace its contents with exactly: relay ready
+
+1. Check the current contents with cat status.txt.
+2. Overwrite it with the new status using echo and &gt;.
+3. Read reward.txt.
+
+## Common mistake
+
+Avoid cat sample.txt &gt; sample.txt. Use a separate temporary destination.
+
+## Check your understanding
+
+Why can &gt; destroy data even when the command itself is only reading?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

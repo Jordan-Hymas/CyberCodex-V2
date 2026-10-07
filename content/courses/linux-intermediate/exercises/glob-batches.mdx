@@ -1,0 +1,69 @@
+---
+title: "Inspect a batch with globbing"
+description: "The batches folder mixes .txt batches with log files and an archive. The receipt is in one of the .txt batches directly inside batches."
+type: exercise
+xpReward: 40
+---
+
+## Learn
+
+### Wildcards
+
+A glob is a pattern with wildcard characters that the shell turns into a list of matching filenames. Two wildcards cover most needs:
+
+- `*` matches any run of characters, including none. `*.log` is every name ending in `.log`.
+- `?` matches exactly one character. `???.log` is every `.log` file with a three-letter name.
+
+### The shell expands it first
+
+This is the key idea: the shell replaces the pattern with the matching names before the command runs. `cat logs/*.log` becomes `cat logs/mon.log logs/tue.log`, and `cat` never even sees the `*`. That's why globs work with any command. `echo` makes it visible, because it just prints what it receives.
+
+```sh
+echo logs/*.log   # what the shell turned the pattern into
+cat logs/*.log
+ls logs/tue.*   # both tue files, any extension
+```
+
+### What * does not reach
+
+- `*` never crosses a `/`, so `logs/*.log` doesn't include `logs/old/sun.log`. Patterns match one directory level at a time.
+- `*` doesn't match hidden names (starting with `.`) unless the pattern itself starts with a dot.
+- If nothing matches, the shell leaves the pattern as it is, and the command complains about a file literally named with a `*`.
+
+```sh
+echo logs/*/*.log   # one level deeper, written out
+cat logs/*.csv   # no match, so cat gets the pattern itself
+```
+
+### Look before you act
+
+Globs are powerful because one short pattern can name many files. That's also the danger. Before using a glob with a command that changes or deletes files, run `ls` or `echo` with the same pattern to see exactly what it expands to.
+
+## Command cheat sheet
+
+- `cat DIR/*.txt`: Read every `.txt` file directly inside DIR.
+- `ls *.log`: List every `.log` file here.
+- `echo PATTERN`: Show what a pattern expands to, without doing anything.
+- `file?.txt`: `?` matches exactly one character.
+
+## New words
+
+- **Glob**: a filename pattern using `*` or `?`.
+- **Expansion**: the shell replacing a pattern (or variable) with its value before running the command.
+
+## Your mission
+
+The batches folder mixes .txt batches with log files and an archive. The receipt is in one of the .txt batches directly inside batches.
+
+1. Read every .txt file directly inside batches with one glob.
+2. Ignore logs and anything in subfolders.
+
+## Common mistake
+
+Quoting the wildcard prevents shell expansion. Dotfiles require an explicit dot in the pattern.
+
+## Check your understanding
+
+What different sets of names do *.txt and ?.txt select?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

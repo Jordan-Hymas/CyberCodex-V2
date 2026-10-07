@@ -1,4 +1,4 @@
-import { missions as linuxMissions } from "@/lib/linux/challenges";
+import { missionsForCourse, isLinuxCourse } from "@/lib/linux/challenges";
 import { hasLinuxPro } from "@/lib/linux/access";
 import { isDevAdmin } from "@/lib/auth/dev-admin";
 import { notFound } from "next/navigation";
@@ -56,6 +56,7 @@ export default async function CoursePage({ params }: CoursePageProps) {
   // Fetch course metadata to get category for banner
   const courseMetadata = await getCourseBySlug(slug);
   const category = courseMetadata ? courseCategories.find((c) => c.id === courseMetadata.category) : null;
+  const bannerSrc = courseMetadata?.banner ?? category?.iconGif ?? null;
 
   // Fetch authenticated user session
   const session = await auth();
@@ -174,29 +175,34 @@ export default async function CoursePage({ params }: CoursePageProps) {
 
   const difficulty = courseMetadata ? difficultyLevels[courseMetadata.difficulty] : null;
   const writtenExercises = new Set(getAllExerciseIds(slug));
+  const isLinux = isLinuxCourse(slug);
+  const linuxCourseMissions = isLinux ? missionsForCourse(slug) : [];
   let linuxCompleted: string[] = [];
   const learner = session?.user?.id ? await prisma.user.findUnique({ where: { id: session.user.id } }) : null;
   const paid = !!learner && hasLinuxPro(learner);
   // TEMPORARY: dev admin with pro toggled on skips the mission-order lock too
   const skipOrder = paid && isDevAdmin(learner?.email);
-  if (slug === "linux-fundamentals" && session?.user?.id) {
-    linuxCompleted = (await prisma.linuxLabSession.findMany({ where: { userId: session.user.id, solvedAt: { not: null } }, select: { exerciseId: true } })).map(s => s.exerciseId);
+  if (isLinux && session?.user?.id) {
+    const solved = new Set((await prisma.linuxLabSession.findMany({ where: { userId: session.user.id, solvedAt: { not: null } }, select: { exerciseId: true } })).map(s => s.exerciseId));
+    // Only this course's solved missions count toward its progress.
+    linuxCompleted = linuxCourseMissions.filter(m => solved.has(m.id)).map(m => m.id);
     completedExercises = linuxCompleted;
     userProgress = {
       ...curriculum.progress,
       exercisesCompleted: linuxCompleted.length,
-      xpEarned: linuxMissions.filter(m => linuxCompleted.includes(m.id)).reduce((total, m) => total + m.xp, 0),
+      xpEarned: linuxCourseMissions.filter(m => solved.has(m.id)).reduce((total, m) => total + m.xp, 0),
     };
   }
   const chapters = curriculum.chapters.map((chapter) => ({
     ...chapter,
     isLocked: chapter.isPremium ? !paid : chapter.isLocked,
     exercises: chapter.exercises.map((ex) => {
-      const index = linuxMissions.findIndex(m => m.id === ex.id);
+      // Sequential unlock within the course: a mission needs the previous one in THIS course solved.
+      const index = linuxCourseMissions.findIndex(m => m.id === ex.id);
       return { ...ex, hasContent: writtenExercises.has(ex.id),
-        ...(slug === "linux-fundamentals" ? {
+        ...(isLinux ? {
           isCompleted: linuxCompleted.includes(ex.id),
-          isLocked: (chapter.isPremium && !paid) || (!skipOrder && index > 0 && !linuxCompleted.includes(linuxMissions[index - 1].id)),
+          isLocked: (chapter.isPremium && !paid) || (!skipOrder && index > 0 && !linuxCompleted.includes(linuxCourseMissions[index - 1].id)),
         } : chapter.isPremium && paid ? { isLocked: false } : {}),
       };
     }),
@@ -206,9 +212,9 @@ export default async function CoursePage({ params }: CoursePageProps) {
   return (
     <main className="min-h-screen pb-24">
       <header className="relative mb-12 overflow-hidden border-b-[3px] border-cyber-ink">
-        {category?.iconGif && (
+        {bannerSrc && (
           <div className="absolute inset-0" aria-hidden="true">
-            <Image src={category.iconGif} alt="" fill priority unoptimized sizes="100vw" className="object-cover pixelated" />
+            <Image src={bannerSrc} alt="" fill priority unoptimized sizes="100vw" className="object-cover pixelated" />
             <div className="absolute inset-0 bg-gradient-to-r from-cyber-dark via-cyber-dark/85 to-cyber-dark/30" />
           </div>
         )}

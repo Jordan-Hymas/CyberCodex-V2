@@ -1,0 +1,67 @@
+---
+title: "Keep a copy of the evidence"
+description: "Save exactly the line from source.log that starts with OK into evidence.txt, and watch it print as you do. Lines that merely contain OK don't count."
+type: exercise
+xpReward: 60
+---
+
+## Learn
+
+### tee: save and show at the same time
+
+`&gt;` saves output but hides it; plain output shows it but doesn't save it. `tee FILE` does both: it writes everything it receives into FILE and also passes it along to the screen (or to the next command in a pipeline). The name comes from a T-shaped pipe fitting that splits one flow into two.
+
+```sh
+grep port scan.log | tee ports.txt
+cat ports.txt   # the same lines were saved
+```
+
+### Anchors: ^ and $
+
+Plain `grep OK` matches `OK` anywhere in a line, including inside `NOT OK`. Anchors pin the match to a position:
+
+- `^OK` matches only lines that start with OK.
+- `443$` matches only lines that end with 443.
+
+```sh
+grep OK scan.log   # includes NOT OK
+grep ^OK scan.log   # only lines beginning with OK
+grep 443$ scan.log
+```
+
+### Keeping evidence
+
+When you investigate, save exact copies of what you found, so you can show it later and so you don't have to rerun everything. `tee` lets you keep the evidence without breaking your flow. `tee -a` appends instead of replacing, just like `&gt;&gt;`.
+
+```sh
+grep ^WARN scan.log | tee -a ports.txt
+cat ports.txt
+```
+
+## Command cheat sheet
+
+- `... | tee FILE`: Save the output into FILE and still show it.
+- `... | tee -a FILE`: Same, but append to FILE.
+- `grep ^TEXT FILE`: Lines that start with TEXT.
+- `grep TEXT$ FILE`: Lines that end with TEXT.
+
+## New words
+
+- **Anchor**: a pattern symbol that pins a match to the start (`^`) or end (`$`) of a line.
+
+## Your mission
+
+Save exactly the line from source.log that starts with OK into evidence.txt, and watch it print as you do. Lines that merely contain OK don't count.
+
+1. Find the line that starts with OK (not lines like NOT OK).
+2. Save exactly that one line to evidence.txt with tee.
+
+## Common mistake
+
+tee does not filter the input. Perform selection before tee if you only want selected records saved.
+
+## Check your understanding
+
+Where would you place tee to inspect the output of a middle pipeline stage?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

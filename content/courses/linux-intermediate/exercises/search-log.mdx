@@ -1,0 +1,81 @@
+---
+title: "Search the relay log"
+description: "Somewhere in /var/log/relay.log is the receipt that was ACCEPTED. Other receipts were voided. The log was rotated, so relay.log.1 holds last week's entries."
+type: exercise
+xpReward: 40
+---
+
+## Learn
+
+### Logs: the system's diary
+
+Linux records what happens in log files, mostly under `/var/log`. Each line is usually one event: a login, an error, a service starting. A busy server writes thousands of lines an hour, far too many to read with `cat`. You need a way to pull out just the lines that matter.
+
+### grep: show only matching lines
+
+`grep PATTERN FILE` reads FILE and prints every line that contains PATTERN. Lines that don't match are skipped. The original file is never changed.
+
+Matching is case sensitive: `FAILED` and `failed` are different. Add `-i` to ignore case.
+
+```sh
+grep FAILED /var/log/auth.log
+grep -i failed /var/log/auth.log   # -i also catches the lowercase line
+```
+
+### Searching for a phrase
+
+The shell splits on spaces, so to search for a phrase, put it in quotes: `grep "disk full" FILE`. Without quotes, grep would search for `disk` in a file called `full`.
+
+Search for the most specific text you know. `login` matches many lines; `login FAILED` matches only failures.
+
+```sh
+grep "disk full" /var/log/auth.log
+grep login /var/log/auth.log   # too broad: every login line
+```
+
+### Useful options
+
+- `-i`: ignore upper and lower case.
+- `-v`: invert: show lines that do NOT match.
+- `-n`: put the line number in front of each match.
+- Search several files at once by listing them all after the pattern.
+
+```sh
+grep -n backup /var/log/auth.log
+grep FAILED /var/log/auth.log /var/log/auth.log.1   # the older, rotated log too
+```
+
+### Rotated logs
+
+Logs would grow forever, so systems rotate them: the current log keeps its name and older entries move to files like `auth.log.1`, `auth.log.2`. If an event isn't in the current log, check the rotated ones, and pay attention to which file a match came from.
+
+## Command cheat sheet
+
+- `grep TEXT FILE`: Print lines in FILE that contain TEXT (case sensitive).
+- `grep "TWO WORDS" FILE`: Search for a phrase.
+- `grep -i TEXT FILE`: Ignore case.
+- `grep -n TEXT FILE`: Show line numbers.
+- `grep TEXT FILE1 FILE2`: Search several files.
+
+## New words
+
+- **Log**: a file where programs record events, one per line.
+- **Pattern**: the text grep searches for.
+- **Log rotation**: moving old log entries into numbered files like `auth.log.1`.
+
+## Your mission
+
+Somewhere in /var/log/relay.log is the receipt that was ACCEPTED. Other receipts were voided. The log was rotated, so relay.log.1 holds last week's entries.
+
+1. Search the current log for RECEIPT and read every match.
+2. Narrow the search to the accepted receipt only.
+
+## Common mistake
+
+Case matters unless you select -i. The search pattern and filename are separate arguments.
+
+## Check your understanding
+
+How would you display every line except those containing DEBUG?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

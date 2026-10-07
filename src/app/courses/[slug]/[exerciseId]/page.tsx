@@ -1,4 +1,5 @@
 import { LinuxLesson } from "@/components/lab/LinuxLesson";
+import { isLinuxCourse } from "@/lib/linux/challenges";
 import { LinuxOrientation } from "@/components/lab/LinuxOrientation";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
@@ -13,7 +14,7 @@ import { ExerciseHeader } from "@/components/course/ExerciseHeader";
 import type { Metadata } from "next";
 
 // Courses that use the terminal emulator
-const TERMINAL_ENABLED_COURSES = ["linux-fundamentals", "networking-fundamentals"];
+const TERMINAL_ENABLED_COURSES = ["linux-fundamentals", "linux-intermediate", "linux-advanced", "networking-fundamentals"];
 
 interface ExercisePageProps {
   params: Promise<{
@@ -69,7 +70,7 @@ export default async function ExercisePage({ params }: ExercisePageProps) {
     notFound();
   }
 
-  if (slug === "linux-fundamentals") return <LinuxLesson exerciseId={exerciseId} />;
+  if (isLinuxCourse(slug)) return <LinuxLesson exerciseId={exerciseId} />;
 
   const hasTerminal = TERMINAL_ENABLED_COURSES.includes(slug);
   const isInteractivePython = exercise.frontmatter.type === "interactive-python";

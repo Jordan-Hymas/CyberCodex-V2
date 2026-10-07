@@ -1,0 +1,62 @@
+---
+title: "Operator checkpoint: the hidden uplink"
+description: "A hidden uplink program sits somewhere under /var/spool. Run it from /tmp on the ACTIVE channel listed in /opt/relay/channels.txt. It only talks into a pipe, and its payload comes out reversed."
+type: exercise
+xpReward: 100
+---
+
+## Learn
+
+### Operator checkpoint
+
+The final mission chains every Operator technique: find a hidden program, start it from the directory it demands with the right option, catch its output in a pipe, filter it, and undo an encoding. Here's the same shape of problem with a practice program.
+
+### Work in checkable steps
+
+```sh
+find /var/spool -name ".collector*"   # 1. find the hidden program
+cat /opt/jobs/queues.txt   # 2. read the configuration to pick the right value
+cd /tmp   # 3. stand where the program wants to run
+/var/spool/jobs/.collector-55 --queue cobalt   # 4. run it with the option you chose
+```
+
+### Reversed text
+
+The real mission's payload comes out reversed. A reversed flag ends with `&#123;REBYC`, so `grep REBYC` finds the line and `rev` turns it back around. Put both after the program in one pipeline.
+
+```sh
+echo "}eulav{REBYC" | rev
+```
+
+### Skills used
+
+- Finding hidden files (`find`, `ls -a`).
+- Running programs by path from a chosen working directory.
+- Options with values, chosen from a config file. The RETIRED entry is a decoy.
+- Pipelines with `grep` and `rev`.
+
+## Command cheat sheet
+
+- `find → cat → cd → /path/program --opt VALUE | grep | rev`: The checkpoint, one step at a time.
+
+## Why it matters
+
+Real investigations chain small, checkable steps. Each one here is a technique from this tier, and the decoy rewards checking each step's result.
+
+## Your mission
+
+A hidden uplink program sits somewhere under /var/spool. Run it from /tmp on the ACTIVE channel listed in /opt/relay/channels.txt. It only talks into a pipe, and its payload comes out reversed.
+
+1. Find the hidden uplink under /var/spool.
+2. Read the channel list.
+3. From /tmp, run the uplink on the ACTIVE channel through grep and rev.
+
+## Common mistake
+
+The RETIRED channel still answers, with a flag that looks real. Only the ACTIVE channel carries yours.
+
+## Check your understanding
+
+How would you debug this pipeline if grep REBYC printed nothing?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

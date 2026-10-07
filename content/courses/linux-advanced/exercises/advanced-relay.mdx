@@ -1,0 +1,51 @@
+---
+title: "Advanced checkpoint: restore the relay"
+description: "Final checkpoint. Several dispatch.dat files exist under /opt/academy. Use the ACTIVE one: select its RELEASE record, decode field 2, and save the decoded flag to /home/user/final.txt."
+type: exercise
+xpReward: 60
+---
+
+## Learn
+
+### Final advanced checkpoint
+
+This mission strings together discovery (`find`), inspection (`cat`, `grep`), extraction (`cut`), decoding (`base64 -d`) and saving evidence (`tee`). More than one sequence of commands works; what matters is the result and that you can explain each step.
+
+### The investigation pattern
+
+Here's the same shape of problem on practice files: two feeds, and only the LIVE one matters.
+
+```sh
+find /srv/feeds -name feed.dat   # 1. find every candidate
+grep STATE /srv/feeds/east/feed.dat /srv/feeds/west/feed.dat   # 2. decide which one is relevant
+grep DATA /srv/feeds/west/feed.dat | cut -d : -f 2   # 3. extract from the right file only
+grep DATA /srv/feeds/west/feed.dat | cut -d : -f 2 | base64 -d | tee result.txt   # 4. decode and keep a copy
+```
+
+### Habits that carry you through
+
+- Find every candidate before trusting the first one.
+- Let the data tell you which file is relevant (a status line, a date, a name), not the order `find` printed them in.
+- Build pipelines one stage at a time and check the output after each one.
+- Save the final result where the task asks, and read it back to confirm.
+
+## Command cheat sheet
+
+- `find → grep → cut → base64 -d → tee`: Discover, select, extract, decode, keep evidence.
+
+## Your mission
+
+Final checkpoint. Several dispatch.dat files exist under /opt/academy. Use the ACTIVE one: select its RELEASE record, decode field 2, and save the decoded flag to /home/user/final.txt.
+
+1. Find every dispatch.dat under /opt/academy and work out which is ACTIVE.
+2. Decode the RELEASE payload from that file only, and save it to /home/user/final.txt.
+
+## Common mistake
+
+The final flag must also be saved at the requested path before the mission is complete.
+
+## Check your understanding
+
+How would you debug this workflow if you found the file but produced an empty final report?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

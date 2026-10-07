@@ -7,22 +7,54 @@ xpReward: 25
 
 ## Learn
 
-You don't have to memorize every command. man COMMAND opens a command's manual, and help lists every command this lab supports.
+### Nobody memorizes every command
 
-Real professionals look things up constantly. Read a manual's first line to see the basic syntax, then try one option at a time. This lab's manuals describe its supported subset; on a full Linux system, man pages are longer and cover more options.
+Linux has thousands of commands and each has many options. Experienced people look things up constantly; the skill is knowing where to look. Every Linux system ships with built-in documentation, and this lab has a compact version of it.
+
+### man: the manual
+
+`man COMMAND` shows the manual page for a command. On a full Linux system a manual page is long: it opens in a viewer where you scroll with the arrow keys, search with `/`, and quit with `q`. In this lab, `man` prints a short summary of the syntax and the options this lab supports.
+
+```sh
+man ls
+man cat
+```
+
+### How to read a syntax line
+
+Manuals describe commands with a small notation. Once you can read it, any manual makes sense:
+
+- Square brackets mean optional: `ls [-al] [path]` works with or without options and with or without a path.
+- Letters inside brackets are options you can pick: `[-al]` means you can use `-a`, `-l` or both.
+- Capital words are placeholders you replace: in `cat FILE`, you type a real filename instead of FILE.
+- Three dots mean you can repeat the item: `cat [file...]` takes as many files as you like.
+
+### help: the list of commands
+
+`help` lists every command this lab supports with a one-line description, plus the special symbols you can use. `help COMMAND` shows just one. On a full Linux system, `help` describes commands built into the shell, and many programs also explain themselves when you run them with `--help`.
+
+```sh
+help cat
+```
+
+### Try one option at a time
+
+When a manual mentions an option you haven't used, try it on something harmless and look at what changes. Reading the manual for `ls` is exactly how you'd discover the option this mission needs.
+
+## Command cheat sheet
+
+- `man COMMAND`: Show the manual for COMMAND.
+- `help`: List every command this lab supports.
+- `help COMMAND`: Show the summary for one command.
+
+## New words
+
+- **Manual page**: the built-in documentation for a command, shown by `man`.
+- **Placeholder**: a capitalized word in a syntax line, like FILE, that you replace with a real value.
 
 ## Why it matters
 
 Knowing how to find the answer is more valuable than memorizing it. Every tool you meet later will come with a manual.
-
-## Example
-
-```sh
-help        # list every supported command
-man cat     # read the manual for cat
-```
-
-Example filenames illustrate syntax; inspect your mission files before running them.
 
 ## Your mission
 

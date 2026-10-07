@@ -1,0 +1,58 @@
+---
+title: "Spot a changed line"
+description: "Compare before.txt and after.txt. One line was edited and one line was added at the end. The flag is on the added line, not the edited one."
+type: exercise
+xpReward: 60
+---
+
+## Learn
+
+### diff: what changed?
+
+`diff FIRST SECOND` compares two files line by line and prints only the differences. Identical lines are skipped. If nothing differs, it prints nothing at all.
+
+### Reading the output
+
+- A line starting with `&lt;` comes from the first file.
+- A line starting with `&gt;` comes from the second file.
+- A changed line shows up as a pair: the old version with `&lt;`, the new one with `&gt;`.
+- A line that was only added shows up as a lone `&gt;`. A removed line shows up as a lone `&lt;`.
+
+```sh
+diff v1.conf v2.conf
+```
+
+### Narrowing the result
+
+`diff` output is ordinary text, so you can pipe it like anything else, for example to keep only what the second file added.
+
+```sh
+diff v1.conf v2.conf | grep ">"   # lines from the second file only
+diff v1.conf v2.conf | tail -n 1
+```
+
+### Why it matters
+
+`diff` is how you spot tampering, configuration drift and the exact change between two versions. Real `diff` also prints position markers like `1c1` (line 1 changed) or `3a4` (added after line 3); this lab shows just the changed lines.
+
+## Command cheat sheet
+
+- `diff FIRST SECOND`: Show lines that differ. `&lt;` is from FIRST, `&gt;` from SECOND.
+- `diff A B | grep ">"`: Only lines that are in B.
+
+## Your mission
+
+Compare before.txt and after.txt. One line was edited and one line was added at the end. The flag is on the added line, not the edited one.
+
+1. Run diff and read every change.
+2. Pick the line that was added, not the one that was edited.
+
+## Common mistake
+
+Do not include the diff marker when copying a recovered value.
+
+## Check your understanding
+
+Why might diff first.txt second.txt && echo identical be useful?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

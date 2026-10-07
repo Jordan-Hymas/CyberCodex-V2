@@ -4,6 +4,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import Credentials from "next-auth/providers/credentials";
 import prisma from "@/lib/db/prisma";
 import authConfig from "./auth.config";
+import { verifiedOAuthEmail } from "./oauth";
 import { loginSchema } from "@/lib/validations/auth";
 import { verifyPassword } from "./password";
 import { devAdminLogin } from "./dev-admin";
@@ -71,7 +72,14 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     ...authConfig.providers,
   ],
   callbacks: {
-    async jwt({ token, user, trigger, session }) {
+    async jwt({ token, user, account, profile, trigger, session }) {
+      // Auth.js initializes OAuth emailVerified to null. Persist verified evidence
+      // only when it matches this local account, never overwrite a linked account's email.
+      const verifiedEmail = account && verifiedOAuthEmail(account.provider, profile);
+      if (user?.id && verifiedEmail && user.email?.toLowerCase() === verifiedEmail) {
+        const verified = await prisma.user.update({ where: { id: user.id }, data: { emailVerified: new Date() } });
+        user.emailVerified = verified.emailVerified;
+      }
       // Initial sign in - add custom fields to token
       if (user) {
         token.id = user.id;
@@ -122,8 +130,10 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       }
       return session;
     },
-    async signIn({ user, account, profile }) {
-      // Allow sign in
+    async signIn({ account, profile }) {
+      if (account?.provider === "google" || account?.provider === "github") {
+        return verifiedOAuthEmail(account.provider, profile) ? true : "/login?error=VerifiedEmailRequired";
+      }
       return true;
     },
   },

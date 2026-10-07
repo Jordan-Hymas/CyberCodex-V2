@@ -2,7 +2,7 @@ import { test, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { prisma } from '@/lib/db/prisma';
 import { labAction, LabError, pruneLabSessions, LAB_LIMITS } from '../src/lib/linux/service';
-import { missions } from '../src/lib/linux/challenges';
+import { missions, fillSecrets } from '../src/lib/linux/challenges';
 import { hasLinuxPro } from '../src/lib/linux/access';
 after(async () => prisma.$disconnect());
 const relax = async (userId: string, exerciseId: string) => prisma.linuxLabSession.update({ where: { userId_exerciseId: { userId, exerciseId } }, data: { updatedAt: new Date(0), nextAttemptAt: null } });
@@ -39,22 +39,31 @@ test('database-backed personal missions: isolation, persistence, resets, progres
  void changedAfterSave;
  await assert.rejects(labAction(a.id,first,{action:'command',version:wrong.version,command:'pwd'}), (e: unknown) => e instanceof LabError && e.status === 409);
  await assert.rejects(labAction(a.id,missions[2].id,{action:'open'}), (e: unknown) => e instanceof LabError && e.status===403);
- let priorFlag = '';
+ let priorFlag = '', upgraded=false;
  for (const m of missions) {
-   if(m.id === missions[12].id) {
+   // The first paid mission is gated until the account upgrades.
+   if((m as {paid?:boolean}).paid && !upgraded) {
      await assert.rejects(labAction(a.id,m.id,{action:'open'}),(e: unknown)=>e instanceof LabError && e.status===403);
      await prisma.user.update({where:{id:a.id},data:{subscriptionTier:'pro',subscriptionStatus:'active'}});
+     upgraded=true;
    }
    let state = await labAction(a.id,m.id,{action:'open'}); let transcript='';
    if(priorFlag) { await relax(a.id,m.id); state=await labAction(a.id,m.id,{action:'submit',version:state.version,flag:priorFlag}); assert.equal(state.completed,false); }
-   for(const command of m.solution) { await relax(a.id,m.id); const result=await labAction(a.id,m.id,{action:'command',version:state.version,command}); assert.equal(result.error,'',m.id+': '+command); transcript+=result.output; state=result; }
+   // Per-instance secrets live in the server-side state, as they would for a real learner
+   const secrets = JSON.parse((await prisma.linuxLabSession.findUniqueOrThrow({where:{userId_exerciseId:{userId:a.id,exerciseId:m.id}}})).state).secrets ?? {};
+   for(const template of m.solution) { const command=fillSecrets(template,secrets); await relax(a.id,m.id); const result=await labAction(a.id,m.id,{action:'command',version:state.version,command}); if(m.level!=='operator') assert.equal(result.error,'',m.id+': '+command); transcript+=result.output; state=result; }
    const flag=transcript.match(/CYBER\{[a-f0-9]+\}/)?.[0]; assert.ok(flag,m.id+' must expose its flag through commands');
    await relax(a.id,m.id); state=await labAction(a.id,m.id,{action:'submit',version:state.version,flag}); assert.equal(state.completed,true); assert.equal(state.awarded,m.xp);
    await relax(a.id,m.id); const repeat=await labAction(a.id,m.id,{action:'submit',version:state.version,flag}); assert.equal(repeat.awarded,0);
    priorFlag=flag;
  }
- const progress=await prisma.courseProgress.findUniqueOrThrow({where:{userId_courseId:{userId:a.id,courseId:'linux-fundamentals'}}});
- assert.equal(progress.exercisesCompleted,36); assert.equal(progress.isCompleted,true);
+ // Each Linux course records its own completion.
+ for(const course of ['linux-fundamentals','linux-intermediate','linux-advanced']){
+   const courseMissions=missions.filter(m=>m.course===course);
+   const progress=await prisma.courseProgress.findUniqueOrThrow({where:{userId_courseId:{userId:a.id,courseId:course}}});
+   assert.equal(progress.exercisesCompleted,courseMissions.length,course); assert.equal(progress.isCompleted,true,course);
+   assert.equal(progress.totalExercises,courseMissions.length,course);
+ }
  assert.equal((await prisma.user.findUniqueOrThrow({where:{id:a.id}})).totalXp,missions.reduce((sum,m)=>sum+m.xp,0));
  assert.equal((await prisma.user.findUniqueOrThrow({where:{id:b.id}})).totalXp,0);
  // Competing tabs cannot both commit a version or award twice.
@@ -76,7 +85,8 @@ test('database-backed personal missions: isolation, persistence, resets, progres
  const tipped = await labAction(decoyUser.id, relayId, { action: 'command', version: relay.version, command: stored.flag });
  assert.match(tipped.tip ?? '', /flag box/);
  await prisma.user.update({where:{id:a.id},data:{subscriptionStatus:'canceled',subscriptionEndsAt:new Date(0)}});
- await assert.rejects(labAction(a.id,missions[12].id,{action:'open'}),(e: unknown)=>e instanceof LabError && e.status===403);
+ const firstPaid=missions.find(m=>(m as {paid?:boolean}).paid)!.id;
+ await assert.rejects(labAction(a.id,firstPaid,{action:'open'}),(e: unknown)=>e instanceof LabError && e.status===403);
  await prisma.user.delete({where:{id:b.id}}); assert.equal(await prisma.linuxLabSession.count({where:{userId:b.id}}),0);
 });
 test('paid access respects cancellation dates and payment status',()=>{

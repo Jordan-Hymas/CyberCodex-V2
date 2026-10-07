@@ -95,3 +95,7 @@ public/               Static assets
 - Keep `.env.local` out of version control.
 - Keep local database files untracked (`prisma/*.db`).
 - Rotate any key immediately if accidentally exposed.
+
+## Managed database and social login
+
+See [Supabase and Google/GitHub setup](docs/launch/SUPABASE_SETUP.md) for the production PostgreSQL migration path, private database role, OAuth callbacks, and verification commands. Local SQLite remains the default.

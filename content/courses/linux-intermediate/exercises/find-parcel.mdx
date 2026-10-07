@@ -1,0 +1,64 @@
+---
+title: "Locate a filename"
+description: "A parcel addressed to you is somewhere in the depot under /opt/academy. More than one parcel.txt is in there."
+type: exercise
+xpReward: 40
+---
+
+## Learn
+
+### When you don't know where something is
+
+`ls` shows one directory at a time. If a file could be anywhere inside a big tree of folders, opening each one by hand is hopeless. `find` does the walking for you: it visits every directory below a starting point and prints the paths of whatever matches.
+
+### find PATH -name NAME
+
+Give `find` where to start, then a test. `-name invoice.pdf` matches files called exactly `invoice.pdf`. Every match is printed as a full path you can hand straight to `cat`.
+
+```sh
+find /srv/archive -name invoice.pdf
+```
+
+### Patterns and types
+
+`-name` accepts wildcards: `*` means any characters, so `"*.txt"` matches every name ending in `.txt`. Put the pattern in quotes so the shell passes it to `find` untouched instead of expanding it itself.
+
+`-type f` keeps only files and `-type d` only directories. Without any test, `find` lists everything under the starting point.
+
+```sh
+find /srv/archive -name "*.txt"
+find /srv/archive -type d   # only directories
+find /srv/archive/2025   # no test: everything below 2025
+```
+
+### Several matches
+
+Files with the same name can live in many places and mean very different things. When `find` returns more than one path, read each candidate (or its surroundings) before deciding which one you want.
+
+## Command cheat sheet
+
+- `find PATH -name NAME`: Every file or directory called NAME below PATH.
+- `find PATH -name "*.txt"`: Names matching a wildcard pattern (keep the quotes).
+- `find PATH -type f`: Only files (`-type d` for directories).
+- `find PATH`: Everything below PATH.
+
+## New words
+
+- **Recursive**: going into every subdirectory, and their subdirectories, all the way down.
+
+## Your mission
+
+A parcel addressed to you is somewhere in the depot under /opt/academy. More than one parcel.txt is in there.
+
+1. Use find to list every parcel.txt below /opt/academy.
+2. Read them and keep the one addressed to user.
+
+## Common mistake
+
+A filename match does not mean the file contains the desired record. Inspect it after discovery.
+
+## Check your understanding
+
+When would you use find first and grep second?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

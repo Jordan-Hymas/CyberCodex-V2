@@ -53,3 +53,6 @@ Thumbs.db
 # local sqlite database
 prisma/*.db
 prisma/*.db-journal
+
+# Environment backups can contain credentials
+.env*.bak

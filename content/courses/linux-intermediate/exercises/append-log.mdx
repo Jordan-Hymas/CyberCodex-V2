@@ -1,0 +1,58 @@
+---
+title: "Append without erasing"
+description: "status.log says offline. Add a second line, restored, without losing the first."
+type: exercise
+xpReward: 40
+---
+
+## Learn
+
+### &gt;&gt; adds to the end
+
+`&gt;&gt;` works like `&gt;`, except it appends: new output goes after whatever is already in the file, and nothing is erased. If the file doesn't exist yet, `&gt;&gt;` creates it.
+
+```sh
+echo "day 2: progress" >> journal.log
+echo "day 3: done" >> journal.log
+cat journal.log
+```
+
+### The difference in one example
+
+```sh
+echo "day 4: oops" > journal.log   # single > replaces the whole file
+cat journal.log   # days 1 to 3 are gone
+```
+
+### Which one to use
+
+- `&gt;` when you want the file to contain only this output: a fresh report, a new status.
+- `&gt;&gt;` when you're adding to something that should keep growing: logs, notes, evidence collected over time.
+- Mixing them up is one of the most common ways people lose data on Linux. Pause for a second before pressing Enter on a `&gt;`.
+
+## Command cheat sheet
+
+- `COMMAND >> FILE`: Append the output to FILE, keeping what's there.
+- `COMMAND > FILE`: Replace FILE's contents with the output.
+
+## New words
+
+- **Append**: add to the end without removing anything.
+
+## Your mission
+
+status.log says offline. Add a second line, restored, without losing the first.
+
+1. Read status.log.
+2. Append the word restored as a new line.
+3. Check the file has both lines, then read reward.txt.
+
+## Common mistake
+
+Using &gt; instead of &gt;&gt; replaces the entire previous log.
+
+## Check your understanding
+
+How would the output differ if you appended the same record twice?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

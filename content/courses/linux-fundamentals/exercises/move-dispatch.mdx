@@ -7,22 +7,48 @@ xpReward: 25
 
 ## Learn
 
-mv moves or renames a file. Unlike cp, the old name disappears, because it's the same file under a new path.
+### mv moves and renames
 
-Renaming and moving are the same operation in Linux: you're changing the path used to reach the file. mv old.txt new.txt renames it, and mv file.txt folder/ moves it into a folder. Afterwards, check that the old name is gone. Once the rename is correct, reward.txt appears with your flag.
+`mv SOURCE DESTINATION` moves a file. Unlike `cp`, nothing is left behind at the old name: it's the same file, now reached by a new path.
+
+Linux has no separate rename command because renaming is just moving a file to a new name in the same directory.
+
+```sh
+mv draft.txt final.txt   # rename
+ls
+cat final.txt   # same contents, new name
+```
+
+### Moving into a directory
+
+If the destination is an existing directory, `mv` puts the file inside it and keeps its name. You can also move and rename in one step by giving the full new path.
+
+```sh
+mv final.txt reports
+ls reports
+mv reports/final.txt reports/2026-final.txt   # rename inside the folder
+ls reports
+```
+
+### Check your work
+
+After a move, the old name is gone. A quick `ls` confirms the file is where you expect and the old name has disappeared.
+
+Be careful on a full Linux system: if a file already exists at the destination, `mv` replaces it without asking. The old contents are lost.
+
+## Command cheat sheet
+
+- `mv OLD NEW`: Rename OLD to NEW.
+- `mv FILE DIR`: Move FILE into DIR, keeping its name.
+- `mv FILE DIR/NEWNAME`: Move and rename in one step.
+
+## New words
+
+- **Rename**: in Linux, moving a file to a new name. It's the same operation as moving.
 
 ## Why it matters
 
 Renaming files is everyday admin work, and knowing the difference between moving and copying avoids lost or duplicated data.
-
-## Example
-
-```sh
-mv draft.txt final.txt       # rename a file
-mv final.txt reports/        # move it into a folder
-```
-
-Example filenames illustrate syntax; inspect your mission files before running them.
 
 ## Your mission
 

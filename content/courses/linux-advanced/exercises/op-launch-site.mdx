@@ -1,0 +1,55 @@
+---
+title: "Launch from the right place"
+description: "Run /opt/relay/bin/ignite. It names the directory it must be launched from. Go there with cd and run it again by its absolute path."
+type: exercise
+xpReward: 50
+---
+
+## Learn
+
+### Every process has a working directory
+
+When you start a program, it begins life in your shell's current directory. That's its working directory. The program can check it, and it uses it whenever it opens a file by a relative name. That's why the same program can behave differently depending on where you run it from.
+
+### Watch the working directory change
+
+Our practice program prints the working directory it was started in. We call it by the same absolute path each time, from different places.
+
+```sh
+/opt/tools/bin/scanner
+cd /var/log
+/opt/tools/bin/scanner   # same program, different working directory
+```
+
+### Separate where you are from how you call it
+
+Two different things are going on, and it helps to keep them apart. Where you stand is set with `cd` and shown by `pwd`. How you call the program (absolute or relative path) is about finding the file. With an absolute path you can stand anywhere and still reach the program.
+
+This mission's program tells you where it insists on running, and that place is different for every learner. Read its message, move there, and call it again.
+
+## Command cheat sheet
+
+- `cd DIR then /path/to/program`: Run a program with DIR as its working directory.
+- `pwd`: Confirm where you are before running it.
+
+## Why it matters
+
+Scripts and services often behave differently depending on the directory they start in, and relative paths inside them break when they start somewhere else. Checking the working directory is a standard first move when a tool works for one person and not another.
+
+## Your mission
+
+Run /opt/relay/bin/ignite. It names the directory it must be launched from. Go there with cd and run it again by its absolute path.
+
+1. Run /opt/relay/bin/ignite and read where it wants to run.
+2. cd to that directory.
+3. Run /opt/relay/bin/ignite again.
+
+## Common mistake
+
+Copying the directory from someone else's screen will not help: each learner's launch site is picked at random.
+
+## Check your understanding
+
+A backup script saves report.txt using a relative path. Where does the report end up if you run the script from /tmp?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

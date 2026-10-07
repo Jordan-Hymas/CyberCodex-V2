@@ -1,0 +1,59 @@
+---
+title: "Decode the shipment label"
+description: "The shipment label in label.b64 is base64-encoded. Decode it. (Ignore old-label.b64: that shipment has been delivered.)"
+type: exercise
+xpReward: 40
+---
+
+## Learn
+
+### What base64 is
+
+Base64 is a way of writing any data, even pictures or programs, using only letters, digits, `+` and `/`. It exists so data can travel safely through systems that only handle plain text, such as email or web addresses.
+
+It's an encoding, not encryption: there's no key and no secret. Anyone can turn it back. That's worth remembering, because people sometimes mistake base64 for protection.
+
+### Recognising it
+
+- A long run of letters and digits with no spaces, mixing upper and lower case.
+- Often ends with one or two `=` signs (padding).
+- You'll meet it in web tokens, email attachments, configuration files and malware.
+
+### Encoding and decoding
+
+`base64` encodes its input. `base64 -d` decodes. Give it a file, or pipe text into it.
+
+```sh
+echo hello | base64
+echo aGVsbG8K | base64 -d
+cat message.b64
+base64 -d message.b64
+```
+
+## Command cheat sheet
+
+- `base64 -d FILE`: Decode a base64 file.
+- `echo TEXT | base64`: Encode text.
+- `echo CODE | base64 -d`: Decode a base64 string.
+
+## New words
+
+- **Encoding**: a reversible way of writing data in another form. No secret is involved.
+- **Encryption**: scrambling data so only someone with a key can read it.
+
+## Your mission
+
+The shipment label in label.b64 is base64-encoded. Decode it. (Ignore old-label.b64: that shipment has been delivered.)
+
+1. Look at label.b64. Notice it's encoded.
+2. Decode it with base64 -d.
+
+## Common mistake
+
+Copying only part of an encoded line can cause an invalid-input error.
+
+## Check your understanding
+
+Why should a password not be protected with base64 alone?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

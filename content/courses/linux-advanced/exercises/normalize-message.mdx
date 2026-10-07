@@ -1,0 +1,61 @@
+---
+title: "Normalize a status stream"
+description: "Convert status.txt to lowercase and save the result as normalized.txt."
+type: exercise
+xpReward: 60
+---
+
+## Learn
+
+### tr translates characters
+
+`tr SET1 SET2` reads its standard input and replaces each character from SET1 with the matching character from SET2. Ranges save typing: `A-Z` is every capital letter, `a-z` every lowercase letter, `0-9` every digit.
+
+`tr` only reads standard input, never a filename, so feed it with a pipe or `&lt;`.
+
+```sh
+echo HELLO | tr A-Z a-z
+tr A-Z a-z < alert.txt
+echo 2026-10-06 | tr - /   # swap one separator for another
+```
+
+### Deleting characters
+
+`tr -d SET` deletes every character in SET instead of replacing it.
+
+```sh
+echo "b-a-n-a-n-a" | tr -d -   # remove every dash
+```
+
+### Why normalize
+
+Data from different sources rarely agrees on capitals, separators or spacing. Converting everything to one form first makes searching, sorting and comparing reliable. `ERROR`, `Error` and `error` become one thing.
+
+```sh
+cat alert.txt | tr A-Z a-z > normalized.txt
+cat normalized.txt
+```
+
+## Command cheat sheet
+
+- `tr A-Z a-z`: Uppercase to lowercase.
+- `tr a-z A-Z`: Lowercase to uppercase.
+- `tr -d SET`: Delete the characters in SET.
+- `tr SET1 SET2 < FILE`: Translate a file's contents.
+
+## Your mission
+
+Convert status.txt to lowercase and save the result as normalized.txt.
+
+1. Feed status.txt into tr and translate uppercase to lowercase.
+2. Save the output to normalized.txt.
+
+## Common mistake
+
+Passing a filename to tr does not make it read that file. Redirect or pipe the contents instead.
+
+## Check your understanding
+
+When would changing case lose information that should be preserved?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

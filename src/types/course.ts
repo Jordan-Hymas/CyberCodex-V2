@@ -16,6 +16,8 @@ export interface CourseFrontmatter {
   tags?: string[];
   prerequisites?: string[];
   learningObjectives?: string[];
+  /** Per-course banner image (overrides the category gif). */
+  banner?: string;
 }
 
 /**

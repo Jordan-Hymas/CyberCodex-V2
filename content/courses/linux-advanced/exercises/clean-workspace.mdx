@@ -1,0 +1,61 @@
+---
+title: "Clean the staging folder"
+description: "Delete the temporary files in staging, then remove the empty staging folder. keep.txt must survive."
+type: exercise
+xpReward: 60
+---
+
+## Learn
+
+### Deleting is permanent
+
+There's no recycle bin on the command line. `rm` removes files immediately and for good. That's why careful people look before they delete, every time.
+
+### rm and rmdir
+
+- `rm FILE` deletes a file. Give several names, or a glob, to delete several.
+- `rmdir DIR` deletes a directory, but only if it's empty. That makes it a safe way to remove folders: it refuses if anything is still inside.
+- `rm -r DIR` deletes a directory and everything in it. Powerful and dangerous; double-check the path first.
+
+### Check with ls, then delete
+
+Run `ls` with exactly the same pattern you plan to delete. If the list is right, press the up arrow, replace `ls` with `rm`, and run it.
+
+```sh
+ls build/*.tmp   # 1. see exactly what the pattern matches
+rm build/*.tmp   # 2. delete those files
+ls build   # 3. the config survived
+```
+
+### Removing directories
+
+```sh
+rmdir scratch   # refuses: scratch isn't empty
+rm scratch/old.txt
+rmdir scratch   # now it's empty, so it goes
+ls
+```
+
+## Command cheat sheet
+
+- `rm FILE`: Delete a file, permanently.
+- `rm DIR/*.tmp`: Delete every `.tmp` file in DIR (check with `ls` first).
+- `rmdir DIR`: Delete an empty directory.
+- `rm -r DIR`: Delete a directory and everything inside it.
+
+## Your mission
+
+Delete the temporary files in staging, then remove the empty staging folder. keep.txt must survive.
+
+1. Check what's in staging.
+2. Delete the .tmp files, then the empty folder. Leave keep.txt alone.
+
+## Common mistake
+
+A broad wildcard can match more files than intended. Never use deletion commands without understanding the target path.
+
+## Check your understanding
+
+Why is rmdir safer than recursive removal when you expect an empty directory?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

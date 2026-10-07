@@ -7,22 +7,63 @@ xpReward: 25
 
 ## Learn
 
-cp copies a file and leaves the original where it is. mkdir creates a new directory. A copy needs its destination directory to exist first.
+### Making directories with mkdir
 
-A copy is a completely separate file with the same contents, so changing one later won't affect the other. cp won't create missing directories for you, so make the folder first with mkdir. This mission checks your filesystem: once the backup exists with the right contents, a reward.txt file containing your flag appears in your home directory.
+`mkdir NAME` (make directory) creates a new, empty directory. Like most commands it prints nothing when it works. `mkdir -p a/b/c` creates a whole chain of nested directories in one go, skipping any that already exist.
+
+```sh
+mkdir backup
+ls   # the new folder is there
+```
+
+### Copying with cp
+
+`cp SOURCE DESTINATION` copies a file. The first argument is the file that already exists; the second is where the copy should go. The original stays exactly where it was.
+
+A copy is a completely separate file that starts with the same contents. Changing one later doesn't affect the other.
+
+```sh
+cp notes.txt backup/notes.txt
+ls backup
+cat backup/notes.txt
+```
+
+### Copying into a directory
+
+If the destination is an existing directory, `cp` puts the copy inside it and keeps the original filename. So `cp notes.txt backup` and `cp notes.txt backup/notes.txt` do the same thing. Give a different filename and the copy gets that name instead.
+
+```sh
+cp notes.txt backup/notes-copy.txt   # copy under a new name
+ls backup
+```
+
+### The destination must exist
+
+`cp` won't create missing directories for you. Copying into a folder that isn't there fails, so make it first with `mkdir`.
+
+```sh
+cp notes.txt archive/notes.txt   # there's no archive folder yet
+```
+
+### Missions that check your work
+
+Some missions don't hide the flag in a file you can find. Instead they watch your filesystem, and when you've made the change they asked for, a `reward.txt` file appears in your home directory with the flag inside. Read it with `cat`.
+
+## Command cheat sheet
+
+- `mkdir DIR`: Create a directory.
+- `mkdir -p A/B/C`: Create nested directories, including any missing parents.
+- `cp SOURCE DEST`: Copy SOURCE to DEST. The original stays.
+- `cp FILE DIR`: Copy FILE into DIR, keeping its name.
+
+## New words
+
+- **Source**: the file that already exists, the first argument to `cp`.
+- **Destination**: where the copy should end up, the second argument.
 
 ## Why it matters
 
 Backing up a file before you touch it is a habit that saves careers, especially when you're editing configs on a live system.
-
-## Example
-
-```sh
-mkdir copies                      # create a folder
-cp notes.txt copies/notes.txt     # copy a file into it
-```
-
-Example filenames illustrate syntax; inspect your mission files before running them.
 
 ## Your mission
 

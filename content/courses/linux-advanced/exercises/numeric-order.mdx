@@ -1,0 +1,57 @@
+---
+title: "Order numeric priorities"
+description: "Find the smallest number in priorities.txt and save just that number to first.txt."
+type: exercise
+xpReward: 60
+---
+
+## Learn
+
+### Alphabetical order surprises
+
+By default, `sort` compares lines character by character, like a dictionary. For numbers that gives odd results: `1000` comes before `9`, because the character `1` comes before `9`.
+
+```sh
+sort sizes.txt
+```
+
+### sort -n compares numbers
+
+`-n` tells `sort` to read each line as a number. Add `-r` to reverse the order, which puts the biggest first.
+
+```sh
+sort -n sizes.txt
+sort -n -r sizes.txt
+```
+
+### Smallest and largest
+
+Combine `sort -n` with `head` or `tail` to pick out the extremes: the smallest number is the first line after sorting, the largest is the last.
+
+```sh
+sort -n sizes.txt | head -n 1   # smallest
+sort -n sizes.txt | tail -n 1   # largest
+```
+
+## Command cheat sheet
+
+- `sort -n FILE`: Sort by numeric value.
+- `sort -n -r FILE`: Largest first.
+- `sort -n FILE | head -n 1`: The smallest number.
+
+## Your mission
+
+Find the smallest number in priorities.txt and save just that number to first.txt.
+
+1. Sort the numbers so the smallest comes first. Check your output.
+2. Save only the first line to first.txt.
+
+## Common mistake
+
+A value that starts with digits is not always semantically a number; a postal code, for example, is an identifier.
+
+## Check your understanding
+
+Why can lexical ordering put 10 before 2?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

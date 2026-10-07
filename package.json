@@ -13,7 +13,16 @@
     "db:create-admin": "tsx scripts/create-admin-user.ts",
     "db:clear-sessions": "tsx scripts/clear-sessions.ts",
     "test:linux": "node scripts/run-linux-tests.cjs",
-    "db:prune-labs": "node scripts/prune-linux-labs.cjs"
+    "db:prune-labs": "node scripts/prune-linux-labs.cjs",
+    "db:postgres:sync": "node scripts/sync-postgres-schema.cjs",
+    "db:postgres:check": "node scripts/sync-postgres-schema.cjs --check && node scripts/check-database-config.cjs",
+    "db:postgres:generate": "node scripts/sync-postgres-schema.cjs --check && prisma generate --config prisma.postgresql.config.ts",
+    "db:postgres:deploy": "npm run db:postgres:check && prisma migrate deploy --config prisma.postgresql.config.ts",
+    "build:postgres": "npm run db:postgres:check && npm run db:postgres:generate && next build",
+    "db:sqlite:generate": "prisma generate --config prisma.config.ts",
+    "auth:check": "node scripts/check-auth-config.cjs",
+    "test:auth": "node scripts/test-auth.cjs",
+    "db:postgres:smoke": "node scripts/check-postgres-connection.cjs"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
@@ -42,11 +51,11 @@
     "skulpt": "^1.2.0",
     "xterm": "^5.3.0",
     "zod": "^4.1.12",
-    "zustand": "^5.0.8"
+    "zustand": "^5.0.8",
+    "@auth/prisma-adapter": "^2.11.1",
+    "@prisma/client": "^6.18.0"
   },
   "devDependencies": {
-    "@auth/prisma-adapter": "^2.11.1",
-    "@prisma/client": "^6.18.0",
     "@tailwindcss/postcss": "^4.1.16",
     "@types/node": "^24.9.2",
     "@types/react": "^19.2.2",

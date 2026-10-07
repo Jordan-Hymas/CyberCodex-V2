@@ -1,0 +1,66 @@
+---
+title: "Split the streams"
+description: "Run relay so its standard output goes to data.log and its standard error goes to notes.log. Then read both files: the flag is in one of them."
+type: exercise
+xpReward: 50
+---
+
+## Learn
+
+### Redirecting stream 2
+
+Put the stream's number in front of `&gt;` to redirect that stream. `2&gt; errors.log` sends standard error into `errors.log`. Write the `2` and the `&gt;` with no space between them.
+
+```sh
+netscan 2> status.log   # the result still shows; the message went to the file
+cat status.log
+```
+
+### Both at once
+
+One command can redirect both streams, each to its own file. Results go one way and messages the other, and nothing appears on screen.
+
+```sh
+netscan > results.txt 2> status.log
+cat results.txt
+cat status.log
+```
+
+### Throwing output away
+
+`/dev/null` is a special file that discards everything written to it. `2&gt; /dev/null` silences error messages, which is handy for noisy commands. Use it carefully: you won't see real problems either.
+
+```sh
+netscan 2> /dev/null
+```
+
+### The spacing trap
+
+`2 &gt; file` (with a space) is different: the shell treats `2` as an ordinary argument to the program and redirects standard output. The number must touch the `&gt;`.
+
+## Command cheat sheet
+
+- `COMMAND 2> FILE`: Save standard error in FILE.
+- `COMMAND > OUT 2> ERR`: Split the two streams into two files.
+- `COMMAND 2> /dev/null`: Discard error messages.
+
+## Why it matters
+
+Separating errors from results keeps logs clean and makes failures stand out instead of scrolling past.
+
+## Your mission
+
+Run relay so its standard output goes to data.log and its standard error goes to notes.log. Then read both files: the flag is in one of them.
+
+1. Redirect stream 1 to data.log and stream 2 to notes.log in one command.
+2. Read both files.
+
+## Common mistake
+
+2 &gt; notes.log (with a space) passes 2 to the program as an ordinary argument and redirects standard output instead.
+
+## Check your understanding
+
+How would you throw away just the error messages of a noisy command?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

@@ -1,3 +1,5 @@
+import { configuredOAuthProviders } from "@/lib/auth/oauth";
+export const dynamic = "force-dynamic";
 import Link from "next/link";
 import { SignupForm } from "@/components/auth/SignupForm";
 import { AuthShell } from "@/components/auth/AuthShell";
@@ -7,7 +9,8 @@ export const metadata = {
   description: "Create your CyberCodex account",
 };
 
-export default function SignupPage() {
+export default async function SignupPage({ searchParams }: { searchParams: Promise<{ callbackUrl?: string }> }) {
+  const { callbackUrl } = await searchParams;
   return (
     <AuthShell
       title="New player"
@@ -24,7 +27,7 @@ export default function SignupPage() {
         </>
       }
     >
-      <SignupForm />
+      <SignupForm providers={configuredOAuthProviders()} callbackUrl={callbackUrl} />
     </AuthShell>
   );
 }

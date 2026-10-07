@@ -1,3 +1,5 @@
+import { configuredOAuthProviders } from "@/lib/auth/oauth";
+export const dynamic = "force-dynamic";
 import Link from "next/link";
 import { LoginForm } from "@/components/auth/LoginForm";
 import { AuthShell } from "@/components/auth/AuthShell";
@@ -29,7 +31,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
         </>
       }
     >
-      <LoginForm callbackUrl={callbackUrl} verified={verified === "true"} errorCode={error} />
+      <LoginForm providers={configuredOAuthProviders()} callbackUrl={callbackUrl} verified={verified === "true"} errorCode={error} />
     </AuthShell>
   );
 }

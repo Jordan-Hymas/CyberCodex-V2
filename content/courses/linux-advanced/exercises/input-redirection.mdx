@@ -1,0 +1,59 @@
+---
+title: "Read through standard input"
+description: "Decode the current receipt by feeding receipt.b64 into base64 with input redirection. An older receipt is lying around too."
+type: exercise
+xpReward: 60
+---
+
+## Learn
+
+### Standard input
+
+Every running program has a standard input: the place it reads text from when you don't name a file. In a pipeline, standard input is the previous command's output. Typed on its own in a full Linux terminal, it's your keyboard.
+
+You've been using it already: in `cat file | grep x`, `grep` reads its standard input because you gave it no filename.
+
+### &lt; feeds a file in
+
+`&lt;` is the mirror image of `&gt;`. Where `&gt;` sends output into a file, `&lt; FILE` connects FILE to the command's standard input. The command reads the file's contents as if they had been piped or typed in, without ever seeing the filename.
+
+```sh
+wc -l < guests.txt   # count the lines fed in on standard input
+base64 -d < token.b64
+```
+
+### Three ways to give a command data
+
+- As an argument: `base64 -d token.b64`. The command opens the file itself.
+- Through a pipe: `cat token.b64 | base64 -d`. Another command produces the data.
+- With input redirection: `base64 -d &lt; token.b64`. The shell opens the file and feeds it in.
+- All three print the same here. Redirection shines with tools that only read standard input, and inside scripts.
+
+```sh
+cat token.b64 | base64 -d
+```
+
+## Command cheat sheet
+
+- `COMMAND < FILE`: Feed FILE into the command's standard input.
+- `wc -l < FILE`: Count the lines of FILE through standard input.
+
+## New words
+
+- **Standard input (stdin)**: where a program reads its input from: the keyboard, a pipe or a redirected file.
+
+## Your mission
+
+Decode the current receipt by feeding receipt.b64 into base64 with input redirection. An older receipt is lying around too.
+
+1. Decode receipt.b64 using &lt; rather than a filename argument.
+
+## Common mistake
+
+The arrow points from the file into the command. &gt; points output toward a destination file.
+
+## Check your understanding
+
+Can you explain the data flow of wc -l &lt; sample.log &gt; count.txt?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

@@ -1,0 +1,60 @@
+---
+title: "Count accepted records"
+description: "Count the lines in traffic.txt that begin with ACCEPT and write just that number to count.txt. Some lines contain ACCEPT without starting with it."
+type: exercise
+xpReward: 60
+---
+
+## Learn
+
+### wc counts
+
+`wc` (word count) counts lines, words and bytes. With no options it prints all three. Use `-l` for lines, `-w` for words, or `-c` for bytes.
+
+```sh
+wc access.log   # lines, words, bytes
+wc -l access.log
+```
+
+### Counting matches
+
+Pipe a filter into `wc -l` and you get the number of matching lines. How many failed logins? How many blocked connections? This is one of the most common questions in log analysis.
+
+```sh
+grep DENY access.log | wc -l   # 4, but one of them is NOT DENY
+grep ^DENY access.log | wc -l   # anchored: exactly the lines that start with DENY
+```
+
+### Check what you counted
+
+A count is only as good as the filter in front of it. Run the filter without `wc` first and read the lines. One unintended match changes the answer, and nothing will warn you.
+
+### Saving just the number
+
+```sh
+grep ^DENY access.log | wc -l > denied.txt
+cat denied.txt
+```
+
+## Command cheat sheet
+
+- `wc -l FILE`: Count lines.
+- `grep TEXT FILE | wc -l`: Count matching lines.
+- `wc -w / wc -c`: Count words / bytes.
+
+## Your mission
+
+Count the lines in traffic.txt that begin with ACCEPT and write just that number to count.txt. Some lines contain ACCEPT without starting with it.
+
+1. Filter to lines that start with ACCEPT.
+2. Count them and save the number to count.txt.
+
+## Common mistake
+
+A file containing text without a final newline may have fewer newline characters than visible text records.
+
+## Check your understanding
+
+Why is filtering before counting different from counting the entire file?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

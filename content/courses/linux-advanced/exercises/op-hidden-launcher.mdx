@@ -1,0 +1,53 @@
+---
+title: "Checkpoint: find the live launcher"
+description: "One launcher in /opt/relay/bin is live and hidden. List everything in that directory, dotfiles included, and run the live launcher by its full path. Ignore the retired one."
+type: exercise
+xpReward: 75
+---
+
+## Learn
+
+### Checkpoint: programs can hide too
+
+A program's name is just a filename, so all the tricks from earlier chapters apply. A program can have a random name, and if that name starts with a dot it's hidden from a plain `ls`. Attackers hide backdoors exactly this way, and investigators find them with `ls -a`.
+
+```sh
+ls /opt/tools/bin
+ls -a /opt/tools/bin   # the hidden program appears
+/opt/tools/bin/.agent-7731
+```
+
+### Tab completion beats typing random names
+
+In your terminal, type the start of a name and press Tab: the shell fills in the rest. Press Tab twice to list the options when several names match. It's faster than copying random characters, and it avoids typos.
+
+### Don't trust the first thing that answers
+
+This mission has two launchers, and both print a flag. One is retired. Before trusting output, ask where it came from: read the README, check names, and think about which program the mission actually meant.
+
+## Command cheat sheet
+
+- `ls -a DIR`: Reveal hidden (dot-named) programs.
+- `Tab / Tab Tab`: Complete a name, or list the possible completions.
+
+## Why it matters
+
+Incident responders hunt for exactly this: renamed or hidden executables sitting next to legitimate ones.
+
+## Your mission
+
+One launcher in /opt/relay/bin is live and hidden. List everything in that directory, dotfiles included, and run the live launcher by its full path. Ignore the retired one.
+
+1. List /opt/relay/bin including hidden entries.
+2. Read the README if you want the backstory.
+3. Run the hidden launcher by its absolute path.
+
+## Common mistake
+
+launcher-legacy prints a convincing flag too. It is a decoy: read what a program says about itself before trusting its output.
+
+## Check your understanding
+
+How would you find the live launcher if it were somewhere under /opt and you did not know which directory?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

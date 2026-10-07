@@ -1,0 +1,68 @@
+---
+title: "Read straight into a variable"
+description: "/opt/relay/rotating.key changes after every command you run. Load the current key into the KEY variable in a single command."
+type: exercise
+xpReward: 60
+---
+
+## Learn
+
+### read stores a line in a variable
+
+`read NAME` takes one line of input and stores it in the variable NAME. Combine it with `&lt;` and the input comes from a file: one step, no copying and pasting.
+
+```sh
+read VERSION < version.txt
+echo "Running version $VERSION"
+```
+
+### Several variables at once
+
+Give `read` several names and it splits the line at spaces: the first word goes into the first variable, and so on. The last variable gets whatever is left over.
+
+```sh
+read USERNAME PASSWORD < creds.txt
+echo $USERNAME
+```
+
+### The pipeline trap
+
+`cat version.txt | read V` looks reasonable but leaves `V` empty. Each stage of a pipeline runs in its own copy of the shell (a subshell), so the variable is set in that copy and disappears when the line finishes. Use `&lt; FILE` instead.
+
+```sh
+cat version.txt | read V
+echo "[$V]"
+```
+
+### Why one step matters
+
+Some values change constantly: rotating keys, temporary tokens, files another program keeps rewriting. Reading with `cat` and then typing the value takes two steps, and the value may already be stale. `read NAME &lt; FILE` captures it in a single command.
+
+## Command cheat sheet
+
+- `read NAME < FILE`: Store the first line of FILE in NAME.
+- `read A B < FILE`: Split the line into words: A gets the first, B the rest.
+
+## New words
+
+- **Subshell**: a separate copy of the shell. Variables set inside it vanish when it ends.
+
+## Why it matters
+
+Scripts read configuration values and tokens this way all the time. It is one step, starts no extra program, and avoids the subshell trap.
+
+## Your mission
+
+/opt/relay/rotating.key changes after every command you run. Load the current key into the KEY variable in a single command.
+
+1. Use read with input redirection from /opt/relay/rotating.key.
+
+## Common mistake
+
+cat /opt/relay/rotating.key | read KEY looks right, but each stage of a pipeline runs in its own subshell, so KEY vanishes as soon as the line finishes.
+
+## Check your understanding
+
+Why does echo hello | read WORD leave WORD empty in bash?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

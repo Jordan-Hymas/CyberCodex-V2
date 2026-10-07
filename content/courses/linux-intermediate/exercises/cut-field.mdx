@@ -1,0 +1,60 @@
+---
+title: "Extract a manifest field"
+description: "manifest.txt lists shipments as id:status:payload. Extract the payload (field 3) of the shipment whose status is ready."
+type: exercise
+xpReward: 40
+---
+
+## Learn
+
+### Data in columns
+
+Lots of files store one record per line, split into fields by a separator character. System files often use a colon: `/etc/passwd` lists every user as `name:x:uid:gid:...`. Other files use commas or tabs.
+
+```sh
+cat staff.txt
+```
+
+### cut picks one field
+
+`cut -d SEPARATOR -f NUMBER` splits each line at SEPARATOR and prints field NUMBER. Fields are counted from 1. `-d` stands for delimiter (the separator) and `-f` for field.
+
+```sh
+cut -d : -f 1 staff.txt   # the first field of every line
+cut -d : -f 3 staff.txt
+```
+
+### Pick the row, then the column
+
+`cut` works on every line, so first narrow down to the rows you want with `grep`, then cut out the field. Matching `:red:` with the colons included avoids matching red somewhere else in the line.
+
+```sh
+grep :red: staff.txt | cut -d : -f 1
+```
+
+## Command cheat sheet
+
+- `cut -d : -f N FILE`: Print field N of each line, splitting at `:`.
+- `grep TEXT FILE | cut -d : -f N`: Field N of the matching lines only.
+
+## New words
+
+- **Field**: one column of a line, between separators.
+- **Delimiter**: the character that separates fields, such as `:` or `,`.
+
+## Your mission
+
+manifest.txt lists shipments as id:status:payload. Extract the payload (field 3) of the shipment whose status is ready.
+
+1. Look at the file to see its columns.
+2. Select the ready row, then cut out field 3.
+
+## Common mistake
+
+If a delimiter appears inside a quoted value, this simple cut command still treats it as a delimiter.
+
+## Check your understanding
+
+What does field 1 mean when there is no delimiter on the line?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

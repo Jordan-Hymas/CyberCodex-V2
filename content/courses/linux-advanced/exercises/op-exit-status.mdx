@@ -1,0 +1,66 @@
+---
+title: "Read the exit status"
+description: "Run probe. It fails on purpose with an exit status. Read the status with echo $? straight away, then run report with that number."
+type: exercise
+xpReward: 50
+---
+
+## Learn
+
+### Every command reports success or failure
+
+When a command finishes it hands the shell a number called its exit status. `0` means it succeeded. Anything from 1 to 255 means it failed, and programs often use different numbers for different kinds of failure.
+
+The shell doesn't print the status. It stores it in the special variable `$?`, which you can read with `echo $?`.
+
+```sh
+ls /tmp
+echo $?
+ls /nope
+echo $?
+```
+
+### $? only remembers the latest command
+
+Every command overwrites `$?`, including `echo` itself. Read it immediately after the command you care about, before running anything else.
+
+```sh
+healthcheck
+echo $?   # the healthcheck's status
+echo $?   # now it's echo's own status
+```
+
+### Where exit statuses matter
+
+`&&` and `||`, which you used earlier, decide what to run based on exit statuses. So do scripts, monitoring systems and automated build pipelines. A program can print "all fine" and still fail, and the exit status is what the machine believes.
+
+## Command cheat sheet
+
+- `echo $?`: Print the exit status of the previous command.
+- `0 / 1-255`: Success / failure.
+
+## New words
+
+- **Exit status**: the number a command returns when it finishes. 0 means success.
+
+## Why it matters
+
+Scripts, monitoring checks and CI pipelines decide success or failure from exit statuses, not from the text a program prints.
+
+## Your mission
+
+Run probe. It fails on purpose with an exit status. Read the status with echo $? straight away, then run report with that number.
+
+1. Run probe.
+2. Run echo $?
+3. Run report with that number.
+
+## Common mistake
+
+Running anything between probe and echo $?, even ls, replaces the value. If that happens, run probe again: it picks a new status each time. Run probe and echo $? as two separate commands: this simulator expands $? when you press Enter.
+
+## Check your understanding
+
+Why does false && echo yes print nothing?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

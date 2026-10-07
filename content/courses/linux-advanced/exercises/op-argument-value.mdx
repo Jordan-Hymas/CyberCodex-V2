@@ -1,0 +1,65 @@
+---
+title: "An option with a value"
+description: "Read /opt/vault/README, then use the vault command to read /flag for you."
+type: exercise
+xpReward: 50
+---
+
+## Learn
+
+### Programs on the PATH
+
+This mission's program lives in `/usr/local/bin`, which is on the PATH, so its bare name works, just like `ls` or `cat`. Most tools you install end up in a directory like this.
+
+### Options that take a value
+
+Some options are simple switches, like `ls -a`. Others need a value, and the value is the very next word. In `find /etc -name hosts`, the word `hosts` belongs to `-name`. In `tail -n 5 file`, the `5` belongs to `-n`.
+
+Documentation shows this with a placeholder after the option: `--dest DIR` means put a directory right after `--dest`.
+
+```sh
+backup --dest /tmp/save
+backup --dest   # the option is missing its value
+```
+
+### Reading a README
+
+Many tools come with a README file explaining their options. Reading it before guessing is faster, and on a privileged tool it's also how you spot options that do more than they should, such as reading any file you name.
+
+### Order matters
+
+The value must come right after its option. `backup /tmp/save --dest` gives `--dest` nothing to work with, because the program reads its arguments in order.
+
+```sh
+backup /tmp/save --dest
+```
+
+## Command cheat sheet
+
+- `PROGRAM --option VALUE`: Pass VALUE to an option that needs one.
+- `cat README`: Read the documentation before guessing.
+
+## New words
+
+- **Option value**: the word that follows an option that needs one, such as `5` in `tail -n 5`.
+
+## Why it matters
+
+A program that runs as root and reads any file you name is a classic privilege-escalation route. Spotting options like --export on privileged helpers is part of every Linux security review.
+
+## Your mission
+
+Read /opt/vault/README, then use the vault command to read /flag for you.
+
+1. Read the README.
+2. Run vault with --export followed by the path of the flag.
+
+## Common mistake
+
+vault --export on its own fails because the option is missing its value. vault /flag --export fails too: the order matters.
+
+## Check your understanding
+
+In tail -n 5 log.txt, which word is the option's value and which is the file?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.

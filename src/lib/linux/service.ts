@@ -1,9 +1,10 @@
 import { prisma } from '@/lib/db/prisma';
-import { missionById, missions, createChallenge, flagMatches, revealReward, objectiveMet, courseId, decoyIndex, coachTip, fixtureVersion, type Mission } from './challenges';
-import { execute, listDir, readForEdit, saveFile, commands, type Shell } from './engine';
+import { missionById, createChallenge, flagMatches, revealReward, runCommand, objectiveMet, courseOf, missionsForCourse, decoyIndex, coachTip, fixtureVersion, type Mission } from './challenges';
+import { listDir, readForEdit, saveFile, commands, type Shell } from './engine';
 import { accessError } from './access';
 export class LabError extends Error { constructor(message: string, public status = 400) { super(message); } }
-type Stored = { shell: Shell; flag: string; decoys?: string[]; fixture?: string };
+/** Server-only instance state. secrets: per-instance values such as randomized names (never sent to the browser). */
+type Stored = { shell: Shell; flag: string; decoys?: string[]; fixture?: string; secrets?: Record<string, string> };
 
 /**
  * Storage lifecycle. Only environments a learner is actively using keep their full
@@ -48,14 +49,15 @@ function maybePrune() {
 
 /** What the terminal shows on open: this mission, where you start, what's visible there. */
 function missionIntro(mission: Mission, shell: Shell, notice?: string) {
-  const index = missions.findIndex(m => m.id === mission.id);
+  const course = missionsForCourse(courseOf(mission));
+  const index = course.findIndex(m => m.id === mission.id);
   const dir = shell.cwd;
   const entries = Object.keys(shell.files)
     .filter(f => f !== dir && (f.slice(0, f.lastIndexOf('/')) || '/') === dir)
     .map(f => f.split('/').pop()! + (shell.files[f].kind === 'dir' ? '/' : ''))
     .filter(name => !name.startsWith('.')) // hidden files stay hidden, like ls
     .sort();
-  return { number: index + 1, total: missions.length, title: mission.title, goal: mission.brief, cwd: dir, entries, notice };
+  return { number: index + 1, total: course.length, title: mission.title, goal: mission.brief, cwd: dir, entries, notice };
 }
 export type LabAction = { action: 'open' | 'command' | 'submit' | 'reset' | 'complete' | 'read' | 'save'; version?: number; command?: string; flag?: string; path?: string; content?: string };
 export type LabReply = {
@@ -72,6 +74,7 @@ export type LabReply = {
 export async function labAction(userId: string, exerciseId: string, action: LabAction): Promise<LabReply> {
   const mission = missionById(exerciseId);
   if (!mission) throw new LabError('Unknown Linux mission.', 404);
+  const courseId = courseOf(mission);
   if (action.action === 'open') maybePrune();
   return prisma.$transaction(async tx => {
     const user = await tx.user.findUnique({ where: { id: userId } });
@@ -84,7 +87,7 @@ export async function labAction(userId: string, exerciseId: string, action: LabA
     if (!row) {
       if (action.action !== 'open') throw new LabError('Open your mission before sending commands.', 409);
       const challenge = createChallenge(mission);
-      row = await tx.linuxLabSession.create({ data: { userId, exerciseId, state: JSON.stringify({ shell: challenge.shell, flag: challenge.flag, decoys: challenge.decoys, fixture: challenge.fixture }), flagHash: challenge.hash } });
+      row = await tx.linuxLabSession.create({ data: { userId, exerciseId, state: JSON.stringify({ shell: challenge.shell, flag: challenge.flag, decoys: challenge.decoys, fixture: challenge.fixture, secrets: challenge.secrets }), flagHash: challenge.hash } });
     }
     let notice: string | undefined;
     if (action.action === 'open') {
@@ -99,7 +102,7 @@ export async function labAction(userId: string, exerciseId: string, action: LabA
           // Unsolved environments are only compacted by the idle prune
           : 'Your environment was cleared after 14 days without use, so you have a fresh start.';
         const fresh = createChallenge(mission);
-        row = await tx.linuxLabSession.update({ where: { id: row.id }, data: { state: JSON.stringify({ shell: fresh.shell, flag: fresh.flag, decoys: fresh.decoys, fixture: fresh.fixture }), flagHash: fresh.hash, version: { increment: 1 } } });
+        row = await tx.linuxLabSession.update({ where: { id: row.id }, data: { state: JSON.stringify({ shell: fresh.shell, flag: fresh.flag, decoys: fresh.decoys, fixture: fresh.fixture, secrets: fresh.secrets }), flagHash: fresh.hash, version: { increment: 1 } } });
       }
     } else if (row.state === COMPACT) {
       throw new LabError('This environment was cleared to save space. Reopen it to get a fresh one.', 409);
@@ -119,14 +122,13 @@ export async function labAction(userId: string, exerciseId: string, action: LabA
     let solvedAt = row.solvedAt, attempts = row.attempts, hash = row.flagHash;
     let progress: LabReply['progress'];
     if (action.action === 'reset') {
-      const fresh = createChallenge(mission); state.shell = fresh.shell; state.flag = fresh.flag; state.decoys = fresh.decoys; state.fixture = fresh.fixture; hash = fresh.hash;
+      const fresh = createChallenge(mission); state.shell = fresh.shell; state.flag = fresh.flag; state.decoys = fresh.decoys; state.fixture = fresh.fixture; state.secrets = fresh.secrets; hash = fresh.hash;
       message = 'Environment reset. A new flag was generated; your earned completion is preserved.'; clear = true;
     } else if (action.action === 'command') {
       if (Date.now() - row.updatedAt.getTime() < 80) throw new LabError('Please wait briefly before the next command.', 429);
-      const result = execute(state.shell, action.command ?? '');
+      const result = runCommand(mission, state.shell, state.flag, action.command ?? '');
       ({ output, error, clear = false, status } = result);
       tip = coachTip(mission, action.command ?? '', status !== 0 || !!error);
-      revealReward(mission, state.shell, state.flag);
       if (Buffer.byteLength(JSON.stringify(state)) > LAB_LIMITS.stateBytes) throw new LabError('Environment storage limit reached. Remove large files or reset.');
     } else if (action.action === 'save') {
       if (Date.now() - row.updatedAt.getTime() < 80) throw new LabError('Please wait briefly before saving again.', 429);
@@ -155,8 +157,11 @@ export async function labAction(userId: string, exerciseId: string, action: LabA
         progress = { totalXp, level: Math.floor(totalXp / 100) + 1, levelXp: totalXp % 100 };
         const finished = await tx.linuxLabSession.findMany({ where: { userId, solvedAt: { not: null } }, select: { exerciseId: true } });
         const ids = new Set([...finished.map(f => f.exerciseId), exerciseId]);
-        const count = missions.filter(m => ids.has(m.id)).length;
-        const data = { exercisesCompleted: count, totalExercises: missions.length, xpEarned: missions.filter(m => ids.has(m.id)).reduce((sum,m) => sum + m.xp, 0), totalXp: missions.reduce((sum,m) => sum + m.xp, 0), isCompleted: count === missions.length, completedAt: count === missions.length ? new Date() : null, lastActivityAt: new Date() };
+        // Course progress is per course: only count this course's missions.
+        const courseMissions = missionsForCourse(courseId);
+        const done = courseMissions.filter(m => ids.has(m.id));
+        const count = done.length;
+        const data = { exercisesCompleted: count, totalExercises: courseMissions.length, xpEarned: done.reduce((sum,m) => sum + m.xp, 0), totalXp: courseMissions.reduce((sum,m) => sum + m.xp, 0), isCompleted: count === courseMissions.length, completedAt: count === courseMissions.length ? new Date() : null, lastActivityAt: new Date() };
         await tx.courseProgress.upsert({ where: { userId_courseId: { userId, courseId } }, create: { userId, courseId, ...data }, update: data });
         message = awarded ? `Flag captured! +${awarded} XP. The next mission is unlocked.` : 'Flag confirmed. This mission was already completed; no duplicate XP awarded.';
       }

@@ -7,23 +7,66 @@ xpReward: 25
 
 ## Learn
 
-cd (change directory) moves you to another directory. cd .. goes up one level, cd - jumps back to where you just were, and plain cd takes you home.
+### Moving around with cd
 
-Your terminal remembers one current directory. After a cd, every filename you type is looked up from the new location. Directories inside directories are written with / between them, so stations/relay means "the relay folder inside stations". Use pwd or ls after moving if you want to check where you landed.
+`cd` (change directory) moves your shell to another directory. Afterwards, everything you type is relative to the new place: `ls` lists it, `cat file` reads from it. Watch the prompt: the part before `$` changes to show where you are.
+
+`cd` itself prints nothing when it works. Silence means success, which is normal for Linux commands.
+
+```sh
+cd city
+ls
+cd north   # one level deeper
+cat sign.txt
+```
+
+### Going back up
+
+Every directory has a parent: the one it sits inside. `..` is a special name that always means the parent, so `cd ..` goes up one level. You can climb and descend in one move: `cd ../south` means go up one level, then into `south`.
+
+```sh
+cd ..   # back to city
+pwd
+cd ../city/south   # up to ~, then down into city/south
+cat sign.txt
+```
+
+### Shortcuts home and back
+
+- `cd` with no argument always takes you home, wherever you are.
+- `cd ~` does the same, because `~` means your home directory.
+- `cd -` jumps back to the previous directory you were in, and prints where it took you. Handy for switching between two places.
+
+```sh
+cd
+pwd
+cd -   # back to where we just were
+```
+
+### If cd fails
+
+`cd` only goes into directories that exist, so a typo gives an error and leaves you where you were. Use `ls` to see the exact names around you, and `pwd` whenever you're unsure where you landed.
+
+```sh
+cd sooth   # typo: there is no sooth directory, so we stay where we were
+```
+
+## Command cheat sheet
+
+- `cd DIR`: Move into DIR.
+- `cd ..`: Move up to the parent directory.
+- `cd ../DIR`: Up one level, then into DIR.
+- `cd`: Go to your home directory (`cd ~` does the same).
+- `cd -`: Return to the previous directory.
+
+## New words
+
+- **Parent directory**: the directory one level up, written `..`.
+- **Subdirectory**: a directory inside another directory.
 
 ## Why it matters
 
 Moving around the filesystem quickly is the core skill for every later mission and every real system you'll work on.
-
-## Example
-
-```sh
-cd /tmp     # go to /tmp
-pwd         # confirm where you are
-cd -        # jump back to the previous directory
-```
-
-Example filenames illustrate syntax; inspect your mission files before running them.
 
 ## Your mission
 

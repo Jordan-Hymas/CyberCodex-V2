@@ -1,0 +1,48 @@
+---
+title: "Intermediate checkpoint: process a manifest"
+description: "Checkpoint. /var/log/manifest holds encoded records as NAME:payload. Decode the payload of the record named exactly READY. Similar records and an old manifest are there to trip you up."
+type: exercise
+xpReward: 40
+---
+
+## Learn
+
+### Checkpoint: one pipeline, several skills
+
+This checkpoint combines selecting a line (`grep`), extracting a field (`cut`) and decoding (`base64 -d`) in one pipeline. Nothing new; the skill is assembling the pieces and checking each stage.
+
+### Build it one stage at a time
+
+Here's the method on a practice file. Each run adds one stage, and we look at the result before adding the next.
+
+```sh
+cat orders.txt   # 1. look at the data
+grep SHIP: orders.txt   # 2. select the row. The colon excludes SHIP_TEST
+grep SHIP: orders.txt | cut -d : -f 2   # 3. keep only the payload
+grep SHIP: orders.txt | cut -d : -f 2 | base64 -d   # 4. decode it
+```
+
+### Precise matching
+
+Similar names are a classic trap. `grep SHIP` also matches `SHIP_TEST`. Including the separator (`SHIP:`) or anchoring to the start of the line (`grep ^SHIP:`) makes the match exact. Always check how many lines a stage returns before moving on.
+
+## Command cheat sheet
+
+- `grep NAME: FILE | cut -d : -f 2 | base64 -d`: Select a record, take its payload, decode it.
+
+## Your mission
+
+Checkpoint. /var/log/manifest holds encoded records as NAME:payload. Decode the payload of the record named exactly READY. Similar records and an old manifest are there to trip you up.
+
+1. Find the record named exactly READY (look at what else starts with READY).
+2. Cut out its payload and decode it, ideally in one pipeline.
+
+## Common mistake
+
+Including the READY: prefix in the base64 decoder input will not produce the intended message.
+
+## Check your understanding
+
+Which intermediate output would you inspect first if decoding failed?
+
+Capture the personal flag and submit it in the form. Use `help` or `man COMMAND` for supported syntax. A reset restores fixtures and replaces the flag while preserving earned completion.
